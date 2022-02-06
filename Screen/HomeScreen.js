@@ -1,11 +1,14 @@
-import * as React from 'react';
+import React, { useRef } from "react";
 import { StatusBar } from 'expo-status-bar';
 import logo from '../assets/shoes.png'; 
 import AppLoading from 'expo-app-loading';
+import { AntDesign } from '@expo/vector-icons'; 
+import { NavigationContainer,useNavigation } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import {useFonts,EBGaramond_400Regular} from '@expo-google-fonts/eb-garamond';
 
 import { StyleSheet, Text,  View,FlatList, TouchableWithoutFeedback,Image,
-        Pressable,  ScrollView,Dimensions,} from 'react-native';
+        Pressable,  ScrollView,Dimensions,TextInput,SafeAreaView,Animated,Button, } from 'react-native';
 
  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
  const cardPerSlide = 3
@@ -38,22 +41,120 @@ import { StyleSheet, Text,  View,FlatList, TouchableWithoutFeedback,Image,
                 id: 'a58694a0f-3da1-471f-bd96-145571e29d72ss',
                 title: 'Third Item',
               },
+              {
+                id: 'ad58694a0f-3da1-471f-bd96-145571e29d72ss',
+                title: 'Third Item',
+              },
+              {
+                id: 'azx58694a0f-3da1-471f-bd96-145571e29d72ss',
+                title: 'Third Item',
+              },
 
-          ];
-const HomeScreen =(props) =>{
+          ];    
+const HomeScreen =({navigation}) =>{
+  const [isClicked, setisClicked] = React.useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [count, setCount] = React.useState(0);
+
+  const showSearch = () =>{
+    setisClicked(true)
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true
+      }).start();
+  }
+
+  const hideSearch = () =>{
+    setisClicked(false)
+    Animated.timing(fadeAnim,{
+      toValue:1,
+      duration:500,
+      useNativeDriver: true
+    }).start();
+  }
+  
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+          <View style={{flexDirection:'row', marginRight:10}}>
+            <View style={{ marginRight:10}}>
+            <AntDesign.Button name="shoppingcart"  
+           borderWidth={1} 
+           size={24} 
+           backgroundColor = "#FFFFFF" 
+           color="black"
+         
+           iconStyle={
+           {marginRight: 5,}
+           } 
+           onPress={isClicked != true ? showSearch:hideSearch}
+           >
+             <Text style={{  fontWeight: 'bold', fontSize:18}}>4</Text>
+           </AntDesign.Button>
+            </View>
+
+             <AntDesign.Button  name="search1"
+           borderWidth={1} 
+           size={24}
+           backgroundColor = "#FFFFFF" 
+           color="#000"
+           iconStyle={
+           {
+            margin:0,
+            marginRight:0
+           }
+           } 
+           onPress={isClicked != true ? showSearch:hideSearch}
+           />
+       
+          </View>             
+
+      ),
+    });
+  }, [navigation, isClicked]);
+
     let [fontsLoaded] = useFonts({
         EBGaramond_400Regular,
       });
       if (!fontsLoaded) {
         return <AppLoading />;
       }
-      const { onPress, title = 'Save' } = props;
+   
     return(
-        <View style={styles.container}>
+      <Animated.View
+      style={[
+        styles.fadingContainer,
+        {
+          // Bind opacity to animated value
+          transform: [{
+            translateY:fadeAnim.interpolate({
+              inputRange: [0,1],
+              outputRange: [0, -50] // 0 : 150, 0.5 : 75, 1 : 0
+            }),
+          }],
+        }
+      ]}
+    >
+        <View style={styles.container}>    
              <StatusBar
               backgroundColor="#F0F0F0" />
-              <View>
+              <View style={{flexDirection:'row'}}>
+              <AntDesign.Button name="search1"  
+             size={24} 
+             backgroundColor='rgba(255, 255, 255, 0.62)'
+             color='rgba(206, 11, 255, 0.58)'
+             iconStyle={
+             {marginRight: 0,
+              fontWeight:'bold'
+             }
+             } 
+             />
+              <TextInput style={styles.searchTxt} placeholder="Search for..."/>
+              </View>
+              <View style={{marginTop:10, justifyContent:'center'}}>
               <ScrollView
+               showsHorizontalScrollIndicator={false}
              contentContainerStyle={{
                 justifyContent:"space-between",
             }}
@@ -61,38 +162,38 @@ const HomeScreen =(props) =>{
             alwaysBounceHorizontal={true}>
             <View style={styles.catContainer}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button} onPress={onPress}>
-                    <Text style={styles.text}>{title}</Text>
+            <Pressable style={styles.button}>
+                  <Text style={styles.text}>CatA</Text>
                 </Pressable>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button} onPress={onPress}>
-                    <Text style={styles.text}>{title}</Text>
+            <Pressable style={styles.button}>
+            <Text style={styles.text}>CatA</Text>
                 </Pressable>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button} onPress={onPress}>
-                    <Text style={styles.text}>{title}</Text>
+            <Pressable style={styles.button} >
+            <Text style={styles.text}>CatA</Text>
                 </Pressable>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button} onPress={onPress}>
-                    <Text style={styles.text}>{title}</Text>
+            <Pressable style={styles.button}>
+            <Text style={styles.text}>CatA</Text>
                 </Pressable>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button} onPress={onPress}>
-                    <Text style={styles.text}>{title}</Text>
+            <Pressable style={styles.button} >
+            <Text style={styles.text}>CatA</Text>
                 </Pressable>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button} onPress={onPress}>
-                    <Text style={styles.text}>{title}</Text>
+            <Pressable style={styles.button} >
+            <Text style={styles.text}>CatA</Text>
                 </Pressable>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-                <Pressable style={styles.button} onPress={onPress}>
-                    <Text style={styles.text}>{title}</Text>
+                <Pressable style={styles.button}>
+                <Text style={styles.text}>CatA</Text>
                 </Pressable>
             </View>
            
@@ -101,21 +202,23 @@ const HomeScreen =(props) =>{
               </View>
        
          <View style={styles.itemContainer}>
-         <FlatList
+         <FlatList contentContainerStyle={{ paddingBottom: 20}} 
+           showsVerticalScrollIndicator={false}
             data={DATA}
             keyExtractor={({ id }, index) => id}  
             numColumns={2}  
             renderItem={({item, index}) =>                        
-          ProductCard(item)//this is a main view
+          ProductCard()//this is a main view
         }
           />
          </View>
         </View>
+        </Animated.View>
 
     )
 }
-
-const ProductCard=(item)=>{
+//Start Product Card
+const ProductCard=()=>{
     return(           
 
         <TouchableWithoutFeedback>
@@ -134,6 +237,7 @@ const ProductCard=(item)=>{
     
 }
 
+//End of Product Card
 const styles = StyleSheet.create({
     container: {
         flex:1,
@@ -141,43 +245,57 @@ const styles = StyleSheet.create({
         paddingTop:5,
      
     },
-    
+    fadingContainer: {
+      flexDirection:'row',
+    },
+    fadingText: {
+      fontSize: 28
+    },
+    searchTxt:{
+     // borderWidth:1,
+      fontSize:24,
+      fontWeight:'400',
+      fontFamily:'Roboto',
+      width:screenWidth,
+      height:42,
+      backgroundColor:'rgba(255, 255, 255, 0.62)'
+    },
     catContainer:{
         flexDirection:'row',
         justifyContent:'space-between',
-      //  borderWidth:1,  
         padding:5
      
     },
     button: {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 32,
+        paddingVertical: 5,
+        paddingHorizontal: 15,
         borderRadius: 4,
         elevation: 3,
-        backgroundColor: 'black',
+        backgroundColor: '#FFFFFF',
+        borderWidth:1,
       },
       text: {
         fontSize: 16,
         lineHeight: 21,
-        fontWeight: 'bold',
-        letterSpacing: 0.25,
-        color: 'white',
+        fontFamily:'Roboto',
+        fontStyle:'normal',
+        color: '#000',
       },
     itemContainer: {
-        flex:1,
+        height:screenHeight-130,
+        alignItems:'center',
         justifyContent: "space-between",
         backgroundColor: "#F0F0F0",
-        alignItems:"center",
     },
     mainCardView: {
-        width:167,
-        height:206,
+        width:screenWidth/2.1,
+        height:screenHeight/3,
         borderRadius:6,
         backgroundColor:"#FFFFFF",
-        margin:5,
         marginTop:10,
+        margin:5,
         shadowColor: "#000000",
         shadowOffset: {
             width: 0,
@@ -202,7 +320,7 @@ const styles = StyleSheet.create({
 
     image:{
         resizeMode: "cover",
-        width:167,
+        width:screenWidth/2.1,
         height:131,
         borderRadius:6,
     },
@@ -236,4 +354,4 @@ const styles = StyleSheet.create({
     },
     
   });
-export default HomeScreen;
+export default HomeScreen
