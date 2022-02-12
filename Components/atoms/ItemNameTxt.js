@@ -6,17 +6,11 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign } from '@expo/vector-icons'; 
 import 'react-native-gesture-handler';
-
-import buttonStyle from '../../styles/buttonStyle';
 import textStyle from '../../styles/textStyle';
-const CatButton = ({name, onPress}) =>{
+const ItemNameTxt = ({name}) =>{
     return(
-    <Pressable style={buttonStyle.catBtn}
-        onPress={onPress}
-    >
-        <Text style={textStyle.catTxt}>{name}</Text>
-    </Pressable>
+        <Text style={textStyle.itemNameTxt}>{name}</Text>
     )
 }
 
-export default CatButton;
+export default ItemNameTxt;

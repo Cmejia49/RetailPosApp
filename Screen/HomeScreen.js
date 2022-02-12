@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { StatusBar } from 'expo-status-bar';
-import logo from '../assets/shoes.png'; 
+import logo from '../assets/shoes.png'
 import AppLoading from 'expo-app-loading';
 import { AntDesign } from '@expo/vector-icons'; 
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
@@ -9,8 +9,9 @@ import {useFonts,EBGaramond_400Regular} from '@expo-google-fonts/eb-garamond';
 
 import { StyleSheet, Text,  View,FlatList, TouchableWithoutFeedback,Image,
         Pressable,  ScrollView,Dimensions,TextInput,SafeAreaView,Animated,Button, } from 'react-native';
-import CatButton from "../Components/atoms/CatButton";
- const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import Categories from "../Components/organisim/Categories";
+import ProductList from "../Components/organisim/ProductList";
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
  const cardPerSlide = 3
  const cardPadding = 15
  const paddingAround = cardPadding * 2 // slide horizontal padding
@@ -84,11 +85,10 @@ const HomeScreen =({navigation}) =>{
            size={24} 
            backgroundColor = "#FFFFFF" 
            color="black"
-         
            iconStyle={
            {marginRight: 5,}
            } 
-           onPress={isClicked != true ? showSearch:hideSearch}
+           onPressIn={()=>navigation.navigate('shoppingcart')}
            >
              <Text style={{  fontWeight: 'bold', fontSize:18}}>4</Text>
            </AntDesign.Button>
@@ -161,80 +161,17 @@ const HomeScreen =({navigation}) =>{
             }}
              horizontal={true}
             alwaysBounceHorizontal={true}>
-            <View style={styles.catContainer}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <CatButton/>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button}>
-            <Text style={styles.text}>CatA</Text>
-                </Pressable>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button} >
-            <Text style={styles.text}>CatA</Text>
-                </Pressable>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button}>
-            <Text style={styles.text}>CatA</Text>
-                </Pressable>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button} >
-            <Text style={styles.text}>CatA</Text>
-                </Pressable>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button} >
-            <Text style={styles.text}>CatA</Text>
-                </Pressable>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-                <Pressable style={styles.button}>
-                <Text style={styles.text}>CatA</Text>
-                </Pressable>
-            </View>
-           
-            </View>
+              <Categories data={DATA}/>
             </ScrollView>
               </View>
        
-         <View style={styles.itemContainer}>
-         <FlatList contentContainerStyle={{alignContent:'center',alignItems:'center', paddingBottom: 15}} 
-           showsVerticalScrollIndicator={false}
-            data={DATA}
-            keyExtractor={({ id }, index) => id}  
-            numColumns={2}  
-            renderItem={({item, index}) =>                        
-          ProductCard()//this is a main view
-        }
-          />
-         </View>
+              <ProductList data={DATA}/>
         </View>
         </Animated.View>
 
     )
 }
 //Start Product Card
-const ProductCard=()=>{
-    return(           
-
-        <TouchableWithoutFeedback>
-       <View style={styles.mainCardView}>
-           <View style={styles.cardImage}>
-            <Image source={logo} style={styles.image}/> 
-           </View>
-           <View style={styles.cardDetail}>
-               <Text style={styles.itemNameTxt}>Red Shoes</Text>
-               <Text style={styles.itemPriceTxt}>$150.00</Text>
-           </View>
-       </View>
-     </TouchableWithoutFeedback>
-    );
-        
-    
-}
 
 //End of Product Card
 const styles = StyleSheet.create({
@@ -320,7 +257,7 @@ const styles = StyleSheet.create({
     image:{
         resizeMode: "cover",
         width:screenWidth/2.1,
-        height:131,
+        height:screenHeight/5,
         borderRadius:6,
     },
     cardImage:{
