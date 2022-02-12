@@ -9,6 +9,14 @@ import {useFonts,EBGaramond_400Regular,EBGaramond_500Medium} from '@expo-google-
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const DetailScreen =() =>{
+  const [stockCount = 12, setStockCount] = React.useState(0);
+
+  const increment = () =>{
+    setStockCount(stockCount + 1);
+  }
+  const decrement = () =>{
+    setStockCount(stockCount - 1)
+  }
     let [fontsLoaded] = useFonts({
         EBGaramond_400Regular,
         EBGaramond_500Medium,
@@ -58,11 +66,16 @@ const DetailScreen =() =>{
                 </View>
                 <View style={{flexDirection:'row',marginTop:5,marginHorizontal:5 , paddingBottom:20}}>
                     <View style={{flexDirection:'row'}}>
-                    <Pressable style={{padding:3,paddingHorizontal:15 ,borderWidth:1,borderRightWidth:0}}>
+                    <Pressable onPress={decrement}
+                      style={{padding:3,paddingHorizontal:15 ,borderWidth:1,borderRightWidth:0}}>
                      <Text>-</Text>
                     </Pressable>
-                    <TextInput style={ styles.inputTxt}textAlign={'center'} textAlignVertical={'center'} value="100"/>
-                    <Pressable style={{padding:3,paddingHorizontal:15,borderWidth:1,borderLeftWidth:0}}>
+                    <TextInput 
+                       onChangeText={newText => setStockCount(newText)}
+                    defaultValue={stockCount + ""}
+                    style={ styles.inputTxt}textAlign={'center'} textAlignVertical={'center'}/>
+                    <Pressable onPress={increment}
+                      style={{padding:3,paddingHorizontal:15,borderWidth:1,borderLeftWidth:0}}>
                      <Text>+</Text>
                     </Pressable>
                     </View>

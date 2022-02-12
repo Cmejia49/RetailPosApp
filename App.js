@@ -3,15 +3,93 @@ import * as React from 'react';
 import { StyleSheet, Text, View,Button,Animated } from 'react-native';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign } from '@expo/vector-icons'; 
 import 'react-native-gesture-handler';
 
 //Import Screen
-import HomeScreen from "./Screen/HomeScreen.js"
-import DetailScreen from "./Screen/DetailScreen"
+import HomeScreen from "./Screen/HomeScreen.js";
+import DetailScreen from "./Screen/DetailScreen";
+import SaleScreen  from './Screen/SaleScreen.js';
+import CartScreen from './Screen/CartScreen';
+import CheckoutScreen from './Screen/CheckoutScreen.js';
+import ExpensesScreen  from './Screen/ExpensesScreen.js';
+import AddexpensesScreen from './Screen/AddExpensesScreen.js';
 
-import * as f from './Screen/HomeScreen.js'
 const drawer = createDrawerNavigator();
+const stack = createStackNavigator();
+function Root() {
+  return (
+    <stack.Navigator>
+      <stack.Screen name="Cart" component={CartScreen}  options={{
+              title: 'Cart',
+              headerTitle:'Cart',
+              headerTitleAlign: 'center',
+              drawerLockMode: 'locked-closed',
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                color:'#000',
+              },
+              headerStyle: {
+                backgroundColor: '#FFFFFF',
+                shadowColor: "#000000",
+                shadowOffset: {
+                    width: 0,
+                    height:4,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+                elevation: 5,
+              },
+              gestureEnabled:false ,
+              swipeEnabled:false, 
+              headerLeft:()=>(
+                GoToButton()
+              ),
+            }}
+      
+      />
+          <stack.Screen name="Checkout" component={CheckoutScreen}  />
+    </stack.Navigator>
+  );
+}
+function OtherRoot() {
+  return (
+    <stack.Navigator>
+      <stack.Screen name="Expenses" component={ExpensesScreen}  options={{
+              title: 'Expenses',
+              headerTitle:'Expenses Summary',
+              headerTitleAlign: 'center',
+              drawerLockMode: 'locked-closed',
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                color:'#000',
+              },
+              headerStyle: {
+                backgroundColor: '#FFFFFF',
+                shadowColor: "#000000",
+                shadowOffset: {
+                    width: 0,
+                    height:4,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+                elevation: 5,
+              },
+              gestureEnabled:false ,
+              swipeEnabled:false, 
+              headerLeft:()=>(
+                GoToButton()
+              ),
+            }}
+      
+      />
+      <stack.Screen name="AddExpenses" component={AddexpensesScreen}  />
+    </stack.Navigator>
+  );
+}
 export default function App(props) {
   const [isClicked, setisClicked] = React.useState(false);
   const fadeAnim =React.useRef(new Animated.Value(0)).current;
@@ -24,6 +102,7 @@ export default function App(props) {
     }
     return isClicked;
   }
+
   return (
     <NavigationContainer>
      <drawer.Navigator initialRouteName="Home"
@@ -35,13 +114,13 @@ export default function App(props) {
             },
             drawerLabelStyle:{
               color:'#000000'
-            },          
+            },  
           }}>
             
           <drawer.Screen name="Home"
           component={HomeScreen}    
           options={{
-        
+            tabBarStyle: { display: "none" },
           headerStyle: {
             backgroundColor: '#FFFFFF',
             shadowColor: "#000000",
@@ -110,6 +189,95 @@ export default function App(props) {
                 shadowRadius: 4,
                 elevation: 5,
               },
+              gestureEnabled:false ,
+              swipeEnabled:false, 
+              headerLeft:()=>(
+                GoToButton()
+              ),
+            }}/>
+
+      <drawer.Screen name="Sale" component={SaleScreen} 
+            options={{
+              title: 'Sale',
+              headerTitle:'Sale Report',
+              headerTitleAlign: 'center',
+              drawerLockMode: 'locked-closed',
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                color:'#000',
+              },
+              headerStyle: {
+                backgroundColor: '#FFFFFF',
+                shadowColor: "#000000",
+                shadowOffset: {
+                    width: 0,
+                    height:4,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+                elevation: 5,
+              },
+              gestureEnabled:false ,
+              swipeEnabled:false, 
+              headerLeft:()=>(
+                GoToButton()
+              ),
+            }}/>
+
+<drawer.Screen name="Root" component={Root} 
+            options={{
+              title: 'Cart',
+              headerTitle:'Cart',
+              headerTitleAlign: 'center',
+              drawerLockMode: 'locked-closed',
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                color:'#000',
+              },
+              headerStyle: {
+                backgroundColor: '#FFFFFF',
+                shadowColor: "#000000",
+                shadowOffset: {
+                    width: 0,
+                    height:4,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+                elevation: 5,
+              },
+              headerShown: false,
+              gestureEnabled:false ,
+              swipeEnabled:false, 
+              headerLeft:()=>(
+                GoToButton()
+              ),
+            }}/>
+
+<drawer.Screen name="Expenses" component={OtherRoot} 
+            options={{
+              title: 'Expenses',
+              headerTitle:'Expenses Summary',
+              headerTitleAlign: 'center',
+              drawerLockMode: 'locked-closed',
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                color:'#000',
+              },
+              headerStyle: {
+                backgroundColor: '#FFFFFF',
+                shadowColor: "#000000",
+                shadowOffset: {
+                    width: 0,
+                    height:4,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+                elevation: 5,
+              },
+              headerShown: false,
               gestureEnabled:false ,
               swipeEnabled:false, 
               headerLeft:()=>(

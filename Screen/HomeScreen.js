@@ -9,7 +9,7 @@ import {useFonts,EBGaramond_400Regular} from '@expo-google-fonts/eb-garamond';
 
 import { StyleSheet, Text,  View,FlatList, TouchableWithoutFeedback,Image,
         Pressable,  ScrollView,Dimensions,TextInput,SafeAreaView,Animated,Button, } from 'react-native';
-
+import CatButton from "../Components/atoms/CatButton";
  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
  const cardPerSlide = 3
  const cardPadding = 15
@@ -123,6 +123,7 @@ const HomeScreen =({navigation}) =>{
    
     return(
       <Animated.View
+      flex={1}
       style={[
         styles.fadingContainer,
         {
@@ -130,7 +131,7 @@ const HomeScreen =({navigation}) =>{
           transform: [{
             translateY:fadeAnim.interpolate({
               inputRange: [0,1],
-              outputRange: [0, -50] // 0 : 150, 0.5 : 75, 1 : 0
+              outputRange: [0, 50] // 0 : 150, 0.5 : 75, 1 : 0
             }),
           }],
         }
@@ -162,9 +163,7 @@ const HomeScreen =({navigation}) =>{
             alwaysBounceHorizontal={true}>
             <View style={styles.catContainer}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-            <Pressable style={styles.button}>
-                  <Text style={styles.text}>CatA</Text>
-                </Pressable>
+            <CatButton/>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
             <Pressable style={styles.button}>
@@ -202,7 +201,7 @@ const HomeScreen =({navigation}) =>{
               </View>
        
          <View style={styles.itemContainer}>
-         <FlatList contentContainerStyle={{ paddingBottom: 20}} 
+         <FlatList contentContainerStyle={{alignContent:'center',alignItems:'center', paddingBottom: 15}} 
            showsVerticalScrollIndicator={false}
             data={DATA}
             keyExtractor={({ id }, index) => id}  
@@ -242,6 +241,7 @@ const styles = StyleSheet.create({
     container: {
         flex:1,
         backgroundColor: "#F0F0F0",
+        marginTop:-50,
         paddingTop:5,
      
     },
@@ -284,8 +284,7 @@ const styles = StyleSheet.create({
         color: '#000',
       },
     itemContainer: {
-        height:screenHeight-130,
-        alignItems:'center',
+        flex:1,
         justifyContent: "space-between",
         backgroundColor: "#F0F0F0",
     },
