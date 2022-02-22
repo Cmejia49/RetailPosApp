@@ -1,19 +1,14 @@
-import React, { useRef } from "react";
-import { StatusBar } from 'expo-status-bar';
-import logo from '../assets/shoes.png'; 
+import React from "react";
 import AppLoading from 'expo-app-loading';
-import { AntDesign } from '@expo/vector-icons'; 
-import { NavigationContainer,useNavigation } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import {useFonts,EBGaramond_400Regular} from '@expo-google-fonts/eb-garamond';
 
-import { StyleSheet, Text,  View,FlatList, TouchableWithoutFeedback,Image,
-        Pressable,  ScrollView,Dimensions,TextInput,SafeAreaView,Animated,Button, } from 'react-native';
-import { color } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
-
+import { StyleSheet, Text,  View,TouchableWithoutFeedback,Pressable,  Dimensions,TextInput,KeyboardAvoidingView 
+    ,Keyboard} from 'react-native';
+import Content from "../Components/organisim/addExpensesPage/Content";
  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
- const AddExpensesScreen = () =>{
+ const AddExpensesScreen = ({navigation}) =>{
+    const [value, onChangeText] = React.useState('');
     let [fontsLoaded] = useFonts({
         EBGaramond_400Regular,
       });
@@ -22,36 +17,18 @@ import { color } from "react-native/Libraries/Components/View/ReactNativeStyleAt
       }
    
   return(
-      <View style={styles.container}>
-          <View style={{flex:1, margin:20}}>
-          <View style={styles.dateContainer}>
-              <Text style={styles.dateTxt}>Date  01-28-2022</Text>
-          </View>
-
-          <View style={styles.summaryContainer}>
-              <Text style={styles.summaryTxt}>Enter Amount:</Text>
-              <TextInput style={styles.inputTxt} value="$0.00"/>
-              <Text style={styles.summaryTxt}>Enter Details:</Text>
-              <TextInput style={{
-                  flex:1,
-                  borderWidth:1,
-                  margin:10,
-                  textAlignVertical:'top',
-                  padding:5,
-                  fontFamily:'Roboto',
-                  fontWeight:'300',
-                  fontStyle:'normal',
-                  fontSize:14,
-                  lineHeight:17,
-                  color:'rgba(0,0,0,0.7)'
-              }} value="Type Here"/>
-          </View>
-          </View>
+    <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "margin" : "height"}
+    style={styles.container}
+  >
+          
+        <Content/>
   
           <View style={styles.bottomContainer}>
           <View style={{flex:1}}backgroundColor={'#FFFFFF'}>
               <View style={{margin:10,paddingHorizontal:20}}>
               <Pressable style={styles.bottomBtn}
+              onPress={()=>navigation.navigate("Expenses")}
             backgroundColor={'#7C39B0'}>
         <Text style={{
                 fontSize:24,
@@ -67,7 +44,7 @@ import { color } from "react-native/Libraries/Components/View/ReactNativeStyleAt
               </View>
         </View>
     </View>
-      </View>
+    </KeyboardAvoidingView>
   )   
  }
 
@@ -76,14 +53,11 @@ import { color } from "react-native/Libraries/Components/View/ReactNativeStyleAt
       flex: 1,
       backgroundColor: '#F0F0F0',
     },
-    row: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-    },
+
     dateContainer:{
         flex:0,
-        marginTop:20,
         margin:2,
+        marginVertical:10,
         backgroundColor:'#FFFFFF',
         shadowColor: "#000",
         shadowOffset: {
@@ -106,7 +80,6 @@ import { color } from "react-native/Libraries/Components/View/ReactNativeStyleAt
     },
     summaryContainer:{
         flex:2,
-        marginTop:30,
         margin:2,
         backgroundColor:'#FFFFFF',
         shadowColor: "#000",
@@ -140,31 +113,8 @@ import { color } from "react-native/Libraries/Components/View/ReactNativeStyleAt
         fontWeight:'500',
         textAlign:'center',
       },
-      exactBtnContainer:{
-          flex:1,
-            marginTop:20,
-          shadowColor: "#000",
-          shadowOffset: {
-              width: 0,
-              height:4,
-          },
-          shadowOpacity:1,
-          shadowRadius:4,
-          elevation:24, 
-      },
-      exactBtn:{
-        borderWidth:1.5,
-        backgroundColor:'rgba(0,0,0,0)',
-      },
-      exactBtnTxt:{
-        textAlign:'center',
-        fontFamily:'Roboto',
-        fontWeight:'300',
-        fontStyle:'normal',
-        fontSize:24,
-        lineHeight:28,
-        padding:10
-      },
+
+
       bottomContainer:{
        flex:0,
        flexDirection:'row',

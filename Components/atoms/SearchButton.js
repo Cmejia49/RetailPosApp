@@ -6,11 +6,24 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign } from '@expo/vector-icons'; 
 import 'react-native-gesture-handler';
-import textStyle from '../../styles/textStyle';
-const ItemNameTxt = ({name}) =>{
+
+import buttonStyle from '../../styles/buttonStyle';
+const SearchButton = ({name, onPress}) =>{
     return(
-        <Text style={textStyle.itemNameTxt}>{name}</Text>
+    <AntDesign.Button
+     name = {name}
+     size={24} 
+     backgroundColor = 'rgba(255, 255, 255,0.65)'
+     color='black'
+     iconStyle={
+     {marginRight: 0,
+      fontWeight:'bold',
+     }
+    }
+    onPress={onPress}
+    />
+
     )
 }
 
-export default ItemNameTxt;
+export default SearchButton;

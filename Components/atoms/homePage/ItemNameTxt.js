@@ -6,10 +6,11 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign } from '@expo/vector-icons'; 
 import 'react-native-gesture-handler';
-import textStyle from '../../styles/textStyle';
-const ItemPriceTxt = ({name}) =>{
+import textStyle from '../../../styles/textStyle';
+const ItemNameTxt = ({name}) =>{
     return(
-        <Text style={textStyle.itemPriceTxt}>{name}</Text>
+        <Text style={textStyle.itemNameTxt}>{name}</Text>
     )
 }
-export default ItemPriceTxt;
+
+export default ItemNameTxt;
