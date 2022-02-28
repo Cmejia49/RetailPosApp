@@ -1,5 +1,6 @@
 {
   "expo": {
+    "userInterfaceStyle": "automatic",
     "name": "RetailPosApp",
     "slug": "RetailPosApp",
     "version": "1.0.0",

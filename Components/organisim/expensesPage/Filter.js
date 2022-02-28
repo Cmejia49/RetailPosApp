@@ -6,7 +6,7 @@ import ReportGrp from "../../molecules/dateReport/ReportGrp";
 import containerStyle from "../../../styles/containerStyle";
 import DateLabel from "../../atoms/button/DateLabel";
 
-const Filter = () =>{
+const Filter = (props) =>{
     return(
         <View>
         <View style={containerStyle.dateContainer}>
@@ -14,7 +14,7 @@ const Filter = () =>{
                  <DateLabel value={"Date of Report"}/>
             </View>
             <View style={{margin:5}}>
-                 <DateGrp/>
+                     <DateGrp text={props.date} onPress={props.pressCalendar}/>
             </View>
        </View>
        <View style={containerStyle.dateContainer}>
@@ -22,7 +22,7 @@ const Filter = () =>{
                  <DateLabel value={"Report"}/>
             </View>
             <View style={{margin:5}}>
-                 <ReportGrp/>
+                 <ReportGrp text={props.text} onPress={props.onPress}/>
             </View>
        </View>
         </View>

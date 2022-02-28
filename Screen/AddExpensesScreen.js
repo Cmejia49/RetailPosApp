@@ -1,34 +1,39 @@
 import React from "react";
 import AppLoading from 'expo-app-loading';
 import {useFonts,EBGaramond_400Regular} from '@expo-google-fonts/eb-garamond';
+import { StyleSheet,Text, View,Pressable,KeyboardAvoidingView } from 'react-native';
 
-import { StyleSheet, Text,  View,TouchableWithoutFeedback,Pressable,  Dimensions,TextInput,KeyboardAvoidingView 
-    ,Keyboard} from 'react-native';
 import Content from "../Components/organisim/addExpensesPage/Content";
- const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
+import FailedMessage from "../Components/organisim/popUp/FailedMessage";
  const AddExpensesScreen = ({navigation}) =>{
-    const [value, onChangeText] = React.useState('');
+    const [visible,setVisible] = React.useState(false);
+
+    const save = ()=>{
+      setVisible(true);
+    }
+    const saveConfirm = ()=>{
+      setVisible(!visible);
+    }
+ 
     let [fontsLoaded] = useFonts({
         EBGaramond_400Regular,
       });
       if (!fontsLoaded) {
         return <AppLoading />;
       }
-   
   return(
     <KeyboardAvoidingView
     behavior={Platform.OS === "ios" ? "margin" : "height"}
     style={styles.container}
   >
-          
+        <FailedMessage visible={visible}onPress={saveConfirm}/>
         <Content/>
-  
+
           <View style={styles.bottomContainer}>
           <View style={{flex:1}}backgroundColor={'#FFFFFF'}>
               <View style={{margin:10,paddingHorizontal:20}}>
               <Pressable style={styles.bottomBtn}
-              onPress={()=>navigation.navigate("Expenses")}
+              onPress={save}
             backgroundColor={'#7C39B0'}>
         <Text style={{
                 fontSize:24,

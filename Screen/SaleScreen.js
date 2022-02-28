@@ -1,15 +1,56 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { StyleSheet, Text, View,Pressable,Button,Alert,TouchableWithoutFeedback,Dimensions  } from 'react-native';
-import { styleProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
-import { AntDesign } from '@expo/vector-icons'; 
-import { MaterialIcons } from '@expo/vector-icons'; 
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { FlatList } from 'react-native-gesture-handler';
+import { StyleSheet, View } from 'react-native';
+import moment from 'moment';
 import Footer from '../Components/organisim/salePage/Footer';
 import Content from '../Components/organisim/salePage/Content';
 import Filter from '../Components/organisim/salePage/Filter';
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import FilterMessage from '../Components/organisim/popUp/FilterMessage'
+import RadioButton from '../Components/organisim/popUp/RadioButton';
+import Calendar from '../Components/organisim/popUp/Calendar';
+const PROP = [
+	{
+		key: 'Today',
+		text: 'Today',
+	},
+	{
+		key: 'Yesterday',
+		text: 'Yesterday',
+	},
+	{
+		key: 'ThisWeek',
+		text: 'This Week',
+	},
+	{
+		key: 'LastWeek',
+		text: 'Last Week',
+  },
+  {
+    
+		key: 'ThisMonth',
+		text: 'This Month',
+  },
+  {
+    
+		key: 'LastMonth',
+		text: 'Last Month',
+  },
+  {
+    
+		key: 'ThisYear',
+		text: 'This Year',
+  },
+  {
+    
+		key: 'LastYear',
+		text: 'Last Year',
+  },
+  {
+    
+		key: 'All',
+		text: 'All',
+  },
+];
 const DATA = [
     {
       id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
@@ -66,10 +107,52 @@ const DATA = [
   ];  
 
 const SaleScreen = ({navigation})=>{
+  const [value, setValue] = React.useState(PROP[0].key)
+  const [text, setText] = React.useState('Today')
+const [modalVisible, setModalVisible]= React.useState(false)
+const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
+const [date,setDate] = React.useState("");
+const showDatePicker = () => {
+  setDatePickerVisibility(true);
+};
 
+const hideDatePicker = () => {
+  setDatePickerVisibility(false);
+};
+
+const handleConfirm = (date) => {
+
+  setDate(moment(date).format('MM/DD/YYYY') );
+  hideDatePicker();
+};
     return(
         <View style={styles.container}>
-              <Filter/>
+            <Calendar
+              visible={isDatePickerVisible}
+              onConfrim={handleConfirm}
+              onCancel={hideDatePicker}
+            />
+           <FilterMessage visible={modalVisible}>
+        {PROP.map(res => {
+                           return(
+              <RadioButton
+              key={res.key}
+              id={res.key}
+              text={res.text}
+              value={value}
+             onPress={()=>{
+               setValue(res.key)
+               setModalVisible(!modalVisible);
+               setText(res.text)
+              }}/>
+                           );        
+            })}
+        </FilterMessage>
+              <Filter text={text} 
+              date={date}
+              pressCalendar={showDatePicker}
+              onPress={()=>setModalVisible(true)}
+              />
               <Content data={DATA}/>
             <Footer/>
         </View>
