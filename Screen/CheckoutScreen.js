@@ -1,37 +1,63 @@
 import React from "react";
-import AppLoading from 'expo-app-loading';
-import {useFonts,EBGaramond_400Regular} from '@expo-google-fonts/eb-garamond';
 import Footer from "../Components/organisim/cartPage/Footer";
-import { View,Modal,Text,Alert,Button,StyleSheet,Pressable } from 'react-native';
+import { View } from 'react-native';
 import Content from "../Components/organisim/checkoutPage/Content";
-import { Ionicons } from '@expo/vector-icons'; 
-import { AntDesign } from '@expo/vector-icons'; 
-import { TextInput } from "react-native-gesture-handler";
-import Calendar from "../Components/organisim/popUp/Calendar";
- 
+import moment from 'moment';
+import useTheme from "../Service/ThemeContext";
+import SuccessMessage from '../Components/organisim/popUp/SuccessMessage';
+import useApi from "../Service/ApiContext";
+import {CreateSaleEndPoint} from"../Service/URLstring"
 
 const CheckoutScreen = ({navigation}) =>{
+  const{change,getChange,getTotalItem,getDate,product,successReset} = useTheme();
+   const{error,token} = useApi(); 
   const [modalVisible, setModalVisible] = React.useState(false);
-  let [fontsLoaded] = useFonts({
-        EBGaramond_400Regular,
+
+
+  const checkOut = async () =>{
+    try {
+      const response =  await fetch(CreateSaleEndPoint,{
+        method:"POST",
+        headers:{
+          'Authorization': 'Bearer '+token,
+          'Content-Type': 'application/json',
+          'Accept': '*/*',
+        },
+        body:JSON.stringify(product)
       });
-      if (!fontsLoaded) {
-        return <AppLoading />;
+      if(response.status === 200 || response.status === 201){
+        successReset()
+      
       }
+     } catch (ex) {
+       error(ex)
+     } 
+  }
+  React.useEffect(()=>{
+    getChange('0');
+    getTotalItem()
+    getDate(moment().format('MM/DD/YYYY'))
+  },[])
+
       const confirmSuccesEvent =()=>{
-        setModalVisible(!modalVisible);
+        setModalVisible(false);
+        navigation.navigate("Home");
       }
       const showSuccessEvent =()=>{
+        checkOut();
         setModalVisible(true);
       }
   return(
+    
       <View style={{flex:1,  backgroundColor: '#F0F0F0',}}>
-       
-
+         <SuccessMessage 
+        message={"Successful"}
+        visible={modalVisible} 
+        onPress={confirmSuccesEvent}/>
           <Content/>
           <Footer 
            event={showSuccessEvent}
-           total={"Change:0"} 
+           total={"Change:"+change} 
            value={"CheckOut"}/>
       </View>
   )   

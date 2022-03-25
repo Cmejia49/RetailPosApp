@@ -3,14 +3,15 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 const RadioButton =(props)=>{
     return(
-		<View key={props.key} style={styles.container}>
-			<Text key={props.key} style={styles.radioText}>{props.text}</Text>
-			<TouchableOpacity key={props.key}
+		
+		<View style={styles.container}>
+			<Text style={styles.radioText}>{props.text}</Text>
+			<TouchableOpacity
 			style={styles.radioCircle}
 			onPress={props.onPress}>
                {props.value === props.id && <View style={styles.selectedRb} />}
-				</TouchableOpacity>
-	</View>
+			</TouchableOpacity>
+		</View>
     )
 }
 

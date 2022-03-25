@@ -1,19 +1,21 @@
 import React from 'react'
 import { View,FlatList,Dimensions } from 'react-native'
-import ContentFlatlist from '../../molecules/FlatListPart/ContentFlatlist'
+import DamageContent from '../../molecules/FlatListPart/DamageContent'
 import HeaderFlatlist from '../../molecules/FlatListPart/HeaderFlatlist'
 import SeperatorFlatlist from '../../molecules/FlatListPart/SeperatorFlatlist'
 import FlalistTxt from '../../atoms/text/FlatlistTxt'
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
-const Content = ({data}) =>{
+import useApi from '../../../Service/ApiContext'
+const Content = () =>{
+    const{damage} = useApi()
     return(
         <View style={{flex:1,flexWrap:'wrap',marginVertical:10}}>
         <FlatList contentContainerStyle={{width:screenWidth,borderWidth:1,borderTopWidth:0}} 
-           data={data}
+           data={damage}
            keyExtractor={({ id }) => id}    
            ListHeaderComponent={<HeaderFlatlist value="Product">
-               <FlalistTxt value={"qnt"}/>
+                <FlalistTxt value={"Qnt"}/>
+               <FlalistTxt value={"Price"}/>
                <FlalistTxt value={"Total"}/>
                <FlalistTxt value={"Cost"}/>
                <FlalistTxt value={"Margin"}/>
@@ -22,15 +24,7 @@ const Content = ({data}) =>{
            stickyHeaderIndices={[0]}
            ItemSeparatorComponent = {SeperatorFlatlist}
            renderItem={({item, index}) =>                        
-            <ContentFlatlist 
-            margin={15}
-            value="sss">
-                <FlalistTxt value={"6"}/>
-                <FlalistTxt value={"6"}/>
-                <FlalistTxt value={"6"}/>
-                <FlalistTxt value={"6"}/>
-                <FlalistTxt value={"6"}/>
-            </ContentFlatlist>
+            <DamageContent item={item}/>
        }
          />
            </View>

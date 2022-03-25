@@ -4,7 +4,7 @@ import buttonStyle from '../../../styles/buttonStyle'
 import textStyle from '../../../styles/textStyle'
 const Button = (props) =>{
     return(
-        <Pressable style={buttonStyle.defBtn} onPress={props.event}>
+        <Pressable style={buttonStyle.defBtn} onPress={props.onPress}>
             <Text style={textStyle.buttonTxT}>{props.value}</Text>
         </Pressable>
     )

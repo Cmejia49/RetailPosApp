@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialIcons } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons'; 
 import 'react-native-gesture-handler';
 //Import Screen
 import HeaderCartGrp from "../Components/molecules/HeaderCartGrp"
@@ -9,34 +10,18 @@ import HomeScreen from "../Screen/HomeScreen";
 import LoginScreen from "../Screen/LoginScreen"
 import CartNavigator from './CartNavigator';
 import DetailScreen from '../Screen/DetailScreen';
-import * as SecureStore from 'expo-secure-store';
-import useApi from '../Service/ApiContext';
-import useDetailOper from '../Service/DetailContext'
+import { StackRouter } from 'react-navigation';
 const stack = createStackNavigator();
-const MainMenuNavigator = () =>{
-  const {token,getToken} = useApi();
-  const {getStoreFid} = useDetailOper();
 
-  const retrieveToken = async()=>{
-    let result = await SecureStore.getItemAsync("Token");
-    const obj = JSON.parse(result);
-    if(result != null){
-      getToken(obj.jwtToken);
-      getStoreFid(obj.storeFid);
-    }
-  }
-  React.useEffect(()=>{
-    retrieveToken();
-  },[])
+const LoginNavigator = () =>{
     return(
         <stack.Navigator>
-          {token == null ?(
-              <stack.Screen
-            name=" "
-            component={LoginScreen}
-          />
-          ):(
-            <>
+            <stack.Screen
+                name="Login"
+                component={LoginScreen}
+            >
+
+            </stack.Screen>
             <stack.Screen
               name="Home"
               component={HomeScreen}
@@ -65,21 +50,7 @@ const MainMenuNavigator = () =>{
           
                }}
             />
-            <stack.Screen
-              name="Cart"
-              component={CartNavigator}
-              options={{
-                headerShown:false,
-                gestureEnabled:false ,
-                swipeEnabled:false, 
-              }}
-            />
-            <stack.Screen
-              name="Detail"
-              component={DetailScreen}
-              />
-          </>
-          )}
+           
         </stack.Navigator>
     )
 }

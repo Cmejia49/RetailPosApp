@@ -1,14 +1,15 @@
 import React from 'react'
-import {View,TouchableWithoutFeedback,Image} from 'react-native'
+import {View,TouchableWithoutFeedback,Image,TouchableOpacity,Text} from 'react-native'
 
 import CartTxt from '../../atoms/cartPage/CartTxt'
 import CartPriceTxt from '../../atoms/cartPage/CartPriceTxt'
-import QuantityGrp from '../detailPage/QuantityGrp'
-
+import CartQntGrp from './CartQntGrp'
+import { AntDesign } from '@expo/vector-icons'; 
 import containerStyle from '../../../styles/containerStyle'
 import imageStyle from '../../../styles/imageStyle'
-import textInputStyle from '../../../styles/textInputStyle'
+import useTheme from '../../../Service/ThemeContext'
 const Card = (props) =>{
+    const{deleteCart} = useTheme();
     return(
         <TouchableWithoutFeedback>
         <View style={containerStyle.cartCardContainer}>
@@ -16,13 +17,25 @@ const Card = (props) =>{
               <Image source={props.logo} style={imageStyle.cartCardImg}/>
             </View>
             <View style={containerStyle.carCardInfoContainer}>
-            <CartTxt value={"Red Shoes"}/>
-            <CartTxt value={"Variation: Red,11"}/>
-            <CartPriceTxt value={"#150.00"}/>
-            <View>
-            <QuantityGrp style={{width:20}} />
+                <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                    <CartTxt value={props.name}/>
+                    <TouchableOpacity
+                        
+                        onPress={()=>{deleteCart(props.id)}}>
+                            <AntDesign name="close" size={18} color="black" />
+                    </TouchableOpacity>
             </View>
-            <CartPriceTxt value={"$150.00"}/>
+            <CartTxt value={props.variation}/>
+            <CartPriceTxt value={props.price}/>
+            <View>
+            <CartQntGrp
+             dec={props.dec}
+             id = {props.id}
+             quantity={props.quantity}
+             stock={props.stock}
+             style={{width:20}} />
+            </View>
+            <CartPriceTxt value={props.subtotal}/>
             </View>
         </View>
         </TouchableWithoutFeedback>

@@ -1,41 +1,33 @@
 import React from "react";
-import { View } from "react-native";
-
+import { View,Text,Pressable } from "react-native";
 import QntBtn from "../../atoms/detailsPage/QntBtn";
 import QntBtnLabel from "../../atoms/detailsPage/QntBtnLabel";
-import QntTextInput from "../../atoms/detailsPage/QntTextInput";
 import StockTxt from "../../atoms/detailsPage/StockTxt";
-
 import buttonStyle from "../../../styles/buttonStyle";
-const QuantityGrp = (props) =>{
-    const [stockCount = 12, setStockCount] = React.useState(0);
 
-    const increment = () =>{
-      setStockCount(stockCount + 1);
-    }
-    const decrement = () =>{
-      setStockCount(stockCount - 1)
-    }
+import useDetailOper from "../../../Service/DetailContext"
+import useApi from "../../../Service/ApiContext";
+const QuantityGrp = () =>{
+const{increment,decrement,quantity,stock} = useDetailOper()
+
+
     return(
         <View style={{flexDirection:'row'}}>
             <QntBtn
-             onPress={decrement}
+              onPress={()=>decrement()}
              style={buttonStyle.minusBtn}>
                 <QntBtnLabel value={"-"}/>
             </QntBtn>
-            <QntTextInput 
-                {...props}
-                onChangeText={newText => setStockCount(newText)}
-               defaultValue={stockCount + ""}/>
+            <Text style={{paddingHorizontal:25,borderWidth:1, textAlignVertical:'center'}}>{quantity}</Text>
             <QntBtn
-              onPress={increment} 
+            onPress={()=>increment()}
             style={buttonStyle.addBtn}>
                 <QntBtnLabel value={"+"}/>
             </QntBtn>
             <View style={{flexDirection:'row', margin:5,alignItems:'flex-end'}}
                     textAlignVertical={'bottom'}
                     >
-            <StockTxt value={"500"}/>
+            <StockTxt value={stock}/>
             </View>
         </View>
     )

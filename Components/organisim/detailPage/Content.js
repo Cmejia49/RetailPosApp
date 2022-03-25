@@ -1,54 +1,47 @@
 import React from 'react'
 import { View } from 'react-native'
-
+//component
 import QuantityGrp from '../../molecules/detailPage/QuantityGrp'
 import ItemInfoGrp from '../../molecules/detailPage/ItemInfoGrp'
 import VariationBtnGrp from '../../molecules/detailPage/VariationBtnGrp'
+import SubVariationBtnGrp from '../../molecules/detailPage/SubVariationBtnGrp'
 import DetailTxt from '../../atoms/detailsPage/DetailTxt'
-
-import textStyle from '../../../styles/textStyle'
-import textInputStyle from "../../../styles/textInputStyle";
-
+//style
 import containerStyle from '../../../styles/containerStyle'
-const Content = () =>{
+
+//service
+import useApi from '../../../Service/ApiContext'
+import useDetailOper from '../../../Service/DetailContext'
+import react from 'react'
+
+const Content = (props) =>{
+    const {detail,isLoading} = useApi();
+    const{subvariation,variation,subVariationName,
+        variationName,itemCode,price} = useDetailOper();
+    
     return(
         <View style={containerStyle.detailContainer}>
-              <ItemInfoGrp itemName={"TITI"} itemPrice={"$900"} itemCost={"SSD"}/>
-              <View style={{marginHorizontal:7}}>
-                    <DetailTxt value={"Color:"}/>
-                </View>
+              <ItemInfoGrp itemName={detail.itemName} itemPrice={price} itemCost={itemCode}/>
+            <View style={{marginHorizontal:7}}>
+                <DetailTxt value={variationName}/>
+            </View>
             <View style={{flexDirection:'row',}}>
-                <VariationBtnGrp
-                    buttons={["Red", "Blue", "Pink"]}/>
+                <VariationBtnGrp variaty={variation}/>
             </View>
             <View style={{marginHorizontal:7}}>
-                    <DetailTxt value={"Color:"}/>
+               <DetailTxt value={subVariationName}/>
             </View>
             <View style={{flexDirection:'row'}}>
-                <VariationBtnGrp
-                buttons={["011", "012", "013"]} />
+              <SubVariationBtnGrp variaty={subvariation}/>
             </View>
             <View style={{marginHorizontal:7}}>
                  <DetailTxt value={"Quantity:"}/>
             </View>
             <View style={{marginHorizontal:7}}>
-                 <QuantityGrp style={textInputStyle.qntTxtInput} />
+                 <QuantityGrp
+             style={{width:20}} />
             </View>
         </View>
     )
 }
-/*<View style={{flexDirection:'row'}}>
-<Pressable onPress={decrement}
-  style={{padding:3,paddingHorizontal:15 ,borderWidth:1,borderRightWidth:0}}>
- <Text>-</Text>
-</Pressable>
-<TextInput 
-   onChangeText={newText => setStockCount(newText)}
-defaultValue={stockCount + ""}
-style={ styles.inputTxt}textAlign={'center'} textAlignVertical={'center'}/>
-<Pressable onPress={increment}
-  style={{padding:3,paddingHorizontal:15,borderWidth:1,borderLeftWidth:0}}>
- <Text>+</Text>
-</Pressable>
-</View>*/
 export default Content;

@@ -4,13 +4,15 @@ import CheckOut from '../../molecules/cartPage/CheckOut'
 import FooterTxt from '../../atoms/cartPage/FooterTxt'
 import containerStyle from '../../../styles/containerStyle'
 import textStyle from '../../../styles/textStyle'
+import useTheme from '../../../Service/ThemeContext'
 const Footer = (props) =>{
+
     return(
         <View style={containerStyle.cartFooterContainer}>
             <View style={{flex:1}}backgroundColor={'#FFFFFF'}>
-            <FooterTxt style={textStyle.footerTxtBlack}>{props.total}</FooterTxt>
+                <FooterTxt style={textStyle.footerTxtBlack}>{props.total}</FooterTxt>
             </View> 
-               <CheckOut event={props.event} value={props.value}/>
+                <CheckOut event={props.event} value={props.value}/>
         </View>
         
     )

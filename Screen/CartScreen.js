@@ -12,49 +12,26 @@ import AppLoading from 'expo-app-loading';
 import logo from '../assets/shoes.png'; 
 import Content from '../Components/organisim/cartPage/Content';
 import Footer from '../Components/organisim/cartPage/Footer';
-const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-        id: 'a58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-        id: 'b58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
+import useTheme from '../Service/ThemeContext';
 
-  ];   
 const CartScreen=({navigation })=>{
-    let [fontsLoaded] = useFonts({
-        EBGaramond_400Regular,
-        EBGaramond_500Medium,
-      });
-      if (!fontsLoaded) {
-        return <AppLoading />;
-      }
-    
-  const increment = () =>{
+  const {getTotal,product,total} = useTheme();
+
+      React.useEffect(()=>{
+        getTotal()
+        },[product])
+
+  const navCheckout = () =>{
     
     navigation.navigate('Checkout')
   }
     return(
         <View style={{flex:1}}>
-          <Content data={DATA}/>
+          <Content/>
           <Footer 
-           total={"Total:2600"} 
+           total={"Total:"+total} 
            value={"Proced"}
-          event ={increment}/>
+          event ={navCheckout}/>
         </View>
     )
 }

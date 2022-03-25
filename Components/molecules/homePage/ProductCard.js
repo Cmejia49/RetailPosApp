@@ -11,15 +11,15 @@ import ItemImage from '../../atoms/homePage/ItemImage';
 import ItemNameTxt from'../../atoms/homePage/ItemNameTxt';
 import ItemPriceTxt from '../../atoms/homePage/ItemPriceTxt';
 import containerStyle from '../../../styles/containerStyle';
-const ProductCard = (props) =>{
+const ProductCard = ({item,imgSrc,onPress}) =>{
     return(
-        <TouchableWithoutFeedback onPress={props.onPress}>
+        <TouchableWithoutFeedback onPress={onPress}>
         <View style={containerStyle.cardContainer}>
-            <View style={containerStyle.cardImgContainer}>
-             <ItemImage source={props.imgSrc}/> 
+            <View  style={containerStyle.cardImgContainer}>
+             <ItemImage source={imgSrc}/> 
             </View>
-            <View style={containerStyle.cardInfoContainer}>
-                <ItemNameTxt name="Red Shoes"/>
+            <View  style={containerStyle.cardInfoContainer}>
+                <ItemNameTxt  name={item.itemName}/>
                 <ItemPriceTxt name="$150.00"/>
             </View>
         </View>

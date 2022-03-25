@@ -7,7 +7,9 @@ import ProductCard from '../../molecules/homePage/ProductCard'
 import containerStyle from '../../../styles/containerStyle';
 
 import logo from '../../../assets/shoes.png'
+import useApi from '../../../Service/ApiContext';
 const ProductList = (props) =>{
+  const{product}=useApi();
   return(
       <View style={containerStyle.ProductContainer}>
       <FlatList contentContainerStyle={{alignContent:'center',alignItems:'center', paddingBottom: 15}} 

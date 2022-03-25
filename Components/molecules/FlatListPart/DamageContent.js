@@ -4,20 +4,10 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import FlalistTxt from '../../atoms/text/FlatlistTxt'
 
 import containerStyle from '../../../styles/containerStyle'
-import useSale from '../../../Service/SaleContext'
-const ContentFlatlist = ({item}) =>{
-const{quantity,subtotal,margin,cost,getTotal,
-getCost,getMargin,getQuantity,price,reset} = useSale();
-React.useEffect(()=>{
 
-    getTotal(item.price)
-    getCost(item.itemCode)
-    getQuantity(item.quantity)
-    getMargin();
-    return()=>{
-        reset();
-    }
-},[margin])
+
+const DamageContent = ({item}) =>{
+
     return(
         <TouchableWithoutFeedback>
         <View style={containerStyle.flContentContainer}>
@@ -34,11 +24,11 @@ React.useEffect(()=>{
             alignItems: 'flex-start',
             justifyContent:'space-evenly',
         }}>
-                <FlalistTxt value={quantity}/>
-                <FlalistTxt value={price}/>
-                <FlalistTxt value={subtotal}/>
+                <FlalistTxt value={item.quantity}/>
+                <FlalistTxt value={item.price}/>
                 <FlalistTxt value={item.itemCode}/>
-                <FlalistTxt value={margin}/>
+                <FlalistTxt value={item.itemCode}/>
+                <FlalistTxt value={item.price * item.quantity}/>
     
         </View>
         </View>
@@ -46,4 +36,4 @@ React.useEffect(()=>{
     )
 }
 
-export default ContentFlatlist;
+export default DamageContent;

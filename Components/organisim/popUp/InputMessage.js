@@ -3,9 +3,11 @@ import { View,Modal,Text,Alert,StyleSheet,Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
 import { TextInput } from 'react-native';
+import useDetailOper from '../../../Service/DetailContext';
 
 const InputMessage = ({visible,onPress,navigate}) =>{
-
+  
+  const{getInputPrice, inputPrice} = useDetailOper();
     return(
         <Modal
         animationType="slide"
@@ -47,8 +49,10 @@ const InputMessage = ({visible,onPress,navigate}) =>{
           <View style={{
               justifyContent:'flex-start', 
               marginHorizontal :50}}>
-            <TextInput value="Enter amount" textAlign="center" borderWidth={1.5} padding={5}
-            style={{
+            <TextInput placeholder="Enter amount" textAlign="center" borderWidth={1.5} padding={5}
+              onChangeText={x => getInputPrice(x)}
+              value={inputPrice}
+           style={{
               fontSize:24,
               fontFamily:"serif",
               fontWeight:"700",

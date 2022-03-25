@@ -75,6 +75,7 @@ flatlistTxt:{
   fontStyle:'normal',
   lineHeight:14.5,
   fontWeight:'400',
+
 },
 
 summaryTxt:{

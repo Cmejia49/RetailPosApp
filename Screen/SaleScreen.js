@@ -1,6 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
+
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View,ActivityIndicator } from 'react-native';
 import moment from 'moment';
 import Footer from '../Components/organisim/salePage/Footer';
 import Content from '../Components/organisim/salePage/Content';
@@ -8,110 +8,57 @@ import Filter from '../Components/organisim/salePage/Filter';
 import FilterMessage from '../Components/organisim/popUp/FilterMessage'
 import RadioButton from '../Components/organisim/popUp/RadioButton';
 import Calendar from '../Components/organisim/popUp/Calendar';
-const PROP = [
-	{
-		key: 'Today',
-		text: 'Today',
-	},
-	{
-		key: 'Yesterday',
-		text: 'Yesterday',
-	},
-	{
-		key: 'ThisWeek',
-		text: 'This Week',
-	},
-	{
-		key: 'LastWeek',
-		text: 'Last Week',
-  },
-  {
-    
-		key: 'ThisMonth',
-		text: 'This Month',
-  },
-  {
-    
-		key: 'LastMonth',
-		text: 'Last Month',
-  },
-  {
-    
-		key: 'ThisYear',
-		text: 'This Year',
-  },
-  {
-    
-		key: 'LastYear',
-		text: 'Last Year',
-  },
-  {
-    
-		key: 'All',
-		text: 'All',
-  },
-];
-const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-        id: 'r5c8694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-        id: 'e5x8694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-        id: 'w5z8694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-        id: 'q5z8694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-        id: 'z5z8694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-        id: 'x5z8694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-        id: 'v5z8694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-        id: 'cv5z8694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-        id: 'xv5z8694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-        id: 'zv5z8694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-  ];  
+import { GetSaleEndPoint } from '../Service/URLstring';
+import useApi from '../Service/ApiContext';
+import {FilterOption} from '../Data/FilterOption'
+import { SaleProvider } from '../Service/SaleContext';
 
 const SaleScreen = ({navigation})=>{
-  const [value, setValue] = React.useState(PROP[0].key)
+
+  const {token,getSale,error,callEndpoint} = useApi();
+  const [value, setValue] = React.useState()
   const [text, setText] = React.useState('Today')
-const [modalVisible, setModalVisible]= React.useState(false)
-const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
-const [date,setDate] = React.useState("");
+  const [modalVisible, setModalVisible]= React.useState(false)
+  const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
+  const [date,setDate] = React.useState("");
+
+const fetchSale = async () => {
+  try {
+  const response = await fetch(GetSaleEndPoint,{
+    method:"GET",
+    headers:{
+      'Authorization': 'Bearer '+token,
+      'Accept': '*/*',
+    }
+  })
+  const json = await response.json();
+  getSale(json);
+ } catch (ex) {
+  error(ex)
+ } 
+}
+
+const filterSale = async(day)=>{
+  try {
+    const response = await fetch(GetSaleEndPoint+"/"+"day?day="+day,{
+      method:"GET",
+      headers:{
+        'Authorization': 'Bearer '+token,
+        'Accept': '*/*',
+      }
+    })
+    const json = await response.json();
+    getSale(json);
+   } catch (ex) {
+    error(ex)
+   } 
+}
+
+React.useEffect(()=>{
+  callEndpoint();
+  fetchSale();
+  handleConfirm();
+},[])
 const showDatePicker = () => {
   setDatePickerVisibility(true);
 };
@@ -121,31 +68,33 @@ const hideDatePicker = () => {
 };
 
 const handleConfirm = (date) => {
-
+  console.debug(moment(date).format('MM/DD/YYYY'));
   setDate(moment(date).format('MM/DD/YYYY') );
   hideDatePicker();
 };
     return(
+      <SaleProvider>
         <View style={styles.container}>
             <Calendar
               visible={isDatePickerVisible}
               onConfrim={handleConfirm}
               onCancel={hideDatePicker}
             />
-           <FilterMessage visible={modalVisible}>
-        {PROP.map(res => {
-                           return(
+       <FilterMessage visible={modalVisible}>
+        {FilterOption.map((res,index) => {
+         return(
               <RadioButton
-              key={res.key}
               id={res.key}
+              key={res.key}
               text={res.text}
               value={value}
              onPress={()=>{
+                filterSale(res.key)
                setValue(res.key)
                setModalVisible(!modalVisible);
                setText(res.text)
               }}/>
-                           );        
+              );        
             })}
         </FilterMessage>
               <Filter text={text} 
@@ -153,9 +102,10 @@ const handleConfirm = (date) => {
               pressCalendar={showDatePicker}
               onPress={()=>setModalVisible(true)}
               />
-              <Content data={DATA}/>
-            <Footer/>
+              <Content/>
+              <Footer/>
         </View>
+        </SaleProvider>
     );
 }
 
@@ -169,4 +119,9 @@ const styles = StyleSheet.create({
    
 
 })
+
+
+/**
+ *     
+ */
 export default SaleScreen;

@@ -1,4 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
+
 import * as React from 'react';
 import {ScrollView, View} from 'react-native';
 import 'react-native-gesture-handler';
@@ -7,7 +7,7 @@ import CatBtnGrp from '../../molecules/homePage/CatBtnGrp'
 import SearchForm from '../../molecules/SearchForm';
 import containerStyle from '../../../styles/containerStyle';
 
-const Categories = ({data}) =>{
+const Filter = () =>{
     return(
         <View style={{marginTop:0, justifyContent:'center'}}>
             <SearchForm/>
@@ -19,9 +19,7 @@ const Categories = ({data}) =>{
       horizontal={true}
      alwaysBounceHorizontal={true}>
      <View style={containerStyle.catContainer}>
-     <CatBtnGrp
-         buttons={data}
-         />
+     <CatBtnGrp/>
      </View>
      </ScrollView>
      </View>
@@ -29,4 +27,4 @@ const Categories = ({data}) =>{
     )
 }
 
-export default Categories;
+export default Filter;

@@ -6,8 +6,8 @@ import VariationBtn from '../../atoms/detailsPage/VariationBtn'
 import buttonStyle from "../../../styles/buttonStyle";
 import useDetailOper from '../../../Service/DetailContext';
 
-const VariationBtnGrp = () =>{
-    const {variationClick,variation} = useDetailOper();
+const SubVariationBtnGrp = () =>{
+  const {subvariation,subVariationClick} = useDetailOper();
     const [clickedId, setClickedId] =  React.useState(-1);
     const [activeId, setActiveId] =  React.useState(0);
     const handleClick = (event, id) => {
@@ -24,20 +24,20 @@ const VariationBtnGrp = () =>{
       };
     return (
       <>
-     {variation.map((item,i) => (
+     {subvariation.map((sub,i) => (
           <VariationBtn
-            key={item.variationValueId}
+            key={sub.variationValueId}
             onPress={(event) => {
               handleClick(event, i)
-              variationClick(i,item.variationValueName)
+              subVariationClick(i,sub.variationValueName)
             }}
             style={(i == clickedId && activeId == 1 )? buttonStyle.buttonActive : buttonStyle.variationBtn}
           >
-             <VarationTxt value={item.variationValueName}/>
+             <VarationTxt value={sub.variationValueName}/>
           </VariationBtn>
         ))}
       </>
     ) 
 }
 
-export default VariationBtnGrp;
+export default SubVariationBtnGrp;

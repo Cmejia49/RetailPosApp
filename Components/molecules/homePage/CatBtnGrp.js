@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { View } from 'react-native';
 import 'react-native-gesture-handler';
+import useApi from '../../../Service/ApiContext';
 import CatButton from '../../atoms/homePage/CatButton'
 
-const CatBtnGrp = ({ buttons }) =>{
+const CatBtnGrp = () =>{
+  const{categories} = useApi();
         const [clickedId, setClickedId] =  React.useState(-1);
         const [activeId, setActiveId] =  React.useState(0);
         const handleClick = (event, id) => {
@@ -20,13 +22,12 @@ const CatBtnGrp = ({ buttons }) =>{
           };
         return (
           <>
-            {buttons.map(item => (
-                 <View key={item.id} style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
-              <CatButton 
-               key={item.id}
-               name={item.title}
-               onPress={(event) => handleClick(event, item.id)}/>
-               </View>
+            {categories.map((item,index) => (
+            <View key={item.catId} style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
+                <CatButton 
+                  name={item.categoryName}
+                  onPress={(event) => handleClick(event, item.catId)}/>
+            </View>
             ))}
           </>
         ) 

@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react'
 import { View,Modal,Text,Alert,Button,StyleSheet,Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { AntDesign } from '@expo/vector-icons'; 
-import { TextInput } from "react-native-gesture-handler";
 
 const SuccessMessage = ({message,visible,onPress}) =>{
 

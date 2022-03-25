@@ -19,12 +19,9 @@ const Content = ({data}) =>{
            stickyHeaderIndices={[0]}
            ItemSeparatorComponent = {SeperatorFlatlist}
            renderItem={({item, index}) =>                        
-            <ContentFlatlist 
-            margin={15}
-            value="sss">
-
-                <FlalistTxt value={"6"}/>
-            </ContentFlatlist>
+            <View>
+                
+            </View>
        }
          />
            </View>
