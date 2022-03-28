@@ -7,7 +7,7 @@ import SuccessMessage from '../Components/organisim/popUp/SuccessMessage';
 import InputMessage from '../Components/organisim/popUp/InputMessage';
 import useApi from "../Service/ApiContext";
 import useDetailOper from "../Service/DetailContext";
-import {GetDetail} from "../Service/URLstring";
+import {GetDetail,CreateDamageEndPoint} from "../Service/URLstring";
 import * as SecureStore from 'expo-secure-store';
 import useTheme from '../Service/ThemeContext';
 
@@ -16,7 +16,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 
 const DetailScreen =({navigation,route}) =>{
-  const {detail,getDetail,callEndpoint,error} = useApi();
+  const {detail,getDetail,callEndpoint,error,token} = useApi();
 
   const {getVariety,setIndex3,reset,cartId,itemCode,
           getIndex3,index3,name,quantity,stock,stockFid
@@ -32,6 +32,7 @@ const DetailScreen =({navigation,route}) =>{
     const fetchDetail = async () => {
         try {
           reset()
+          callEndpoint();
           const response = await fetch(GetDetail+route.params.paramKey);
           const json = await response.json();
           if(response.status == 200){
@@ -40,6 +41,23 @@ const DetailScreen =({navigation,route}) =>{
           }
        } catch (ex) {
         error(ex)
+       } 
+     }
+
+     const postDamage=async(damage)=>{
+      try {
+        const response =  await fetch(CreateDamageEndPoint,{
+          method:"POST",
+          headers:{
+            'Authorization': 'Bearer '+token,
+            'Content-Type': 'application/json',
+            'Accept': '*/*',
+          },
+          body:JSON.stringify(damage)
+        });
+
+       } catch (ex) {
+        console.debug(ex);
        } 
      }
 
@@ -55,6 +73,13 @@ const DetailScreen =({navigation,route}) =>{
      }
 
     const addToDamage = ()=>{
+      const damage={
+        ProductName:name+","+variationValue+","+subVariationValue,
+        ItemCode:itemCode,
+        Quantity:quantity,
+        StockFid:stockFid,
+      }
+        postDamage(damage)
         setDamageMessage(true);
     }
     const addToDamageConfirm = ()=>{
@@ -77,13 +102,13 @@ const DetailScreen =({navigation,route}) =>{
           subVariationValue,
           subtotal
       }
+      //validation HERE
         addCart(product);
         navigation.navigate("Home");
         setCartMessage(!cartMessage);
       }
 
       React.useEffect(() => {
-        callEndpoint();
         fetchDetail();
         retrieveIndex3();
         return()=>{reset()}

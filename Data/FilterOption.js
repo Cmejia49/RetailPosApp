@@ -35,9 +35,4 @@ export const FilterOption = [
 		key: 'LastYear',
 		text: 'Last Year',
   },
-  {
-    
-		key: 'All',
-		text: 'All',
-  },
 ];

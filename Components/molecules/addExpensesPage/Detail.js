@@ -4,12 +4,16 @@ import AmountInput from "../../atoms/textInput/AmountInput";
 import containerStyle from "../../../styles/containerStyle";
 import MultiLineInput from "../../atoms/textInput/MultiLineInput";
 import textStyle from "../../../styles/textStyle";
+import useExpenses from "../../../Service/ExpensesContext"
 const Detail =() =>{
+    const {getValue ,value} = useExpenses()
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={containerStyle.middleContainer}>
                 <Text style={textStyle.detailTxt}>Enter Amount:</Text>
-            <AmountInput value={"$0.00"}/>
+                <AmountInput 
+             onChangeText={x => getValue(x)}
+             value={value}/>
             <Text style={textStyle.detailTxt}>Enter Detail:</Text>
             <MultiLineInput/>
         </View>

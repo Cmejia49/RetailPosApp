@@ -50,6 +50,13 @@ export const ApiProvider = (props) =>{
         })
     }
 
+    const getExpenses =(expenses)=>{
+        dispatch({
+            type:ACTIONS.GETEXPENSES,
+            expenses:expenses
+        })
+    }
+
     const getToken = (token)=>{
         authDispatch({
             type:AUTHACTIONS.GETTOKEN,
@@ -77,6 +84,7 @@ export const ApiProvider = (props) =>{
         getToken,
         getSale,
         getDamage,
+        getExpenses,
         reset
     }
     return(

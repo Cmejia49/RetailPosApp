@@ -2,23 +2,16 @@ import React from'react'
 import {View,Text} from 'react-native'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import FlalistTxt from '../../atoms/text/FlatlistTxt'
-
+import moment from 'moment'
 import containerStyle from '../../../styles/containerStyle'
-import useSale from '../../../Service/SaleContext'
+import useExpenses from '../../../Service/ExpensesContext'
 
-const DamageContent = ({item}) =>{
-    const{margin,getTotal,
-        getCost,getMargin,getQuantity,cost,reset} = useSale();
-        React.useEffect(()=>{
-        
-            getTotal(item.price)
-            getCost(item.itemCode)
-            getQuantity(item.quantity)
-            getMargin();
-            return()=>{
-                reset();
-            }
-        },[margin])
+
+const ExpensesContent = ({item}) =>{
+    const {getTotalValue} = useExpenses();
+    React.useEffect(()=>{
+        getTotalValue(item.value);
+    })
     return(
         <TouchableWithoutFeedback>
         <View style={containerStyle.flContentContainer}>
@@ -26,7 +19,7 @@ const DamageContent = ({item}) =>{
                 <Text  
         
                  numberOfLines={1}
-    adjustsFontSizeToFit style={{marginLeft:10}}>{item.productName}</Text>
+    adjustsFontSizeToFit style={{marginLeft:10}}>{item.detail}</Text>
           </View>
         <View style={{
             flex:1.2,
@@ -35,9 +28,8 @@ const DamageContent = ({item}) =>{
             alignItems: 'flex-start',
             justifyContent:'space-evenly',
         }}>
-                <FlalistTxt value={item.quantity}/>
-                <FlalistTxt value={item.itemCode}/>
-                <FlalistTxt value={cost * item.quantity}/>
+                <FlalistTxt value={item.value}/>
+                <FlalistTxt value={moment(item.dateOfExpenses).format('MM/DD/YYYY')}/>
     
         </View>
         </View>
@@ -45,4 +37,4 @@ const DamageContent = ({item}) =>{
     )
 }
 
-export default DamageContent;
+export default ExpensesContent;

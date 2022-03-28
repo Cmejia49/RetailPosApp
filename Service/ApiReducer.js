@@ -7,6 +7,7 @@ export const initialState ={
     detail:[],
     sale:[],
     damage:[],
+    expenses:[],
     isLoading:false,
     error:null
 };
@@ -18,6 +19,7 @@ export const ACTIONS={
     GETDETAIL:'GetDetail',
     GETSALE:'GETSALE',
     GETDAMAGE:'GETDAMAGE',
+    GETEXPENSES:'GETEXPENSES',
     ERROR:'error',
     RESET:'RESET'
 };
@@ -72,6 +74,15 @@ const apiReducer = (state = initialState, action)=>{
                 ...state,
                 isLoading:false,
                 damage:action.damage
+            }
+        }
+
+        case ACTIONS.GETEXPENSES:{
+            console.debug("GETEXPENSES",action.expenses);
+            return{
+                ...state,
+                isLoading:false,
+                expenses:action.expenses
             }
         }
         case ACTIONS.ERROR:{

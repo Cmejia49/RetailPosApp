@@ -2,8 +2,9 @@ import React from 'react'
 import {View,Text} from 'react-native'
 import containerStyle from '../../../styles/containerStyle'
 import textStyle from '../../../styles/textStyle'
+import useSale from '../../../Service/SaleContext'
+const Footer =()=>{
 
-const Footer =({value1,value2,value3,value4})=>{
     return(
         <View style={containerStyle.summaryContainer}>
         <View style={containerStyle.innerSummary}>
@@ -22,11 +23,8 @@ const Footer =({value1,value2,value3,value4})=>{
         alignItems: 'center',
         justifyContent:'space-evenly',
     }}>
-
-        <Text style={textStyle.summaryTxt}>60</Text> 
-        <Text style={textStyle.summaryTxt}>900</Text> 
-        <Text style={textStyle.summaryTxt}>ESSS</Text> 
-        <Text style={textStyle.summaryTxt}>3500</Text> 
+ 
+        <Text style={textStyle.summaryTxt}>{totalCost}</Text> 
     </View>
   </View>
         </View>

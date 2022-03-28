@@ -8,9 +8,11 @@ import 'react-native-gesture-handler';
 import HeaderCartGrp from "../Components/molecules/HeaderCartGrp"
 import ExpensesScreen from "../Screen/ExpensesScreen";
 import AddExpensesScreen from "../Screen/AddExpensesScreen";
+import { ExpensesProvider } from '../Service/ExpensesContext';
 const stack = createStackNavigator();
 const ExpensesNavigator = () =>{
     return (
+      <ExpensesProvider>
         <stack.Navigator>
           <stack.Screen name="Expenses" component={ExpensesScreen}  options={{
                   title: 'Expenses',
@@ -43,6 +45,7 @@ const ExpensesNavigator = () =>{
           />
           <stack.Screen name="AddExpenses" component={AddExpensesScreen}  />
         </stack.Navigator>
+        </ExpensesProvider>
       );
 }
 

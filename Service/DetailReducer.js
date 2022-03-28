@@ -40,6 +40,7 @@ export const ACTIONS={
     RESET:'RESET'
 }
 
+
 const detailReducer=(state=initialState,action)=>{
 
     switch(action.type){
@@ -63,30 +64,39 @@ const detailReducer=(state=initialState,action)=>{
 
         case ACTIONS.GETINDEX3:{
             const variety = action.variety
-            const low = 0;
-            const high =  variety.variationList[0].variationValuesList[0].children[0].stockList.length - 1;
-            while(low<=high){
-               const highId =  variety.variationList[0].variationValuesList[0].children[0].stockList[high].storeFid;
-               const lowId = variety.variationList[0].variationValuesList[0].children[0].stockList[low].storeFid;
-               if(state.storeFid=== highId){
-                   console.debug("high");
-                   return{
-                    ...state,
-                       index3:high
-                   }
-               }else if (state.storeFid === lowId){
-                console.debug("low");  
+            const variation = undefined;
+            const subVariation = undefined;
+            if(variety.variationList.length == 1){
+                 variation =  variety.variationList[0].variationValuesList;
+            }else if(variety.variationList.length == 2){
+                 subVariation =  variety.variationList[0].variationValuesList[0].children;
+            }
+
+            //if no variation
+            if(variety.variationList === undefined || variety.variationList === null){
+                const index3 = srchIndex(subVariation.stockList)
                 return{
                     ...state,
-                    index3:low
+                    index3:index3
                 }
-               }else{
-                   console.debug("not find");
-               }
-               low+1;
-               high-1
             }
-            console.debug("GETINDEX3");
+            //1 variation
+            if(variation !== undefined || variation !== null && subVariation === null){
+ 
+                const index3 = srchIndex(subVariation.stockList)
+               return{
+                   ...state,
+                   index3:index3
+               }
+            }
+            //2 variation
+            if(subVariation !== undefined || subVariation !== null){
+               const index3 = srchIndex(subVariation.stockList)
+               return{
+                   ...state,
+                   index3:index3
+               }
+            }
             
         }
         case ACTIONS.SETINDEX3:{
@@ -126,6 +136,7 @@ const detailReducer=(state=initialState,action)=>{
                 variationName:variationName,
                 subVariationName:subVariationName,
                 variation:variation,
+                // filter the same name or value 
                 subVariation:subvariation.filter((v,i,subvariation)=>subvariation.findIndex(t=>(t.variationValueName===v.variationValueName))===i),
                 stock:total,
                 name:name,
@@ -225,9 +236,28 @@ const detailReducer=(state=initialState,action)=>{
             throw new Error(`No case for type ${action.type} found in DetailReducer.`);
     }
 
-
-
-
 }
+
+//Search for index3
+
+//No variation
+const srchIndex=(stockList)=>{
+    const low = 0;
+    const high =  stockList.length - 1;
+    while(low<=high){
+       const highId =  stockList[high].storeFid;
+       const lowId = stockList[low].storeFid;
+       if(state.storeFid=== highId){
+           return high;
+       }else if (state.storeFid === lowId){
+        return low;
+       }else{
+           console.debug("not find");
+       }
+       low+1;
+       high-1
+    }
+}
+
 
 export default detailReducer;

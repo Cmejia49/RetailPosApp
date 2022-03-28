@@ -23,24 +23,10 @@ const DamageScreen = ({navigation})=>{
   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
   const [date,setDate] = React.useState("");
 
-const fetchDamage = async () => {
-  try {
-  const response = await fetch(GetDamageEndPoint,{
-    method:"GET",
-    headers:{
-      'Authorization': 'Bearer '+token,
-      'Accept': '*/*',
-    }
-  })
-  const json = await response.json();
-  getDamage(json);
- } catch (ex) {
-  error(ex)
- } 
-}
 
-const filterDamage = async(day)=>{
+const filterDamageByDay = async(day)=>{
   try {
+    callEndpoint();
     const response = await fetch(GetDamageEndPoint+"/"+"day?day="+day,{
       method:"GET",
       headers:{
@@ -55,8 +41,25 @@ const filterDamage = async(day)=>{
    } 
 }
 
+const filterDamageByDate = async(date)=>{
+  try {
+    callEndpoint();
+    const response = await fetch(GetDamageEndPoint+"/"+"date?date="+date,{
+      method:"GET",
+      headers:{
+        'Authorization': 'Bearer '+token,
+        'Accept': '*/*',
+      }
+    })
+    const json = await response.json();
+    getDamage(json);
+   } catch (ex) {
+    error(ex)
+   } 
+}
+
 React.useEffect(()=>{
-fetchDamage();
+  handleConfirm();
 },[])
 const showDatePicker = () => {
   setDatePickerVisibility(true);
@@ -67,8 +70,8 @@ const hideDatePicker = () => {
 };
 
 const handleConfirm = (date) => {
-  console.debug(moment(date).format('MM/DD/YYYY'));
   setDate(moment(date).format('MM/DD/YYYY') );
+  filterDamageByDate(moment(date).format('MM/DD/YYYY') )
   hideDatePicker();
 };
     return(
@@ -87,6 +90,7 @@ const handleConfirm = (date) => {
               text={res.text}
               value={value}
              onPress={()=>{
+              filterDamageByDay(res.key)
                setValue(res.key)
                setModalVisible(!modalVisible);
                setText(res.text)

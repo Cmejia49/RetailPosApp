@@ -1,6 +1,6 @@
 import React from 'react'
 
- const ipAddress = "https://68aa-110-93-86-169.ngrok.io";
+ const ipAddress = "https://e1af-110-93-84-177.ngrok.io";
 
  const GetProductList = "/api/Items/Item";
 
@@ -18,6 +18,8 @@ import React from 'react'
 
  const GetDamage="/api/DamageReport"
 
+ const GetExpenses="/api/Expenses"
+
 export const GetProductUrl = ipAddress + GetProductList;
 
 export const GetCat = ipAddress + GetCatList;
@@ -33,3 +35,7 @@ export const CreateSaleEndPoint = ipAddress+CreateSale;
 export const CreateDamageEndPoint = ipAddress+CreateDamage;
 
 export const GetDamageEndPoint = ipAddress + GetDamage;
+
+export const GetExpensesEndpoint =ipAddress + GetExpenses;
+
+export const CreateExpensesEndpoint = ipAddress + GetExpenses

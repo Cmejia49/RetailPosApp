@@ -12,11 +12,9 @@ const Content = () =>{
         <View style={{flex:1,flexWrap:'wrap',marginVertical:10}}>
         <FlatList contentContainerStyle={{width:screenWidth,borderWidth:1,borderTopWidth:0}} 
            data={damage}
-           keyExtractor={({ id }) => id}    
+           keyExtractor={(damage,index) => damage.damageId}    
            ListHeaderComponent={<HeaderFlatlist value="Product">
                 <FlalistTxt value={"Qnt"}/>
-               <FlalistTxt value={"Price"}/>
-               <FlalistTxt value={"Total"}/>
                <FlalistTxt value={"Cost"}/>
                <FlalistTxt value={"Margin"}/>
            </HeaderFlatlist>}

@@ -5,10 +5,41 @@ import { StyleSheet,Text, View,Pressable,KeyboardAvoidingView } from 'react-nati
 
 import Content from "../Components/organisim/addExpensesPage/Content";
 import FailedMessage from "../Components/organisim/popUp/FailedMessage";
+import useTheme from "../Service/ThemeContext";
+import moment from "moment";
+import useExpenses from "../Service/ExpensesContext";
+import {CreateExpensesEndpoint} from "../Service/URLstring"
+import useApi from "../Service/ApiContext";
  const AddExpensesScreen = ({navigation}) =>{
+    const {value,detail}=useExpenses();
+    const{error,token} = useApi(); 
+    const{getDate} = useTheme();
     const [visible,setVisible] = React.useState(false);
 
+    const postExpenses= async()=>{
+      const expenses={
+        Value:value,
+        Detail:detail
+      }
+      try {
+        const response = await fetch(CreateExpensesEndpoint,{
+          method:"POST",
+          headers:{
+            'Authorization': 'Bearer '+token,
+            'Content-Type': 'application/json',
+            'Accept': '*/*',
+          },
+          body:JSON.stringify(expenses)
+        });
+      } catch (ex) {
+        error(ex);
+      } 
+    }
+    React.useEffect(()=>{
+      getDate(moment().format('MM/DD/YYYY'))
+    },[])
     const save = ()=>{
+      postExpenses();
       setVisible(true);
     }
     const saveConfirm = ()=>{
@@ -22,11 +53,12 @@ import FailedMessage from "../Components/organisim/popUp/FailedMessage";
         return <AppLoading />;
       }
   return(
+    
     <KeyboardAvoidingView
     behavior={Platform.OS === "ios" ? "margin" : "height"}
     style={styles.container}
   >
-        <FailedMessage visible={visible}onPress={saveConfirm}/>
+      
         <Content/>
 
           <View style={styles.bottomContainer}>

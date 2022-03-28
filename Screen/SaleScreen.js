@@ -16,29 +16,13 @@ import { SaleProvider } from '../Service/SaleContext';
 const SaleScreen = ({navigation})=>{
 
   const {token,getSale,error,callEndpoint} = useApi();
-  const [value, setValue] = React.useState()
+  const [value, setValue] = React.useState('Today')
   const [text, setText] = React.useState('Today')
   const [modalVisible, setModalVisible]= React.useState(false)
   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
   const [date,setDate] = React.useState("");
 
-const fetchSale = async () => {
-  try {
-  const response = await fetch(GetSaleEndPoint,{
-    method:"GET",
-    headers:{
-      'Authorization': 'Bearer '+token,
-      'Accept': '*/*',
-    }
-  })
-  const json = await response.json();
-  getSale(json);
- } catch (ex) {
-  error(ex)
- } 
-}
-
-const filterSale = async(day)=>{
+const filterSaleByDay = async(day)=>{
   try {
     const response = await fetch(GetSaleEndPoint+"/"+"day?day="+day,{
       method:"GET",
@@ -54,9 +38,24 @@ const filterSale = async(day)=>{
    } 
 }
 
+const filterSaleByDate = async(date)=>{
+  try{
+    const response =await fetch(GetSaleEndPoint+"/"+"date?date="+date,{
+      method:"GET",
+      headers:{
+        'Authorization': 'Bearer '+token,
+        'Accept': '*/*',
+      }
+    })
+    const json = await response.json();
+    getSale(json);
+  }catch(ex){
+    error(ex)
+  }
+}
+
 React.useEffect(()=>{
   callEndpoint();
-  fetchSale();
   handleConfirm();
 },[])
 const showDatePicker = () => {
@@ -68,8 +67,8 @@ const hideDatePicker = () => {
 };
 
 const handleConfirm = (date) => {
-  console.debug(moment(date).format('MM/DD/YYYY'));
   setDate(moment(date).format('MM/DD/YYYY') );
+  filterSaleByDate(moment(date).format('MM/DD/YYYY') );
   hideDatePicker();
 };
     return(
@@ -89,7 +88,7 @@ const handleConfirm = (date) => {
               text={res.text}
               value={value}
              onPress={()=>{
-                filterSale(res.key)
+                filterSaleByDay(res.key)
                setValue(res.key)
                setModalVisible(!modalVisible);
                setText(res.text)

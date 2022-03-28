@@ -5,7 +5,7 @@ import useSale from '../../../Service/SaleContext'
 import containerStyle from '../../../styles/containerStyle'
 import textStyle from '../../../styles/textStyle'
 
-const Footer =({value1,value2,value3,value4})=>{
+const Footer =()=>{
 const{totalCost,totalQnt,total,totalMargin,totalPrice} = useSale();
 
     return(

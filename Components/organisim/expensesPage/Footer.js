@@ -1,9 +1,11 @@
 import React from 'react'
 import {View,Text} from 'react-native'
+import useExpenses from '../../../Service/ExpensesContext'
 import containerStyle from '../../../styles/containerStyle'
 import textStyle from '../../../styles/textStyle'
 
-const Footer =({value1,value2,value3,value4})=>{
+const Footer =()=>{
+    const{totalValue} = useExpenses();
     return(
         <View style={containerStyle.summaryContainer}>
         <View style={containerStyle.innerSummary}>
@@ -23,7 +25,7 @@ const Footer =({value1,value2,value3,value4})=>{
         justifyContent:'space-evenly',
     }}>
 
-        <Text style={textStyle.summaryTxt}>3500</Text> 
+        <Text style={textStyle.summaryTxt}>{totalValue}</Text> 
     </View>
   </View>
         </View>
