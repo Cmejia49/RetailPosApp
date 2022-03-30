@@ -24,7 +24,9 @@ const VariationBtnGrp = () =>{
       };
     return (
       <>
-     {variation.map((item,i) => (
+      {variation != undefined ? (
+        <>
+      {variation.map((item,i) => (
           <VariationBtn
             key={item.variationValueId}
             onPress={(event) => {
@@ -36,6 +38,9 @@ const VariationBtnGrp = () =>{
              <VarationTxt value={item.variationValueName}/>
           </VariationBtn>
         ))}
+        </>
+        ):(
+          <></>)}
       </>
     ) 
 }

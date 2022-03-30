@@ -6,13 +6,13 @@ export const authIntialState = {
 }
 
 export const AUTHACTIONS = {
-    GETTOKEN:'GETTOKEN',
+    GET_TOKEN:'GETTOKEN',
     SUCCESS:'SUCCESS'
 }
 
 const authReducer = (state = intialState,action) =>{
     switch(action.type){
-        case AUTHACTIONS.GETTOKEN:{
+        case AUTHACTIONS.GET_TOKEN:{
             console.debug("GETTOKEN");
             return{
                 ...state,

@@ -6,9 +6,23 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign } from '@expo/vector-icons'; 
 import 'react-native-gesture-handler';
-
+import {GetDetail} from '../../Service/URLstring'
 import buttonStyle from '../../styles/buttonStyle';
+import useApi from '../../Service/ApiContext';
 const SearchButton = ({name, onPress}) =>{
+    const {searchValue,getProduct,error,callEndpoint} = useApi();
+    const search = async()=>{
+        try {
+            callEndpoint();
+            const response = await fetch(GetDetail+"name?name=bags");
+            const json = await response.json();
+            if(response.status == 200){
+                getProduct(json);
+            }
+         } catch (ex) {
+          error(ex)
+         } 
+    }
     return(
     <AntDesign.Button
      name = {name}
@@ -20,7 +34,7 @@ const SearchButton = ({name, onPress}) =>{
       fontWeight:'bold',
      }
     }
-    onPress={onPress}
+    onPress={()=>search()}
     />
 
     )

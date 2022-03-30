@@ -22,6 +22,8 @@ var buttonStyle = StyleSheet.create({
     margin:5,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 4,
+    elevation: 3,
     width:80,
     height:30,
     backgroundColor: '#FFFFFF',
@@ -32,6 +34,8 @@ var buttonStyle = StyleSheet.create({
     margin:5,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 4,
+
     width:80,
     height:30,
     backgroundColor: 'rgba(0, 0, 0, 0.42)',

@@ -16,7 +16,7 @@ const Content = () =>{
            ListHeaderComponent={<HeaderFlatlist value="Product">
                 <FlalistTxt value={"Qnt"}/>
                <FlalistTxt value={"Cost"}/>
-               <FlalistTxt value={"Margin"}/>
+               <FlalistTxt value={"SubTotal"}/>
            </HeaderFlatlist>}
            ListHeaderComponentStyle={{ borderColor: '#000', borderBottomWidth:1}}
            stickyHeaderIndices={[0]}

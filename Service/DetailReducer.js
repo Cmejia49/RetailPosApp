@@ -29,14 +29,15 @@ export const initialState={
 export const ACTIONS={
     INCREMENT :'INCREMENT',
     DECREMENT:'DECREMENT',
-    GETVARIETY:'GETVARIETY',
-    GETSTOREFID:'GETSTOREFID',
-    GETINDEX3:'GETINDEX3',
-    SETINDEX3:'SETINDEX3',
-    VARIATIONCLICK:'VARIATIONCLICK',
-    SUBVARIATIONCLICK:'SUBVARIATIONCLICK',
-    UPDATESTOCK:'UPDATESTOCK',
-    GETINPUTPRICE:'GETINPUTPRICE',
+    GET_VARIETY:'GETVARIETY',
+    GET_STOREFID:'GETSTOREFID',
+    GET_INDEX3:'GETINDEX3',
+    SET_INDEX3:'SETINDEX3',
+    VARIATION_CLICK:'VARIATIONCLICK',
+    SUBVARIATION_CLICK:'SUBVARIATIONCLICK',
+    UPDATE_STOCK:'UPDATESTOCK',
+    UPDATE_QNT:'UPDATEQNT',
+    GET_INPUTPRICE:'GETINPUTPRICE',
     RESET:'RESET'
 }
 
@@ -46,6 +47,12 @@ const detailReducer=(state=initialState,action)=>{
     switch(action.type){
         case ACTIONS.INCREMENT:{
             console.debug("INCREMENT");
+            if(state.quantity >= state.stock){
+                return{
+                    ...state,
+                    quantity:state.stock
+                }
+            }
             return{
                 ...state,
                 quantity:state.quantity + 1
@@ -56,13 +63,26 @@ const detailReducer=(state=initialState,action)=>{
 
         case ACTIONS.DECREMENT:{
             console.debug("DECREMENT");
+            if(state.quantity <=0){
+                return{
+                    ...state,
+                    quantity:0
+                }
+            }
             return{
                 ...state,
                 quantity:state.quantity - 1
             }
         };
 
-        case ACTIONS.GETINDEX3:{
+        case ACTIONS.UPDATEQNT:{
+            return{
+                ...state,
+                quantity:0
+            }
+        }
+
+        case ACTIONS.GET_INDEX3:{
             const variety = action.variety
             const variation = undefined;
             const subVariation = undefined;
@@ -99,52 +119,86 @@ const detailReducer=(state=initialState,action)=>{
             }
             
         }
-        case ACTIONS.SETINDEX3:{
+        case ACTIONS.SET_INDEX3:{
             console.debug("SETINDEX3");
             return{
                 ...state,
                 index3:action.index3
             }
         }
-        case ACTIONS.GETVARIETY:{
+        case ACTIONS.GET_VARIETY:{
             console.debug("GETVARIETY");
             const variety = action.variety
             const name = variety.itemName
             const price = variety.priceRange
             const itemid = variety.itemId
-            const variationName =  variety.variationList[0].variationName
-            const subVariationName =  variety.variationList[1].variationName
-            const variation = [];
-            const subvariation = [];
-            let total=0;
-            const length = variety.variationList[0].variationValuesList.length;
-            for(let i = 0 ;i<length;i++){
-             const variaty = variety.variationList[0].variationValuesList[i];
-                variation.push(variaty)
-              const subLength =  variety.variationList[0].variationValuesList[i].children.length;
-              for(let j = 0;j<subLength;j++){
-                 const sub = variety.variationList[0].variationValuesList[i].children[j];
-                        const index3 = ~~state.index3*1
-                        total = total + sub.stockList[index3].quantity;
-                    
-                 subvariation.push(sub);
-               }
-               
-             } 
-            return{
-                ...state,
-                variationName:variationName,
-                subVariationName:subVariationName,
-                variation:variation,
-                // filter the same name or value 
-                subVariation:subvariation.filter((v,i,subvariation)=>subvariation.findIndex(t=>(t.variationValueName===v.variationValueName))===i),
-                stock:total,
-                name:name,
-                price:price,
-                itemId:itemid
-            };
+            let variationName = undefined
+            let subVariationName =  undefined
+            let variation = [];
+            let subvariation = [];
+            let total=0
+            //Validate the size of variety
+            //No variety
+            if(variety.variationList === undefined || variety.variationList === null){
+               total = variety.stockList[index3].quantity;
+                return{
+                    ...state,
+                    stock:total,
+                    name:name,
+                    price:price,
+                    itemId:itemid
+                };
+            //1 variety
+            }else if(variety.variationList.length== 1){
+                variationName =  variety.variationList[0].variationName
+                const length = variety.variationList[0].variationValuesList.length;
+                for(let i = 0 ;i<length;i++){
+                    const v1 = variety.variationList[0].variationValuesList[i];
+                   total += v1.stockList[index3].quantity
+                   variation.push(v1);
+                }
+                return{
+                    ...state,
+                    variationName:variationName,
+                    variation:variation,
+                    stock:total,
+                    name:name,
+                    price:price,
+                    itemId:itemid
+                }
+            }else if(variety.variationList.length == 2){
+                variationName = variety.variationList[0].variationName
+                subVariationName = variety.variationList[1].variationName
+               const length = variety.variationList[0].variationValuesList.length;
+               for(let i = 0 ;i<length;i++){
+                const v1 = variety.variationList[0].variationValuesList[i];
+                   variation.push(v1)
+                 const subLength =  variety.variationList[0].variationValuesList[i].children.length;
+                 for(let j = 0;j<subLength;j++){
+                    const v2 = variety.variationList[0].variationValuesList[i].children[j];
+                           const index3 = ~~state.index3*1
+                           total = total + v2.stockList[index3].quantity;
+                       
+                    subvariation.push(v2);
+                  } 
+                }     
+                return{
+                    ...state,
+                    variationName:variationName,
+                    subVariationName:subVariationName,
+                    variation:variation,
+                    // filter the same name or value 
+                    subVariation:subvariation.filter((v,i,subvariation)=>subvariation.findIndex(t=>(t.variationValueName===v.variationValueName))===i),
+                    stock:total,
+                    name:name,
+                    price:price,
+                    itemId:itemid
+                };
+            }
+   
+     
         }
-        case ACTIONS.GETSTOREFID:{
+        case ACTIONS.GET_STOREFID:{
             console.debug("GETSTOREFID")
             return{
                 ...state,
@@ -152,7 +206,7 @@ const detailReducer=(state=initialState,action)=>{
             }
         }
 
-        case ACTIONS.GETINPUTPRICE:{
+        case ACTIONS.GET_INPUTPRICE:{
             console.debug("GETIPUTPRICE")
             const price = action.inputPrice
             const subtotal = price * state.quantity
@@ -163,7 +217,7 @@ const detailReducer=(state=initialState,action)=>{
                 subTotal:subtotal
             }
         }
-        case ACTIONS.VARIATIONCLICK:{
+        case ACTIONS.VARIATION_CLICK:{
             console.debug("VARIATIONCLICK");
             const index = action.index
             const subvariation = []
@@ -178,7 +232,7 @@ const detailReducer=(state=initialState,action)=>{
         }
 
         
-        case ACTIONS.SUBVARIATIONCLICK:{
+        case ACTIONS.SUBVARIATION_CLICK:{
             console.debug("SUBVARIATIONCLICK");
             console.debug(action.index);
             return{
@@ -187,30 +241,54 @@ const detailReducer=(state=initialState,action)=>{
                 subVariationValue:action.value
             }
         }
-
-        case ACTIONS.UPDATESTOCK:{
-         
+        //This code not execute when item don't have veriety
+        case ACTIONS.UPDATE_STOCK:{
             let index1 = state.index1;
             let index2 = state.index2;
             let index3 = state.index3;
-            if(index1 != undefined && index2 != undefined){
+            //1 variety
+            if(state.variation !== undefined && state.subVariation === undefined){
+             if(index1 != undefined){
                 try{
-                    let stock = state.variation[index1].children[index2].stockList[index3].quantity
-                    let itemCode = state.variation[index1].children[index2].stockList[index3].itemCode
-                    let price = state.variation[index1].children[index2].stockList[index3].price
-                    let stockFid = state.variation[index1].children[index2].stockList[index3].stockId
+                    let stock = state.variation[index1].stockList[index3].quantity
+                    let itemCode = state.variation[index1].stockList[index3].itemCode
+                    let price = state.variation[index1].stockList[index3].price
+                    let stockFid = state.variation[index1].cstockList[index3].stockId
                     return{
                         ...state,
                         stock:stock,
                         itemCode:itemCode,
                         price:price,
                         stockFid:stockFid,
-                        cartId:state.itemId+state.variationValue+state.subVariationValue+stockFid
+                        cartId:state.itemId+state.variationValue+state+stockFid
                     }
                 }catch(error){
                     console.debug(error)
-                }             
+                }  
+             }
             }
+            //2 veriety
+            if(state.variation !== undefined && state.subVariation !== undefined ){
+                if(index1 != undefined && index2 != undefined){
+                    try{
+                        let stock = state.variation[index1].children[index2].stockList[index3].quantity
+                        let itemCode = state.variation[index1].children[index2].stockList[index3].itemCode
+                        let price = state.variation[index1].children[index2].stockList[index3].price
+                        let stockFid = state.variation[index1].children[index2].stockList[index3].stockId
+                        return{
+                            ...state,
+                            stock:stock,
+                            itemCode:itemCode,
+                            price:price,
+                            stockFid:stockFid,
+                            cartId:state.itemId+state.variationValue+state.subVariationValue+stockFid
+                        }
+                    }catch(error){
+                        console.debug(error)
+                    }             
+                }
+            }
+       
             return{
                 ...state
             }
@@ -239,8 +317,6 @@ const detailReducer=(state=initialState,action)=>{
 }
 
 //Search for index3
-
-//No variation
 const srchIndex=(stockList)=>{
     const low = 0;
     const high =  stockList.length - 1;

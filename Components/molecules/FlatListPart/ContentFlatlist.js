@@ -6,18 +6,36 @@ import FlalistTxt from '../../atoms/text/FlatlistTxt'
 import containerStyle from '../../../styles/containerStyle'
 import useSale from '../../../Service/SaleContext'
 const ContentFlatlist = ({item}) =>{
-const{quantity,subtotal,margin,cost,getTotal,
-getCost,getMargin,getQuantity,price,reset} = useSale();
+const{getTotal,
+getCost,getMargin,getQuantity,reset,} = useSale();
 React.useEffect(()=>{
 
-    getTotal(item.price)
     getCost(item.itemCode)
     getQuantity(item.quantity)
+    getTotal(item.price)
     getMargin();
-    return()=>{
-        reset();
+    return()=>{reset()}
+
+},[item])
+const converter =(str)=>{
+    if(str == null){
+        return 0;
     }
-},[margin])
+    let s = '';
+    const shopCode = "SDANTEMOJI"
+    for(let i = 0;i<str.length;i++)
+    {
+        for(let j =0;j<shopCode.length;j++)
+        {
+            if(str.charAt(i) == shopCode.charAt(j))
+            {
+             
+                  s+=''+shopCode.indexOf(shopCode.charAt(j))
+            }
+        }
+    }
+    return s;
+}
     return(
         <TouchableWithoutFeedback>
         <View style={containerStyle.flContentContainer}>
@@ -34,11 +52,11 @@ React.useEffect(()=>{
             alignItems: 'flex-start',
             justifyContent:'space-evenly',
         }}>
-                <FlalistTxt value={quantity}/>
-                <FlalistTxt value={price}/>
-                <FlalistTxt value={subtotal}/>
-                <FlalistTxt value={item.itemCode}/>
-                <FlalistTxt value={margin}/>
+                <FlalistTxt value={item.quantity}/>
+                <FlalistTxt value={item.price}/>
+                <FlalistTxt value={item.price*item.quantity}/>
+                <FlalistTxt value={converter(item.itemCode)}/>
+                <FlalistTxt value={(item.price * item.quantity - converter(item.itemCode)*item.quantity)}/>
     
         </View>
         </View>

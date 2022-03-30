@@ -7,7 +7,7 @@ import buttonStyle from "../../../styles/buttonStyle";
 import useDetailOper from '../../../Service/DetailContext';
 
 const SubVariationBtnGrp = () =>{
-  const {subvariation,subVariationClick} = useDetailOper();
+  const {subVariation,subVariationClick} = useDetailOper();
     const [clickedId, setClickedId] =  React.useState(-1);
     const [activeId, setActiveId] =  React.useState(0);
     const handleClick = (event, id) => {
@@ -24,7 +24,9 @@ const SubVariationBtnGrp = () =>{
       };
     return (
       <>
-     {subvariation.map((sub,i) => (
+      {subVariation != undefined ?(
+        <>
+     {subVariation.map((sub,i) => (
           <VariationBtn
             key={sub.variationValueId}
             onPress={(event) => {
@@ -36,6 +38,10 @@ const SubVariationBtnGrp = () =>{
              <VarationTxt value={sub.variationValueName}/>
           </VariationBtn>
         ))}
+        </>
+      ):(
+        <></>
+      )}
       </>
     ) 
 }

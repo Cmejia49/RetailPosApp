@@ -17,40 +17,40 @@ export const ThemeProvider = (props) =>{
     //CART OPERATION
     const addCart = (product) =>{
         dispatch({
-            type:ACTIONS.ADDCART,
+            type:ACTIONS.ADD_CART,
             product:product
         })
     }
 
     const deleteCart =(id)=>{
         dispatch({
-            type:ACTIONS.DELETECART,
+            type:ACTIONS.DELETE_CART,
             cartId:id
         })
     }
     
     const getTotal = ()=>{
         dispatch({
-            type:ACTIONS.GETTOTAL
+            type:ACTIONS.GET_TOTAL
         })
     }
     
     const getChange =(amtReceived)=>{
         dispatch({
-            type:ACTIONS.GETCHANGE,
+            type:ACTIONS.GET_CHANGE,
             amtReceived:amtReceived
         })
     }
 
     const getTotalItem =()=>{
         dispatch({
-            type:ACTIONS.GETTOTALITEM,
+            type:ACTIONS.GET_TOTAL_ITEM,
         })
     }
 
     const getDate =(date)=>{
         dispatch({
-            type:ACTIONS.GETDATE,
+            type:ACTIONS.GET_DATE,
             date:date
         })
     }

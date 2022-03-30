@@ -9,18 +9,20 @@ export const initialState ={
     damage:[],
     expenses:[],
     isLoading:false,
-    error:null
+    error:null,
+    searchValue:''
 };
 
 export const ACTIONS={
     CALL_ENDPOINT:'call',
-    GETPRODUCT:'GetProduct',
-    GETCATEGORIES:'GetCategories',
-    GETDETAIL:'GetDetail',
-    GETSALE:'GETSALE',
-    GETDAMAGE:'GETDAMAGE',
-    GETEXPENSES:'GETEXPENSES',
+    GET_PRODUCT:'GetProduct',
+    GET_CATEGORIES:'GetCategories',
+    GET_DETAIL:'GetDetail',
+    GET_SALE:'GETSALE',
+    GET_DAMAGE:'GETDAMAGE',
+    GET_EXPENSES:'GETEXPENSES',
     ERROR:'error',
+    SEARCH:'SEARCH',
     RESET:'RESET'
 };
 
@@ -33,7 +35,7 @@ const apiReducer = (state = initialState, action)=>{
                  isLoading:true,
             };
         }
-        case ACTIONS.GETPRODUCT:{
+        case ACTIONS.GET_PRODUCT:{
             console.debug("GETPRODUCT",action.product);
             return{
                 ...state,
@@ -41,7 +43,7 @@ const apiReducer = (state = initialState, action)=>{
                 product:action.product,
             };
         }
-        case ACTIONS.GETCATEGORIES:{
+        case ACTIONS.GET_CATEGORIES:{
             console.debug("GETCATEGORIES",action.categories);
             return{
                 ...state,
@@ -50,7 +52,7 @@ const apiReducer = (state = initialState, action)=>{
             };
         }
 
-        case ACTIONS.GETDETAIL:{
+        case ACTIONS.GET_DETAIL:{
             console.debug("GETDETAIL",action.detail);
             return{
                 ...state,
@@ -59,7 +61,7 @@ const apiReducer = (state = initialState, action)=>{
             };
         }
 
-        case ACTIONS.GETSALE:{
+        case ACTIONS.GET_SALE:{
             console.debug("GETSALE",action.sale);
             return{
                 ...state,
@@ -68,7 +70,7 @@ const apiReducer = (state = initialState, action)=>{
             }
         }
 
-        case ACTIONS.GETDAMAGE:{
+        case ACTIONS.GET_DAMAGE:{
             console.debug("GETDAMAGE",action.damage);
             return{
                 ...state,
@@ -77,12 +79,20 @@ const apiReducer = (state = initialState, action)=>{
             }
         }
 
-        case ACTIONS.GETEXPENSES:{
+        case ACTIONS.GET_EXPENSES:{
             console.debug("GETEXPENSES",action.expenses);
             return{
                 ...state,
                 isLoading:false,
                 expenses:action.expenses
+            }
+        }
+
+        case ACTIONS.SEARCH:{
+            console.debug("SEARCH");
+            return{
+                ...state,
+                searchValue:action.searchValue
             }
         }
         case ACTIONS.ERROR:{

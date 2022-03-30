@@ -3,7 +3,7 @@ export const initialState={
     
     converted:0,
     totalCost:0,
-    cost:0,
+    cost:'',
     subtotal:0,
     total:0,
     margin:0,
@@ -47,25 +47,25 @@ const saleReducer=(state=initialState,action)=>{
         case ACTIONS.GET_TOTAL:{       
             return{
                 ...state,
-                subtotal:state.quantity *action.price,
+                subtotal:state.quantity*action.price,
                 price:action.price,
-                totalPrice:state.totalPrice+state.price,
+                totalPrice:state.totalPrice + action.price,
                 total:state.total+state.subtotal
             }
         };
         case ACTIONS.GET_MARGIN:{
-            let margin = (state.subtotal - (state.quantity * state.cost))
+            let margin = (state.quantity*state.price - (state.quantity * state.cost))
             return{
                 ...state,
                 margin:margin,
-                totalMargin:state.totalMargin+margin
+                totalMargin:state.totalMargin + margin
             }
         }
         case ACTIONS.GET_QUANTITY:{
             return{
                 ...state,
                 quantity:action.quantity,
-                totalQnt:state.totalQnt + state.quantity
+                totalQnt:state.totalQnt + action.quantity
             }
         }
         case ACTIONS.GET_COST:{
@@ -75,18 +75,19 @@ const saleReducer=(state=initialState,action)=>{
                     ...state
                 }
             }else{
-                
+        
                  s = converter(action.str);
             }
             return{
                 ...state,
-                cost:s,
+                cost:converter(action.str),
                totalCost:(1*state.totalCost)+(1*state.cost),
                
             }
         }
 
         case ACTIONS.RESET:{
+            console.debug("reset")
             return{
                 ...state,
                 total:0,

@@ -10,7 +10,7 @@ import Calendar from '../Components/organisim/popUp/Calendar';
 import moment from 'moment';
 import {FilterOption} from '../Data/FilterOption'
 import { GetDamageEndPoint } from '../Service/URLstring';
-
+import { DamageProvider } from '../Service/DamageContext';
 import useApi from '../Service/ApiContext';
 
 const DamageScreen = ({navigation})=>{
@@ -75,6 +75,7 @@ const handleConfirm = (date) => {
   hideDatePicker();
 };
     return(
+      <DamageProvider>
         <View style={styles.container}>
             <Calendar
               visible={isDatePickerVisible}
@@ -106,6 +107,7 @@ const handleConfirm = (date) => {
               <Content/>
               <Footer/>
         </View>
+        </DamageProvider>
     );
 }
 

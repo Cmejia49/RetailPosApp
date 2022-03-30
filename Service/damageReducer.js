@@ -1,22 +1,16 @@
 
 export const initialState={
     
-    converted:0,
     totalCost:0,
-    cost:0,
+    cost:'',
     subtotal:0,
     total:0,
-    margin:0,
-    totalMargin:0,
     quantity:0,
     totalQnt:0,
-    price:0,
-    totalPrice:0
 }
 
 export const ACTIONS={
-    GET_TOTAL:'GET_TOTAL',
-    GET_MARGIN:'GET_MARGIN',
+    GET_SUBTOTAL:'GET_SUBTOTAL',
     GET_COST:'GET_COST',
     GET_QUANTITY:'GET_QUANTITY',
     RESET:'RESET'
@@ -40,19 +34,10 @@ export const ACTIONS={
      }
      return s;
  }
- const saleReducer=(state=initialState,action)=>{
+ const damageReducer=(state=initialState,action)=>{
  
      switch(action.type){
-         case ACTIONS.GET_TOTAL:{       
-             return{
-                 ...state,
-                 subtotal:state.quantity *action.price,
-                 price:action.price,
-                 totalPrice:state.totalPrice+state.price,
-                 total:state.total+state.subtotal
-             }
-         };
-         case ACTIONS.GET_MARGIN:{
+         case ACTIONS.GET_SUBTOTAL:{
              let margin = (state.subtotal - (state.quantity * state.cost))
              return{
                  ...state,
@@ -68,19 +53,14 @@ export const ACTIONS={
              }
          }
          case ACTIONS.GET_COST:{
-             let s = '';
-             if(action.str == null){
-                 return{
-                     ...state
-                 }
-             }else{
-                 
-                  s = converter(action.str);
-             }
+             console.debug("GETCOST",action.cost)
+                 const s = converter(action.cost);
+                  console.debug(s)
+             
              return{
                  ...state,
                  cost:s,
-                totalCost:(1*state.totalCost)+(1*state.cost),
+                totalCost:state.totalCost + (s*state.quantity)
                 
              }
          }
@@ -88,10 +68,8 @@ export const ACTIONS={
          case ACTIONS.RESET:{
              return{
                  ...state,
-                 total:0,
                  totalCost:0,
                  totalMargin:0,
-                 totalPrice:0,
                  totalQnt:0
              }
          }

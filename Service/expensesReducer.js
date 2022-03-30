@@ -19,7 +19,7 @@ const expensesReducer =(state=intialState,action)=>{
             return{
                 ...state,
                 value:action.value,
-       
+                   totalValue:state.totalValue+action.value 
             }
         }
 

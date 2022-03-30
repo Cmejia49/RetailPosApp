@@ -9,12 +9,11 @@ import 'react-native-gesture-handler';
 
 import buttonStyle from '../../../styles/buttonStyle';
 import textStyle from '../../../styles/textStyle';
-const CatButton = ({name, onPress}) =>{
+const CatButton = (props) =>{
     return(
-    <Pressable style={buttonStyle.catBtn}
-        onPress={onPress}
+    <Pressable   {...props}
     >
-        <Text style={textStyle.catTxt}>{name}</Text>
+           {props.children}
     </Pressable>
     )
 }

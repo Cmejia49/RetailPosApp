@@ -16,14 +16,14 @@ export const ApiProvider = (props) =>{
 
     const getProduct =(payload)=>{
         dispatch({
-            type:ACTIONS.GETPRODUCT,
+            type:ACTIONS.GET_PRODUCT,
             product:payload
         })
     }
 
     const getCategories =(category)=>{
         dispatch({
-            type:ACTIONS.GETCATEGORIES,
+            type:ACTIONS.GET_CATEGORIES,
             categories:category
         })
     }
@@ -31,35 +31,42 @@ export const ApiProvider = (props) =>{
     
     const getDetail =(payload)=>{
         dispatch({
-            type:ACTIONS.GETDETAIL,
+            type:ACTIONS.GET_DETAIL,
             detail:payload
         })
     }
 
     const getSale = (sale) =>{
         dispatch({
-            type:ACTIONS.GETSALE,
+            type:ACTIONS.GET_SALE,
             sale:sale,
         })
     }
     
     const getDamage =(damage)=>{
         dispatch({
-            type:ACTIONS.GETDAMAGE,
+            type:ACTIONS.GET_DAMAGE,
             damage:damage
         })
     }
 
     const getExpenses =(expenses)=>{
         dispatch({
-            type:ACTIONS.GETEXPENSES,
+            type:ACTIONS.GET_EXPENSES,
             expenses:expenses
+        })
+    }
+
+    const search=(searchValue)=>{
+        dispatch({
+            type:ACTIONS.SEARCH,
+            searchValue:searchValue
         })
     }
 
     const getToken = (token)=>{
         authDispatch({
-            type:AUTHACTIONS.GETTOKEN,
+            type:AUTHACTIONS.GET_TOKEN,
             token:token
         })
     }
@@ -85,6 +92,7 @@ export const ApiProvider = (props) =>{
         getSale,
         getDamage,
         getExpenses,
+        search,
         reset
     }
     return(

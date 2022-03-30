@@ -8,17 +8,18 @@ export const initialState = {
     change:0,
     amtReceive:'',
     totalItem:0,
-    date:''
+    date:'',
+    isSuccess:false
 };
 export const ACTIONS = {
     INCREMENT :'INCREMENT',
     DECREMENT:'DECREMENT',
-    ADDCART:'ADDCART',
-    DELETECART:'DELETECART',
-    GETTOTAL:'GETTOTAL',
-    GETCHANGE:'GETCHANGE',
-    GETTOTALITEM:'GETTOTALITEM',
-    GETDATE:'GETDATE',
+    ADD_CART:'ADDCART',
+    DELETE_CART:'DELETECART',
+    GET_TOTAL:'GETTOTAL',
+    GET_CHANGE:'GETCHANGE',
+    GET_TOTAL_ITEM:'GETTOTALITEM',
+    GET_DATE:'GETDATE',
     RESET:'RESET',
     SUCCESS_RESET:'SUCCESS_RESET'
 }
@@ -63,7 +64,7 @@ const themeReducer=(state=initialState,action)=>{
               return { ...state, product: updatedCart };
             };
             //CART OPERATION
-            case ACTIONS.ADDCART:{
+            case ACTIONS.ADD_CART:{
               console.debug("ADD_CART")
               const cartProduct = state.product.concat(action.product)
               console.debug(cartProduct);
@@ -74,7 +75,7 @@ const themeReducer=(state=initialState,action)=>{
               } 
             }
 
-            case ACTIONS.DELETECART:{
+            case ACTIONS.DELETE_CART:{
               console.debug("DELETE_CART",action.cartId)  
              
               const updatedCart = state.product.filter(
@@ -85,7 +86,7 @@ const themeReducer=(state=initialState,action)=>{
                 }
             }
 
-            case ACTIONS.GETTOTAL:{
+            case ACTIONS.GET_TOTAL:{
               let total = 0;
               console.debug("GET-TOTAL");
               if(state.product != undefined || state.product != null){
@@ -100,7 +101,7 @@ const themeReducer=(state=initialState,action)=>{
               }
             }
 
-            case ACTIONS.GETCHANGE:{
+            case ACTIONS.GET_CHANGE:{
                console.debug("GET_CHANGE") 
                const change =  (1*action.amtReceived)-state.total 
                return{
@@ -110,13 +111,13 @@ const themeReducer=(state=initialState,action)=>{
               }
             }
 
-            case ACTIONS.GETTOTALITEM:{
+            case ACTIONS.GET_TOTAL_ITEM:{
               return{
                 ...state,
                 totalItem:state.product.length
               }
             }
-            case ACTIONS.GETDATE:{
+            case ACTIONS.GET_DATE:{
               return{
                 ...state,
                 date:action.date

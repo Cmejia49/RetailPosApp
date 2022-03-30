@@ -8,10 +8,10 @@ import useExpenses from '../../../Service/ExpensesContext'
 
 
 const ExpensesContent = ({item}) =>{
-    const {getTotalValue} = useExpenses();
+    const {getValue} = useExpenses();
     React.useEffect(()=>{
-        getTotalValue(item.value);
-    })
+        getValue(item.value);
+    },[item])
     return(
         <TouchableWithoutFeedback>
         <View style={containerStyle.flContentContainer}>

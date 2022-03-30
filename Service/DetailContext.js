@@ -8,7 +8,8 @@ export const DetailProvider =(props)=>{
    
    
     React.useEffect(()=>{
-        updateStock()
+        updateStock();
+        updateQnt();
     },[state.index1,state.index2])
 
     const increment=()=>{
@@ -21,14 +22,14 @@ export const DetailProvider =(props)=>{
 
     const getVariety=(variety)=>{
         dispatch({
-            type:ACTIONS.GETVARIETY,
+            type:ACTIONS.GET_VARIETY,
             variety:variety
         })
     }
 
     const variationClick=(index,value)=>{
         dispatch({
-            type:ACTIONS.VARIATIONCLICK,
+            type:ACTIONS.VARIATION_CLICK,
             index:index,
             value:value,
         })
@@ -36,39 +37,45 @@ export const DetailProvider =(props)=>{
 
     const subVariationClick=(index,value)=>{
         dispatch({
-            type:ACTIONS.SUBVARIATIONCLICK,
+            type:ACTIONS.SUBVARIATION_CLICK,
             index:index,
             value:value,
         })
     }
     const getStoreFid = (storeFid)=>{
         dispatch({
-            type:ACTIONS.GETSTOREFID,
+            type:ACTIONS.GET_STOREFID,
             storeFid:storeFid
         })
     }
     const getIndex3 = (variety)=>{
         dispatch({
-            type:ACTIONS.GETINDEX3,
+            type:ACTIONS.GET_INDEX3,
             variety:variety
         })
     }
     const setIndex3 = (index3) =>{
         dispatch({
-            type:ACTIONS.SETINDEX3,
+            type:ACTIONS.SET_INDEX3,
             index3:index3
         })
     }
 
     const getInputPrice = (inputPrice) =>{
         dispatch({
-            type:ACTIONS.GETINPUTPRICE,
+            type:ACTIONS.GET_INPUTPRICE,
             inputPrice:inputPrice
         })
     }
     const updateStock=()=>{
         dispatch({
-            type:ACTIONS.UPDATESTOCK,
+            type:ACTIONS.UPDATE_STOCK,
+        })
+    }
+
+    const updateQnt=()=>{
+        dispatch({
+            type:ACTIONS.UPDATE_QNT
         })
     }
     
@@ -79,23 +86,8 @@ export const DetailProvider =(props)=>{
     }
 
     const values={
+        ...state,
         reset,
-        cartId:state.cartId,
-        name:state.name,
-        quantity:state.quantity,
-        variation:state.variation,
-        subvariation:state.subVariation,
-        variationName:state.variationName,
-        subVariationName:state.subVariationName,
-        variationValue:state.variationValue,
-        subVariationValue:state.subVariationValue,
-        inputPrice:state.inputPrice,
-        stock:state.stock,
-        stockFid:state.stockFid,
-        subtotal:state.subTotal,
-        index3:state.index3,
-        itemCode:state.itemCode,
-        price:state.price,
         increment,
         decrement,
         getVariety,

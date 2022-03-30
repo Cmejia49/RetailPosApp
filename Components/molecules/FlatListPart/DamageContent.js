@@ -4,21 +4,36 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import FlalistTxt from '../../atoms/text/FlatlistTxt'
 
 import containerStyle from '../../../styles/containerStyle'
-import useSale from '../../../Service/SaleContext'
+import useDamage from '../../../Service/DamageContext'
+
 
 const DamageContent = ({item}) =>{
-    const{margin,getTotal,
-        getCost,getMargin,getQuantity,cost,reset} = useSale();
-        React.useEffect(()=>{
-        
-            getTotal(item.price)
-            getCost(item.itemCode)
-            getQuantity(item.quantity)
-            getMargin();
-            return()=>{
-                reset();
+const{getCost,getQuantity,cost,reset} = useDamage();
+    React.useEffect(()=>{
+        getQuantity(item.quantity);
+        getCost(item.itemCode);
+        return()=>{reset()}
+    },[item])
+
+    const converter =(str)=>{
+        if(str == null){
+            return 0;
+        }
+        let s = '';
+        const shopCode = "SDANTEMOJI"
+        for(let i = 0;i<str.length;i++)
+        {
+            for(let j =0;j<shopCode.length;j++)
+            {
+                if(str.charAt(i) == shopCode.charAt(j))
+                {
+                 
+                      s+=''+shopCode.indexOf(shopCode.charAt(j))
+                }
             }
-        },[margin])
+        }
+        return s;
+    }
     return(
         <TouchableWithoutFeedback>
         <View style={containerStyle.flContentContainer}>
@@ -37,7 +52,7 @@ const DamageContent = ({item}) =>{
         }}>
                 <FlalistTxt value={item.quantity}/>
                 <FlalistTxt value={item.itemCode}/>
-                <FlalistTxt value={cost * item.quantity}/>
+                <FlalistTxt value={converter(item.itemCode) * item.quantity}/>
     
         </View>
         </View>

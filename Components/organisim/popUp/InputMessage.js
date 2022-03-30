@@ -6,7 +6,7 @@ import { TextInput } from 'react-native';
 import useDetailOper from '../../../Service/DetailContext';
 
 const InputMessage = ({visible,onPress,navigate}) =>{
-  
+  const{subVariationValue, variationValue} = useDetailOper()
   const{getInputPrice, inputPrice} = useDetailOper();
     return(
         <Modal
@@ -37,14 +37,14 @@ const InputMessage = ({visible,onPress,navigate}) =>{
               fontSize:18,
               lineHeight:24,
               fontWeight:"400"
-              }}>Variation: Red</Text>
+              }}>Variation:{variationValue}</Text>
             <Text style={{
                    margin:5,
               fontFamily:'serif',
               fontSize:18,
               lineHeight:24,
               fontWeight:"400"
-              }}>SubVariation: 12</Text>
+              }}>SubVariation: {subVariationValue}</Text>
           </View>
           <View style={{
               justifyContent:'flex-start', 

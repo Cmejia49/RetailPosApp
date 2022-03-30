@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { StatusBar } from 'expo-status-bar';
 import AppLoading from 'expo-app-loading';
 import {useFonts,EBGaramond_400Regular} from '@expo-google-fonts/eb-garamond';
-import { View,Animated,FlatList,ActivityIndicator, } from 'react-native';
+import { View,Animated,FlatList,ActivityIndicator,TextInput } from 'react-native';
 import Filter from "../Components/organisim/homePage/Filter";
 import ProductList from "../Components/organisim/homePage/ProductList";
 import Header from "../Components/organisim/homePage/Header";
@@ -11,7 +11,7 @@ import {GetProductUrl,GetCat} from "../Service/URLstring";
 import logo from '../assets/shoes.png'
 import ProductCard from '../Components/molecules/homePage/ProductCard'
 import containerStyle from '../styles/containerStyle';
-
+import textInputStyle from'../styles/textInputStyle';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from "@react-navigation/native";
 import useApi from "../Service/ApiContext";
@@ -56,8 +56,9 @@ const HomeScreen =({navigation}) =>{
 
   const showSearch = () =>{
     setisClicked(true)
+    console.debug("show")
       Animated.timing(fadeAnim, {
-        toValue: 0,
+        toValue: 1,
         duration: 500,
         useNativeDriver: true
       }).start();
@@ -65,8 +66,9 @@ const HomeScreen =({navigation}) =>{
 
   const hideSearch = () =>{
     setisClicked(false)
+    console.debug("hide")
     Animated.timing(fadeAnim,{
-      toValue:1,
+      toValue:0,
       duration:500,
       useNativeDriver: true
     }).start();
@@ -98,23 +100,20 @@ const HomeScreen =({navigation}) =>{
       style={[
         containerStyle.fadingContainer,
         {
-          // Bind opacity to animated value
           transform: [{
             translateY:fadeAnim.interpolate({
               inputRange: [0,1],
-              outputRange: [0, 50] 
+              outputRange: [-50,0] 
             }),
           }],
         }
       ]}>
-          <StatusBar backgroundColor="#F0F0F0" />
+         
           {product == null || product == undefined ? <ActivityIndicator/> : (
         <View style={containerStyle.container}>    
-          <Filter/>
-     
+       <Filter/>
            <View style={containerStyle.ProductContainer}>
-
-           <FlatList contentContainerStyle={{alignContent:'center',alignItems:'center', paddingBottom: 15}} 
+           <FlatList contentContainerStyle={{alignContent:'center',alignItems:'center',}} 
                 showsVerticalScrollIndicator={false}
                 data={product}
                  keyExtractor={(item,index) => item.itemId}  
