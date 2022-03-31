@@ -10,7 +10,11 @@ export const initialState ={
     expenses:[],
     isLoading:false,
     error:null,
-    searchValue:''
+    searchValue:'',
+    header:[],
+    page:1,
+    filterPage:1,
+    dict: {}
 };
 
 export const ACTIONS={
@@ -21,6 +25,9 @@ export const ACTIONS={
     GET_SALE:'GETSALE',
     GET_DAMAGE:'GETDAMAGE',
     GET_EXPENSES:'GETEXPENSES',
+    GET_HEADER:'GET_HEADER',
+    GET_PAGE:'GET_PAGE',
+    GET_FILTER_PAGE:'GET_PAGE',
     ERROR:'error',
     SEARCH:'SEARCH',
     RESET:'RESET'
@@ -36,15 +43,28 @@ const apiReducer = (state = initialState, action)=>{
             };
         }
         case ACTIONS.GET_PRODUCT:{
-            console.debug("GETPRODUCT",action.product);
+            const newDict = Object.assign({}, state.dict);
+
+            const prop = action.product;
+
+            const filtered = prop.reduce((accum, obj) => {
+                if(!newDict[obj.itemId]){
+                  newDict[obj.itemId] = true
+                  accum.push(obj)
+                }
+                return accum
+              }, [])
+              const newObjects = [...state.product, ...filtered]
+
             return{
                 ...state,
                 isLoading:false,
-                product:action.product,
+                dict:newDict,
+                product:newObjects
             };
         }
         case ACTIONS.GET_CATEGORIES:{
-            console.debug("GETCATEGORIES",action.categories);
+       
             return{
                 ...state,
                 isLoading:false,
@@ -88,6 +108,27 @@ const apiReducer = (state = initialState, action)=>{
             }
         }
 
+        case ACTIONS.GET_HEADER:{
+            return{
+                ...state,
+                header:action.header
+            }
+        }
+
+        case ACTIONS.GET_PAGE:{
+            return{
+                ...state,
+                page:action.page,
+            }
+        }
+
+        case ACTIONS.GET_FILTER_PAGE:{
+            return{
+                ...state,
+                filterPage:action.filterPage
+            }
+        }
+
         case ACTIONS.SEARCH:{
             console.debug("SEARCH");
             return{
@@ -105,10 +146,13 @@ const apiReducer = (state = initialState, action)=>{
         }
 
         case ACTIONS.RESET:{
+            console.debug("reset");
             return{
                 ...state,
                 product:[],
-                categories:[],
+                dict:{},
+                page:1,
+                filterPage:1
             }
         }
         default:
