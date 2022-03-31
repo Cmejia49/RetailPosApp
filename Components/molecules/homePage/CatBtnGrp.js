@@ -7,36 +7,47 @@ import buttonStyle from "../../../styles/buttonStyle";
 import { GetDetail } from '../../../Service/URLstring';
 import textStyle from '../../../styles/textStyle';
 const CatBtnGrp = () =>{
-  const {categories,getProduct,error,callEndpoint} = useApi();
+  const {categories,getProduct,error,callEndpoint,reset,getHeader,filterPage} = useApi();
         const [clickedId, setClickedId] =  React.useState(0);
         const [activeId, setActiveId] =  React.useState(0);
+        const [catName,setCatName] = React.useState('');
         const handleClick = (categoryName, id) => {
             setClickedId(id);
+            setCatName(categoryName)
             if(clickedId === id){
             if(activeId == 0){
+              reset();
               setActiveId(1)
-              searchByCat(categoryName)
+              searchByCat();
             }else{
               setActiveId(0)
             }
           }else{
+            reset();
               setActiveId(1)
-              searchByCat(categoryName)
+              searchByCat();
           }
           };
 
-          const searchByCat=async(categoryName)=>{
+          const searchByCat=async()=>{
             try {
               callEndpoint();
-              const response = await fetch(GetDetail+"catName?catName="+categoryName);
+              const response = await fetch(GetDetail+"catName?catName="+catName+"&PageNumber="+filterPage+"&Type=FILTER&PageSize=2");
               const json = await response.json();
+              const  head = await JSON.parse(response.headers.get("x-pagination"));
+              console.debug(head);
               if(response.status == 200){
-                  getProduct(json);
+                  getProduct(json)
+                  getHeader(head);
               }
            } catch (ex) {
             error(ex)
            } 
           }
+
+          React.useEffect(()=>{
+            searchByCat()
+          },[filterPage])
         return (
           <>
             {categories.map((item,i) => (

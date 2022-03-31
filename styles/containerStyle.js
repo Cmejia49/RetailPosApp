@@ -5,7 +5,6 @@ var containerStyle = StyleSheet.create({
     container: {
         flex:1,
         backgroundColor: "#F0F0F0",
-        marginTop:0,
         paddingTop:5,
      
     },
@@ -24,7 +23,7 @@ var containerStyle = StyleSheet.create({
      
     },
     ProductContainer:{
-        flex:1,
+        flex:1.5,
         justifyContent: "space-between",
         backgroundColor: "#F0F0F0",
         alignItems:'center',

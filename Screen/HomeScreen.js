@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { StatusBar } from 'expo-status-bar';
 import AppLoading from 'expo-app-loading';
 import {useFonts,EBGaramond_400Regular} from '@expo-google-fonts/eb-garamond';
-import { View,Animated,FlatList,ActivityIndicator,TextInput } from 'react-native';
+import { View,Animated,FlatList,ActivityIndicator,Alert } from 'react-native';
 import Filter from "../Components/organisim/homePage/Filter";
 import ProductList from "../Components/organisim/homePage/ProductList";
 import Header from "../Components/organisim/homePage/Header";
@@ -20,18 +20,21 @@ import useApi from "../Service/ApiContext";
   
 
 const HomeScreen =({navigation}) =>{
-  const {product,categories,isLoading,callEndpoint,getProduct,getCategories,error,reset} = useApi();
+  const {product,getFilterPage,reset,callEndpoint,getProduct,
+    getCategories,error,getHeader,header,getPage,page,filterPage} = useApi();
   
   const [isClicked, setisClicked] = React.useState(true);
-
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const fetchProduct = async () => {
     callEndpoint();
     try {
-    const response = await fetch(GetProductUrl);
+    const response = await fetch(GetProductUrl+"?PageNumber="+page+"&Type=GETALL&PageSize=2");
     const json = await response.json();
+    const  head = await JSON.parse(response.headers.get("x-pagination"));
     getProduct(json)
+    console.debug(head);
+    getHeader(head);
    } catch (ex) {
      error(ex)
    } 
@@ -49,14 +52,31 @@ const HomeScreen =({navigation}) =>{
  } 
 }
 
- React.useEffect(() => {
-  fetchCategories();
-  fetchProduct();
-},[]);
+const onEnd = () => {
+  if(page <= header.TotalPages){
+        if(header.Type == "GETALL"){
+          getPage(page+1);
+        }
+  }
+  if(filterPage <= header.TotalPages){
+    if(header.Type =="FILTER"){
+      getFilterPage(pfilterPage+1);
+      
+    }
+  }
+}
+React.useEffect(()=>{
+fetchCategories();
+return()=>{reset();}
+},[])
+
+React.useEffect(()=>{
+   fetchProduct();
+},[page])
 
   const showSearch = () =>{
     setisClicked(true)
-    console.debug("show")
+    console.debug("show"+page)
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 500,
@@ -116,8 +136,10 @@ const HomeScreen =({navigation}) =>{
            <FlatList contentContainerStyle={{alignContent:'center',alignItems:'center',}} 
                 showsVerticalScrollIndicator={false}
                 data={product}
-                 keyExtractor={(item,index) => item.itemId}  
-                 numColumns={2}  
+                 keyExtractor={(item,index) => item.itemId} 
+                 onEndReachedThreshold={0.2}
+                 onEndReached={onEnd}
+                 numColumns={2} 
                  renderItem={({item, index}) =>                        
                  <ProductCard 
                  item={item}
@@ -125,7 +147,6 @@ const HomeScreen =({navigation}) =>{
                  imgSrc={logo}/>
              }
                />
-
            </View>
         </View>
           )}

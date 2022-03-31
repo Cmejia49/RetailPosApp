@@ -57,6 +57,28 @@ export const ApiProvider = (props) =>{
         })
     }
 
+    const getHeader =(header)=>{
+        dispatch({
+            type:ACTIONS.GET_HEADER,
+            header:header
+        })
+    }
+
+    const getPage=(page,filterPage)=>{
+        dispatch({
+            type:ACTIONS.GET_PAGE,
+            page:page,
+            filterPage:filterPage
+        })
+    }
+
+    const getFilterPage=(filterPage)=>{
+        dispatch({
+            type:ACTIONS.GET_PAGE,
+            filterPage:filterPage
+        })
+    }
+
     const search=(searchValue)=>{
         dispatch({
             type:ACTIONS.SEARCH,
@@ -92,6 +114,9 @@ export const ApiProvider = (props) =>{
         getSale,
         getDamage,
         getExpenses,
+        getHeader,
+        getPage,
+        getFilterPage,
         search,
         reset
     }

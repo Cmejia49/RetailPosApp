@@ -75,7 +75,7 @@ const detailReducer=(state=initialState,action)=>{
             }
         };
 
-        case ACTIONS.UPDATEQNT:{
+        case ACTIONS.UPDATE_QNT:{
             return{
                 ...state,
                 quantity:0
