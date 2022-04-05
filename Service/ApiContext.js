@@ -72,13 +72,26 @@ export const ApiProvider = (props) =>{
         })
     }
 
-    const getFilterPage=(filterPage)=>{
+    const getFilterPageCat=(filterPage)=>{
         dispatch({
-            type:ACTIONS.GET_PAGE,
-            filterPage:filterPage
+            type:ACTIONS.GET_FILTER_PAGE_CAT,
+            filterPageCat:filterPage
         })
     }
 
+    const getFilterPageName=(filterPage)=>{
+        dispatch({
+            type:ACTIONS.GET_FILTER_PAGE_NAME,
+            filterPageName:filterPage
+        })
+    }
+
+    const getCatName =(catName)=>{
+        dispatch({
+            type:ACTIONS.GET_CAT_NAME,
+            catName:catName
+        })
+    }
     const search=(searchValue)=>{
         dispatch({
             type:ACTIONS.SEARCH,
@@ -116,7 +129,9 @@ export const ApiProvider = (props) =>{
         getExpenses,
         getHeader,
         getPage,
-        getFilterPage,
+        getFilterPageName,
+        getFilterPageCat,
+        getCatName,
         search,
         reset
     }

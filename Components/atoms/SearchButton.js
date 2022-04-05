@@ -1,28 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { StyleSheet, Text, View,Pressable,Animated } from 'react-native';
-import { NavigationContainer,useNavigation } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign } from '@expo/vector-icons'; 
 import 'react-native-gesture-handler';
 import {GetDetail} from '../../Service/URLstring'
-import buttonStyle from '../../styles/buttonStyle';
 import useApi from '../../Service/ApiContext';
-const SearchButton = ({name, onPress}) =>{
-    const {searchValue,getProduct,error,callEndpoint} = useApi();
+
+const SearchButton = ({name}) =>{
+    const {getProduct,error,searchValue,reset,filterPageName,header,getHeader} = useApi();
     const search = async()=>{
+        console.debug(searchValue);
         try {
-            callEndpoint();
-            const response = await fetch(GetDetail+"name?name=bags");
+            const response = await fetch(GetDetail+"name?ItemName="+searchValue+"&PageNumber="+filterPageName+"&Type=FILTERBYNAME&PageSize=2");
             const json = await response.json();
-            if(response.status == 200){
-                getProduct(json);
-            }
+            const head = await JSON.parse(response.headers.get("x-pagination"));
+            getHeader(head);
+            console.debug(head);
+            getProduct(json)
          } catch (ex) {
           error(ex)
          } 
     }
+
+    React.useEffect(()=>{
+        if(header.Type ==="FILTERBYNAME"){
+            search();
+        }
+    },[filterPageName])
     return(
     <AntDesign.Button
      name = {name}
@@ -34,7 +36,10 @@ const SearchButton = ({name, onPress}) =>{
       fontWeight:'bold',
      }
     }
-    onPress={()=>search()}
+    onPress={()=>{
+        reset();
+        search();
+    }}
     />
 
     )

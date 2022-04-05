@@ -13,8 +13,11 @@ export const initialState ={
     searchValue:'',
     header:[],
     page:1,
-    filterPage:1,
-    dict: {}
+    filterPageCat:1,
+    filterPageName:1,
+    catName:'',
+    dict: {},
+    saleDict:{}
 };
 
 export const ACTIONS={
@@ -27,7 +30,9 @@ export const ACTIONS={
     GET_EXPENSES:'GETEXPENSES',
     GET_HEADER:'GET_HEADER',
     GET_PAGE:'GET_PAGE',
-    GET_FILTER_PAGE:'GET_PAGE',
+    GET_FILTER_PAGE_CAT:'GET_PAGE_CAT',
+    GET_FILTER_PAGE_NAME:'GET_PAGE_NAME',
+    GET_CAT_NAME:'GET_CAT_NAME',
     ERROR:'error',
     SEARCH:'SEARCH',
     RESET:'RESET'
@@ -69,6 +74,7 @@ const apiReducer = (state = initialState, action)=>{
                 ...state,
                 isLoading:false,
                 categories:action.categories,
+                catName:action.categories[0].categoryName
             };
         }
 
@@ -83,10 +89,23 @@ const apiReducer = (state = initialState, action)=>{
 
         case ACTIONS.GET_SALE:{
             console.debug("GETSALE",action.sale);
+
+            const newDict = Object.assign({}, state.saleDict);
+
+            const prop = action.sale;
+            const filtered = prop.reduce((accum, obj) => {
+                if(!newDict[obj.saleId]){
+                  newDict[obj.saleId] = true
+                  accum.push(obj)
+                }
+                return accum
+              }, [])
+              const newObjects = [...filtered, ...state.sale]
             return{
                 ...state,
                 isLoading:false,
-                sale:action.sale
+                saleDict:newDict,
+                sale:newObjects
             }
         }
 
@@ -122,10 +141,24 @@ const apiReducer = (state = initialState, action)=>{
             }
         }
 
-        case ACTIONS.GET_FILTER_PAGE:{
+        case ACTIONS.GET_FILTER_PAGE_CAT:{
             return{
                 ...state,
-                filterPage:action.filterPage
+                filterPageCat:action.filterPageCat
+            }
+        }
+
+        case ACTIONS.GET_FILTER_PAGE_NAME:{
+            return{
+                ...state,
+                filterPageName:action.filterPageName
+            }
+        }
+
+        case ACTIONS.GET_CAT_NAME:{
+            return{
+                ...state,
+                catName:action.catName
             }
         }
 
@@ -149,10 +182,15 @@ const apiReducer = (state = initialState, action)=>{
             console.debug("reset");
             return{
                 ...state,
+                filterPageCat:1,
+                filterPageName:1,
+                header:[],
                 product:[],
+                sale:[],
                 dict:{},
+                saleDict:{},
                 page:1,
-                filterPage:1
+
             }
         }
         default:

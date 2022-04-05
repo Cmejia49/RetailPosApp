@@ -7,19 +7,18 @@ import FlalistTxt from '../../atoms/text/FlatlistTxt'
 import useApi from '../../../Service/ApiContext'
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-const Content = () =>{
+const Content = ({reach}) =>{
     const {sale} = useApi();
-    React.useEffect(()=>{
-      console.debug(sale);
-    },[])
+
     return(
         <View style={{flex:1,flexWrap:'wrap',marginVertical:10}}>
       {sale == null || sale == undefined ?(
-      <ActivityIndicator size="large" />
+     <View><ActivityIndicator size="large" color="#00ff00" /></View>
       ):(
         <FlatList contentContainerStyle={{width:screenWidth,borderWidth:1,borderTopWidth:0}} 
            data={sale}
-           keyExtractor={(sale,index) => sale.saleId}    
+           keyExtractor={(item,index) => item.saleId}  
+           onEndReached={reach} 
            ListHeaderComponent={<HeaderFlatlist value="Product">
                <FlalistTxt value={"Qnt"}/>
                <FlalistTxt value={"Price"}/>

@@ -11,7 +11,7 @@ import {GetProductUrl,GetCat} from "../Service/URLstring";
 import logo from '../assets/shoes.png'
 import ProductCard from '../Components/molecules/homePage/ProductCard'
 import containerStyle from '../styles/containerStyle';
-import textInputStyle from'../styles/textInputStyle';
+import { useIsFocused } from "@react-navigation/native";
 import 'react-native-gesture-handler';
 import { NavigationContainer } from "@react-navigation/native";
 import useApi from "../Service/ApiContext";
@@ -20,21 +20,23 @@ import useApi from "../Service/ApiContext";
   
 
 const HomeScreen =({navigation}) =>{
-  const {product,getFilterPage,reset,callEndpoint,getProduct,
-    getCategories,error,getHeader,header,getPage,page,filterPage} = useApi();
+  const isFocused = useIsFocused();
+  const {product,reset,callEndpoint,getProduct,
+    getCategories,error,getHeader,header,getPage,page,getFilterPageName,
+    getFilterPageCat,filterPageCat,filterPageName} = useApi();
   
   const [isClicked, setisClicked] = React.useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const fetchProduct = async () => {
-    callEndpoint();
     try {
     const response = await fetch(GetProductUrl+"?PageNumber="+page+"&Type=GETALL&PageSize=2");
     const json = await response.json();
     const  head = await JSON.parse(response.headers.get("x-pagination"));
-    getProduct(json)
-    console.debug(head);
+    
     getHeader(head);
+    console.debug(head);
+    getProduct(json)
    } catch (ex) {
      error(ex)
    } 
@@ -42,7 +44,6 @@ const HomeScreen =({navigation}) =>{
 
  
  const fetchCategories = async () => {
-  callEndpoint();
   try {
   const response = await fetch(GetCat);
   const json = await response.json();
@@ -53,30 +54,45 @@ const HomeScreen =({navigation}) =>{
 }
 
 const onEnd = () => {
-  if(page <= header.TotalPages){
-        if(header.Type == "GETALL"){
-          getPage(page+1);
-        }
+  if(page < header.TotalPages){
+    if(header.Type == "GETALL"){
+      getPage(page+1);
+    }
   }
-  if(filterPage <= header.TotalPages){
-    if(header.Type =="FILTER"){
-      getFilterPage(pfilterPage+1);
+  if(filterPageCat < header.TotalPages){
+    if(header.Type =="FILTERBYCAT"){
+      console.debug("sex")
+      getFilterPageCat(filterPageCat+1);   
+    }
+  }
+
+  if(filterPageName < header.TotalPages){
+    if(header.Type =="FILTERBYNAME"){
+      getFilterPageName(filterPageName+1);
       
     }
   }
 }
 React.useEffect(()=>{
-fetchCategories();
+  if(isFocused){ 
+    callEndpoint();
+    fetchCategories();
+    fetchProduct();
+}
+
 return()=>{reset();}
-},[])
+},[isFocused])
 
 React.useEffect(()=>{
-   fetchProduct();
+  if(header.Type =="GETALL"){
+    console.debug("punta ka rito ")
+    callEndpoint();
+    fetchProduct();
+  }
 },[page])
 
   const showSearch = () =>{
     setisClicked(true)
-    console.debug("show"+page)
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 500,
@@ -86,7 +102,6 @@ React.useEffect(()=>{
 
   const hideSearch = () =>{
     setisClicked(false)
-    console.debug("hide")
     Animated.timing(fadeAnim,{
       toValue:0,
       duration:500,
@@ -129,7 +144,7 @@ React.useEffect(()=>{
         }
       ]}>
          
-          {product == null || product == undefined ? <ActivityIndicator/> : (
+          {product == null || product == undefined ? <View><ActivityIndicator size="large" color="#00ff00" /></View> : (
         <View style={containerStyle.container}>    
        <Filter/>
            <View style={containerStyle.ProductContainer}>

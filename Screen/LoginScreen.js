@@ -4,9 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TextInput,
-  Button,
   TouchableOpacity,
   StatusBar
 } from "react-native";
@@ -14,10 +12,9 @@ import * as SecureStore from 'expo-secure-store';
 import { Login } from "../Service/URLstring";
 import useApi from "../Service/ApiContext";
 import useDetailOper from "../Service/DetailContext";
-import { get } from "react-native/Libraries/Utilities/PixelRatio";
-const LoginScreen =({navigation})=>{
+const LoginScreen =()=>{
   const{getToken,error} = useApi();
-  const{getStoreFid,getIndex3} = useDetailOper();
+  const{getStoreFid} = useDetailOper();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
    

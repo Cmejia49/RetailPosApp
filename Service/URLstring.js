@@ -1,6 +1,6 @@
-import React from 'react'
 
- export const ipAddress = "https://978e-110-93-84-177.ngrok.io";
+
+ export const ipAddress = "https://ad59-110-93-85-113.ngrok.io";
 
  const GetProductList = "/api/Items/Item";
 

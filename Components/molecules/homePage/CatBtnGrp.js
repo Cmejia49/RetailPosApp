@@ -7,54 +7,58 @@ import buttonStyle from "../../../styles/buttonStyle";
 import { GetDetail } from '../../../Service/URLstring';
 import textStyle from '../../../styles/textStyle';
 const CatBtnGrp = () =>{
-  const {categories,getProduct,error,callEndpoint,reset,getHeader,filterPage} = useApi();
-        const [clickedId, setClickedId] =  React.useState(0);
+  const {categories,getProduct,error,callEndpoint,reset,getHeader,filterPageCat,header,getCatName,catName} = useApi();
+        const [clickedId, setClickedId] =  React.useState(-1);
         const [activeId, setActiveId] =  React.useState(0);
-        const [catName,setCatName] = React.useState('');
-        const handleClick = (categoryName, id) => {
+
+        const handleClick =(id) => {
             setClickedId(id);
-            setCatName(categoryName)
+            console.debug(clickedId + " ad" + activeId);
             if(clickedId === id){
             if(activeId == 0){
               reset();
-              setActiveId(1)
               searchByCat();
+              setActiveId(1)
+
             }else{
               setActiveId(0)
             }
           }else{
             reset();
+            searchByCat();
               setActiveId(1)
-              searchByCat();
           }
           };
 
           const searchByCat=async()=>{
             try {
-              callEndpoint();
-              const response = await fetch(GetDetail+"catName?catName="+catName+"&PageNumber="+filterPage+"&Type=FILTER&PageSize=2");
+              console.debug("searchByCat"+catName);
+              const response = await fetch(GetDetail+"CatName?CatName="+catName+"&PageNumber="+filterPageCat+"&Type=FILTERBYCAT&PageSize=2");
               const json = await response.json();
-              const  head = await JSON.parse(response.headers.get("x-pagination"));
-              console.debug(head);
-              if(response.status == 200){
-                  getProduct(json)
+              const head = await JSON.parse(response.headers.get("x-pagination"));
                   getHeader(head);
-              }
+                  console.debug(head);
+                  getProduct(json)
+              
            } catch (ex) {
             error(ex)
            } 
           }
 
           React.useEffect(()=>{
-            searchByCat()
-          },[filterPage])
+            if(header.Type == "FILTERBYCAT" || activeId != 0){
+              callEndpoint();
+              searchByCat();
+            }
+          },[filterPageCat])
         return (
           <>
             {categories.map((item,i) => (
             <View key={item.catId} style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 5 }}>
                 <CatButton 
-                  onPress={(event) =>{
-                    handleClick(item.categoryName,i)
+                  onPress={() =>{
+                    getCatName(item.categoryName);
+                    handleClick(i);
                   }}
                   style={(i == clickedId && activeId == 1 )? buttonStyle.buttonActive : buttonStyle.variationBtn}>
                     <Text>{item.categoryName}</Text>
