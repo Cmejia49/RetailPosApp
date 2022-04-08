@@ -15,9 +15,10 @@ const Content = ({reach}) =>{
       {sale == null || sale == undefined ?(
      <View><ActivityIndicator size="large" color="#00ff00" /></View>
       ):(
-        <FlatList contentContainerStyle={{width:screenWidth,borderWidth:1,borderTopWidth:0}} 
+        <FlatList contentContainerStyle={{ width:screenWidth,borderWidth:1,borderTopWidth:0}} 
            data={sale}
            keyExtractor={(item,index) => item.saleId}  
+           onEndReachedThreshold={0.2}
            onEndReached={reach} 
            ListHeaderComponent={<HeaderFlatlist value="Product">
                <FlalistTxt value={"Qnt"}/>

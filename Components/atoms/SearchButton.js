@@ -3,7 +3,7 @@ import { AntDesign } from '@expo/vector-icons';
 import 'react-native-gesture-handler';
 import {GetDetail} from '../../Service/URLstring'
 import useApi from '../../Service/ApiContext';
-
+import { useFocusEffect } from '@react-navigation/native';
 const SearchButton = ({name}) =>{
     const {getProduct,error,searchValue,reset,filterPageName,header,getHeader} = useApi();
     const search = async()=>{
@@ -20,11 +20,13 @@ const SearchButton = ({name}) =>{
          } 
     }
 
-    React.useEffect(()=>{
-        if(header.Type ==="FILTERBYNAME"){
-            search();
-        }
-    },[filterPageName])
+    useFocusEffect(
+        React.useCallback(()=>{
+            if(header.Type ==="FILTERBYNAME"){
+                search();
+            }
+        },[filterPageName])
+        );
     return(
     <AntDesign.Button
      name = {name}

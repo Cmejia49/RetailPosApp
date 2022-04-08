@@ -11,20 +11,27 @@ import moment from 'moment';
 import useApi from '../Service/ApiContext';
 import {FilterOption} from '../Data/FilterOption'
 import { GetExpensesEndpoint } from '../Service/URLstring';
+import { useFocusEffect } from '@react-navigation/native';
+
 const ExpensesScreen = ({navigation})=>{
-  const {token,getExpenses,error,callEndpoint} = useApi();
+
+  const {token,getExpenses,error,reset,callEndpoint,getFilterPageName,getHeader,
+    filterPageName,getFilterPageCat,filterPageCat,header} = useApi();
 
   const [value, setValue] = React.useState('Today')
   const [text, setText] = React.useState('Today')
   const [modalVisible, setModalVisible]= React.useState(false)
   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
-  const [date,setDate] = React.useState("");
+  const [dates,setDate] = React.useState("");
 
 
   const filterExpensesByDay = async(day)=>{
+    let filterPageDay = filterPageCat;
     try {
-      callEndpoint();
-      const response = await fetch(GetExpensesEndpoint+"/"+"day?day="+day,{
+      if(filterPageDay > header.TotalPages){
+        filterPageDay = 1 ;
+      }
+      const response = await fetch(GetExpensesEndpoint+"/"+"day?day="+day+"&PageNumber="+filterPageDay+"&Type=FILTERBYDAY&PageSize=2",{
         method:"GET",
         headers:{
           'Authorization': 'Bearer '+token,
@@ -32,6 +39,9 @@ const ExpensesScreen = ({navigation})=>{
         }
       })
       const json = await response.json();
+      const head = await JSON.parse(response.headers.get("x-pagination"));
+      getHeader(head);
+      console.debug(head);
       getExpenses(json);
      } catch (ex) {
       error(ex)
@@ -39,9 +49,12 @@ const ExpensesScreen = ({navigation})=>{
   }
   
   const filterExpensesByDate = async(date)=>{
-    try{
-      callEndpoint();
-      const response =await fetch(GetExpensesEndpoint+"/"+"date?date="+date,{
+    let filterPageDate = filterPageName;
+    try {
+      if(filterPageDate > header.TotalPages){
+        filterPageDate = 1 ;
+      }
+      const response =await fetch(GetExpensesEndpoint+"/"+"date?DateTime="+date+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=2",{
         method:"GET",
         headers:{
           'Authorization': 'Bearer '+token,
@@ -49,15 +62,59 @@ const ExpensesScreen = ({navigation})=>{
         }
       })
       const json = await response.json();
+      const head = await JSON.parse(response.headers.get("x-pagination"));
+      getHeader(head);
+      console.debug(head);
       getExpenses(json);
     }catch(ex){
       error(ex)
     }
   }
+  const onEnd = () => {
 
-  React.useEffect(()=>{
+    if(filterPageCat <= header.TotalPages){
+      if(header.Type == "FILTERBYDAY"){
+         getFilterPageCat(filterPageCat+1);    
+      }
+    }
+  
+    if(filterPageName <= header.TotalPages){
+      if(header.Type == "FILTERBYDATE"){
+        getFilterPageName(filterPageName+1);    
+      }
+    }
+  
+  }
+
+useFocusEffect(
+  React.useCallback(()=>{
+    callEndpoint();
     handleConfirm();
-  },[])
+    return () => {
+      reset();
+    };
+
+},[])
+);
+
+useFocusEffect(
+  React.useCallback(()=>{
+  if(header.Type == "FILTERBYDAY"){
+  callEndpoint();
+  filterExpensesByDay(value)
+  }
+},[filterPageCat])
+);
+
+useFocusEffect(
+  React.useCallback(()=>{
+  if(header.Type == "FILTERBYDATE"){
+    callEndpoint();
+    filterExpensesByDate(dates);    
+  }
+},[filterPageName])
+);
+
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -67,8 +124,14 @@ const ExpensesScreen = ({navigation})=>{
   };
 
   const handleConfirm = (date) => {
+    if(dates != moment(date).format('MM/DD/YYYY')){
+    reset();
     setDate(moment(date).format('MM/DD/YYYY'));
     filterExpensesByDate(moment(date).format('MM/DD/YYYY'));
+    hideDatePicker();
+    }
+    setValue("Today")
+    setText("Today")
     hideDatePicker();
   };
 
@@ -116,20 +179,25 @@ const ExpensesScreen = ({navigation})=>{
               text={res.text}
               value={value}
              onPress={()=>{
+              if(value != res.key){
+                getFilterPageCat(1)
+               reset();
               filterExpensesByDay(res.key);
                setValue(res.key);
                setModalVisible(!modalVisible);
                setText(res.text);
+              }
+              setModalVisible(!modalVisible);
               }}/>
               );        
             })}
         </FilterMessage>
         <Filter text={text} 
-              date={date}
+              date={dates}
               pressCalendar={showDatePicker}
               onPress={()=>setModalVisible(true)}
               />
-            <Content/>
+               <Content reach={()=>onEnd()}/>
             <Footer/>
         </View>
     );

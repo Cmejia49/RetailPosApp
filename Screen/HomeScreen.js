@@ -2,28 +2,23 @@ import React, { useRef } from "react";
 import { StatusBar } from 'expo-status-bar';
 import AppLoading from 'expo-app-loading';
 import {useFonts,EBGaramond_400Regular} from '@expo-google-fonts/eb-garamond';
-import { View,Animated,FlatList,ActivityIndicator,Alert } from 'react-native';
+import { View,Animated,FlatList,ActivityIndicator, } from 'react-native';
 import Filter from "../Components/organisim/homePage/Filter";
-import ProductList from "../Components/organisim/homePage/ProductList";
 import Header from "../Components/organisim/homePage/Header";
-
+import { useFocusEffect } from '@react-navigation/native';
 import {GetProductUrl,GetCat} from "../Service/URLstring";
 import logo from '../assets/shoes.png'
 import ProductCard from '../Components/molecules/homePage/ProductCard'
 import containerStyle from '../styles/containerStyle';
-import { useIsFocused } from "@react-navigation/native";
 import 'react-native-gesture-handler';
-import { NavigationContainer } from "@react-navigation/native";
 import useApi from "../Service/ApiContext";
-
 
   
 
 const HomeScreen =({navigation}) =>{
-  const isFocused = useIsFocused();
-  const {product,reset,callEndpoint,getProduct,
+  const {product,callEndpoint,getProduct,
     getCategories,error,getHeader,header,getPage,page,getFilterPageName,
-    getFilterPageCat,filterPageCat,filterPageName} = useApi();
+    getFilterPageCat,filterPageCat,filterPageName,reset} = useApi();
   
   const [isClicked, setisClicked] = React.useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -61,7 +56,6 @@ const onEnd = () => {
   }
   if(filterPageCat < header.TotalPages){
     if(header.Type =="FILTERBYCAT"){
-      console.debug("sex")
       getFilterPageCat(filterPageCat+1);   
     }
   }
@@ -73,23 +67,27 @@ const onEnd = () => {
     }
   }
 }
-React.useEffect(()=>{
-  if(isFocused){ 
+useFocusEffect(
+  React.useCallback(() => {
     callEndpoint();
     fetchCategories();
     fetchProduct();
-}
+    return () => {
+      reset();
+      console.debug('Screen was unfocused');
+    };
+  },[])
+);
 
-return()=>{reset();}
-},[isFocused])
+useFocusEffect(
+  React.useCallback(() => {
+    if(header.Type == "GETALL"){
+      callEndpoint();
+      fetchProduct();
+    }
+  },[page])
+);
 
-React.useEffect(()=>{
-  if(header.Type =="GETALL"){
-    console.debug("punta ka rito ")
-    callEndpoint();
-    fetchProduct();
-  }
-},[page])
 
   const showSearch = () =>{
     setisClicked(true)
@@ -152,7 +150,7 @@ React.useEffect(()=>{
                 showsVerticalScrollIndicator={false}
                 data={product}
                  keyExtractor={(item,index) => item.itemId} 
-                 onEndReachedThreshold={0.2}
+                 onEndReachedThreshold={0.3}
                  onEndReached={onEnd}
                  numColumns={2} 
                  renderItem={({item, index}) =>                        

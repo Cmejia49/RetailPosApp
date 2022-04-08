@@ -1,6 +1,6 @@
 
 
- export const ipAddress = "https://ad59-110-93-85-113.ngrok.io";
+ export const ipAddress = "https://1bcc-110-93-85-113.ngrok.io";
 
  const GetProductList = "/api/Items/Item";
 

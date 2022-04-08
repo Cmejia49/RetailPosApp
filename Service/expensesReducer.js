@@ -8,7 +8,8 @@ export const intialState={
 export const ACTION={
     GET_VALUE:"GET_VALUE",
     GET_DETAIL:"GET_DETAIL",
-    GET_TOTAL:'GET_TOTAL'
+    GET_TOTAL:'GET_TOTAL',
+    RESET:'RESET'
 }
 
 const expensesReducer =(state=intialState,action)=>{
@@ -32,16 +33,15 @@ const expensesReducer =(state=intialState,action)=>{
             }
         }
 
-        case ACTION.GET_TOTAL:{
-            console.debug("GET_TOTAL");
+        case ACTION.RESET:{
             return{
                 ...state,
-                totalValue:state.totalValue+action.totalValue
+                totalValue:0
             }
         }
 
         default:{
-            throw new Error(`No case for type ${action.type} found in SaleReducer.`);
+            throw new Error(`No case for type ${action.type} found in Expenses Reducer.`);
         }
     }
 }

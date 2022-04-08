@@ -8,9 +8,10 @@ import useExpenses from '../../../Service/ExpensesContext'
 
 
 const ExpensesContent = ({item}) =>{
-    const {getValue} = useExpenses();
+    const {getValue,reset} = useExpenses();
     React.useEffect(()=>{
         getValue(item.value);
+        return()=>{reset()}
     },[item])
     return(
         <TouchableWithoutFeedback>

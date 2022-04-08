@@ -6,8 +6,9 @@ import FlalistTxt from '../../atoms/text/FlatlistTxt'
 import containerStyle from '../../../styles/containerStyle'
 import useSale from '../../../Service/SaleContext'
 const ContentFlatlist = ({item}) =>{
-const{getTotal,
-getCost,getMargin,getQuantity,reset,} = useSale();
+const{getTotal,getCost,
+    getMargin,getQuantity,reset,} = useSale();
+
 React.useEffect(()=>{
 
     getCost(item.itemCode)

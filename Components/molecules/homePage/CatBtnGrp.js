@@ -6,6 +6,7 @@ import CatButton from '../../atoms/homePage/CatButton'
 import buttonStyle from "../../../styles/buttonStyle";
 import { GetDetail } from '../../../Service/URLstring';
 import textStyle from '../../../styles/textStyle';
+import { useFocusEffect } from '@react-navigation/native';
 const CatBtnGrp = () =>{
   const {categories,getProduct,error,callEndpoint,reset,getHeader,filterPageCat,header,getCatName,catName} = useApi();
         const [clickedId, setClickedId] =  React.useState(-1);
@@ -13,7 +14,6 @@ const CatBtnGrp = () =>{
 
         const handleClick =(id) => {
             setClickedId(id);
-            console.debug(clickedId + " ad" + activeId);
             if(clickedId === id){
             if(activeId == 0){
               reset();
@@ -45,12 +45,14 @@ const CatBtnGrp = () =>{
            } 
           }
 
-          React.useEffect(()=>{
-            if(header.Type == "FILTERBYCAT" || activeId != 0){
-              callEndpoint();
-              searchByCat();
-            }
-          },[filterPageCat])
+          useFocusEffect(
+              React.useCallback(()=>{
+                if(header.Type == "FILTERBYCAT" || activeId != 0){
+                  callEndpoint();
+                  searchByCat();
+                }
+              },[filterPageCat])
+              )
         return (
           <>
             {categories.map((item,i) => (

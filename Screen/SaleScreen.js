@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { StyleSheet, View,ActivityIndicator } from 'react-native';
+import { StyleSheet, View, } from 'react-native';
 import moment from 'moment';
 import Footer from '../Components/organisim/salePage/Footer';
 import Content from '../Components/organisim/salePage/Content';
@@ -14,7 +14,7 @@ import {FilterOption} from '../Data/FilterOption'
 import { SaleProvider } from '../Service/SaleContext';
 import { useIsFocused } from "@react-navigation/native";
 
-const SaleScreen = ({navigation})=>{
+const SaleScreen = ()=>{
 
   const isFocused = useIsFocused();
   
@@ -24,11 +24,15 @@ const SaleScreen = ({navigation})=>{
   const [text, setText] = React.useState('Today')
   const [modalVisible, setModalVisible]= React.useState(false)
   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
-  const [date,setDate] = React.useState("");
+  const [dates,setDate] = React.useState("");
 
 const filterSaleByDay = async(day)=>{
+  let filterPageDay = filterPageCat;
   try {
-    const response = await fetch(GetSaleEndPoint+"/"+"day?day="+day+"&PageNumber="+filterPageCat+"&Type=FILTERBYDAY&PageSize=2",{
+    if(filterPageDay > header.TotalPages){
+      filterPageDay = 1 ;
+    }
+    const response = await fetch(GetSaleEndPoint+"/"+"day?day="+day+"&PageNumber="+filterPageDay+"&Type=FILTERBYDAY&PageSize=2",{
       method:"GET",
       headers:{
         'Authorization': 'Bearer '+token,
@@ -38,6 +42,7 @@ const filterSaleByDay = async(day)=>{
     const json = await response.json();
     const head = await JSON.parse(response.headers.get("x-pagination"));
     getHeader(head);
+    console.debug(head);
     getSale(json);
    } catch (ex) {
     error(ex)
@@ -45,8 +50,12 @@ const filterSaleByDay = async(day)=>{
 }
 
 const filterSaleByDate = async(date)=>{
-  try{
-    const response =await fetch(GetSaleEndPoint+"/"+"date?DateTime="+date+"&PageNumber="+filterPageName+"&Type=FILTERBYDATE&PageSize=2",{
+  let filterPageDate = filterPageName;
+  try {
+    if(filterPageDate > header.TotalPages){
+      filterPageDate = 1 ;
+    }
+    const response =await fetch(GetSaleEndPoint+"/"+"date?DateTime="+date+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=2",{
       method:"GET",
       headers:{
         'Authorization': 'Bearer '+token,
@@ -64,13 +73,14 @@ const filterSaleByDate = async(date)=>{
 }
 
 const onEnd = () => {
-  if(filterPageCat < header.TotalPages){
+
+  if(filterPageCat <= header.TotalPages){
     if(header.Type == "FILTERBYDAY"){
-      getFilterPageCat(filterPageCat+1);    
+       getFilterPageCat(filterPageCat+1);    
     }
   }
 
-  if(filterPageName < header.TotalPages){
+  if(filterPageName <= header.TotalPages){
     if(header.Type == "FILTERBYDATE"){
       getFilterPageName(filterPageName+1);    
     }
@@ -83,21 +93,24 @@ React.useEffect(()=>{
   callEndpoint();
   handleConfirm();
   }
-  return()=>{reset();}
 },[isFocused])
 
 React.useEffect(()=>{
+  if(isFocused){ 
   if(header.Type == "FILTERBYDAY"){
   callEndpoint();
   filterSaleByDay(value)
   }
+}
 },[filterPageCat])
 
 React.useEffect(()=>{
+  if(isFocused){ 
   if(header.Type == "FILTERBYDATE"){
-    console.debug("look")
-    filterSaleByDate(date);    
+    callEndpoint();
+    filterSaleByDate(dates);    
   }
+}
 },[filterPageName])
 
 const showDatePicker = () => {
@@ -109,10 +122,15 @@ const hideDatePicker = () => {
 };
 
 const handleConfirm = (date) => {
+  if(dates != moment(date).format('MM/DD/YYYY')){
   reset();
   setDate(moment(date).format('MM/DD/YYYY') );
   filterSaleByDate(moment(date).format('MM/DD/YYYY') );
   hideDatePicker();
+}
+setValue("Today")
+setText("Today")
+hideDatePicker();
 };
     return(
       <SaleProvider>
@@ -131,21 +149,25 @@ const handleConfirm = (date) => {
               text={res.text}
               value={value}
              onPress={()=>{
-                 reset();
-                 filterSaleByDay(res.key)
-                 setValue(res.key)
-                 setModalVisible(!modalVisible);
-                 setText(res.text)
+               if(value != res.key){
+                 getFilterPageCat(1)
+                reset();
+                filterSaleByDay(res.key)
+                setValue(res.key)
+                setModalVisible(!modalVisible);
+                setText(res.text)
+               }
+               setModalVisible(!modalVisible);
               }}/>
               );        
             })}
         </FilterMessage>
               <Filter text={text} 
-              date={date}
+              date={dates}
               pressCalendar={showDatePicker}
               onPress={()=>setModalVisible(true)}
               />
-              <Content reach={onEnd}/>
+              <Content reach={()=>onEnd()}/>
               <Footer/>
         </View>
         </SaleProvider>

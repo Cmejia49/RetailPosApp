@@ -1,4 +1,4 @@
-import React, { createContext, useReducer,useContext } from "react";
+import React, { createContext, useReducer,useContext,useCallback } from "react";
 
 import apiReducer,{initialState,ACTIONS} from "./ApiReducer";
 import authReducer,{authIntialState,AUTHACTIONS} from "./AuthReducer";
@@ -10,16 +10,14 @@ export const ApiProvider = (props) =>{
     const [state,dispatch] = useReducer(apiReducer,initialState);
     const [authState, authDispatch] = useReducer(authReducer,authIntialState)
     
-    const callEndpoint =()=>{
-        dispatch({type:ACTIONS.CALL_ENDPOINT})
-    }
+    const callEndpoint =useCallback(()=>
+        dispatch({type:ACTIONS.CALL_ENDPOINT}),[]
+    )
 
-    const getProduct =(payload)=>{
-        dispatch({
+    const getProduct =useCallback((payload)=> dispatch({
             type:ACTIONS.GET_PRODUCT,
             product:payload
-        })
-    }
+        }),[state.product])
 
     const getCategories =(category)=>{
         dispatch({
@@ -50,41 +48,37 @@ export const ApiProvider = (props) =>{
         })
     }
 
-    const getExpenses =(expenses)=>{
+    const getExpenses =useCallback((expenses)=>
         dispatch({
             type:ACTIONS.GET_EXPENSES,
             expenses:expenses
-        })
-    }
+        }),[state.expenses]
+    )
 
-    const getHeader =(header)=>{
+    const getHeader =useCallback((header)=>
         dispatch({
             type:ACTIONS.GET_HEADER,
             header:header
-        })
-    }
+        }),[state.header])
 
-    const getPage=(page,filterPage)=>{
+    const getPage=(filterPage)=>{
         dispatch({
             type:ACTIONS.GET_PAGE,
-            page:page,
-            filterPage:filterPage
+            page:filterPage,
         })
     }
 
-    const getFilterPageCat=(filterPage)=>{
+    const getFilterPageCat=useCallback((filterPage)=>
         dispatch({
             type:ACTIONS.GET_FILTER_PAGE_CAT,
             filterPageCat:filterPage
-        })
-    }
+        }),[state.filterPageCat])
 
-    const getFilterPageName=(filterPage)=>{
+    const getFilterPageName=useCallback((filterPage)=>
         dispatch({
             type:ACTIONS.GET_FILTER_PAGE_NAME,
             filterPageName:filterPage
-        })
-    }
+        }),[state.filterPageName])
 
     const getCatName =(catName)=>{
         dispatch({
@@ -111,9 +105,9 @@ export const ApiProvider = (props) =>{
         dispatch({type:ACTIONS.ERROR,error:ex})
     }
 
-    const reset=()=>{
-        dispatch({type:ACTIONS.RESET})
-    }
+    const reset=useCallback(()=>
+        dispatch({type:ACTIONS.RESET}),[]
+    )
 
     const value={
         ...state,

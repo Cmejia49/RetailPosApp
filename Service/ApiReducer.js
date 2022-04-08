@@ -48,23 +48,12 @@ const apiReducer = (state = initialState, action)=>{
             };
         }
         case ACTIONS.GET_PRODUCT:{
-            const newDict = Object.assign({}, state.dict);
-
-            const prop = action.product;
-
-            const filtered = prop.reduce((accum, obj) => {
-                if(!newDict[obj.itemId]){
-                  newDict[obj.itemId] = true
-                  accum.push(obj)
-                }
-                return accum
-              }, [])
-              const newObjects = [...state.product, ...filtered]
+         
+              const newObjects = [...state.product, ...action.product]
 
             return{
                 ...state,
                 isLoading:false,
-                dict:newDict,
                 product:newObjects
             };
         }
@@ -90,9 +79,10 @@ const apiReducer = (state = initialState, action)=>{
         case ACTIONS.GET_SALE:{
             console.debug("GETSALE",action.sale);
 
-            const newDict = Object.assign({}, state.saleDict);
+            const newDict = Object.assign({}, state.dict);
 
             const prop = action.sale;
+
             const filtered = prop.reduce((accum, obj) => {
                 if(!newDict[obj.saleId]){
                   newDict[obj.saleId] = true
@@ -100,30 +90,56 @@ const apiReducer = (state = initialState, action)=>{
                 }
                 return accum
               }, [])
-              const newObjects = [...filtered, ...state.sale]
+              const newObjects = [...state.sale, ...filtered]
             return{
                 ...state,
                 isLoading:false,
-                saleDict:newDict,
+                dict:newDict,
                 sale:newObjects
             }
         }
 
         case ACTIONS.GET_DAMAGE:{
             console.debug("GETDAMAGE",action.damage);
+            const newDict = Object.assign({}, state.dict);
+
+            const prop = action.damage;
+
+            const filtered = prop.reduce((accum, obj) => {
+                if(!newDict[obj.damageId]){
+                  newDict[obj.damageId] = true
+                  accum.push(obj)
+                }
+                return accum
+              }, [])
+              const newObjects = [...state.damage, ...filtered]
             return{
                 ...state,
                 isLoading:false,
-                damage:action.damage
+                dict:newDict,
+                damage:newObjects
             }
         }
 
         case ACTIONS.GET_EXPENSES:{
             console.debug("GETEXPENSES",action.expenses);
+            const newDict = Object.assign({}, state.dict);
+
+            const prop = action.expenses;
+
+            const filtered = prop.reduce((accum, obj) => {
+                if(!newDict[obj.expensesId]){
+                  newDict[obj.expensesId] = true
+                  accum.push(obj)
+                }
+                return accum
+              }, [])
+              const newObjects = [...state.expenses, ...filtered]
             return{
                 ...state,
                 isLoading:false,
-                expenses:action.expenses
+                dict:newDict,
+                expenses:newObjects
             }
         }
 
@@ -187,6 +203,8 @@ const apiReducer = (state = initialState, action)=>{
                 header:[],
                 product:[],
                 sale:[],
+                damage:[],
+                expenses:[],
                 dict:{},
                 saleDict:{},
                 page:1,
