@@ -19,8 +19,7 @@ const expensesReducer =(state=intialState,action)=>{
             console.debug("GET_VALUE")
             return{
                 ...state,
-                value:action.value,
-                   totalValue:state.totalValue+action.value 
+                   value:action.value,
             }
         }
 
@@ -33,9 +32,18 @@ const expensesReducer =(state=intialState,action)=>{
             }
         }
 
+        case ACTION.GET_TOTAL:{
+            return{
+                ...state,
+                totalValue:state.totalValue+action.value 
+            }
+        }
+
         case ACTION.RESET:{
             return{
                 ...state,
+                value:'',
+                detail:'',
                 totalValue:0
             }
         }

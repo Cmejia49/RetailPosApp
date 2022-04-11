@@ -22,6 +22,13 @@ export const ExpensesProvider =(props)=>{
         })
     }
 
+    const getTotalValue=(value)=>{
+        dispatch({
+            type:ACTION.GET_TOTAL,
+            value:value
+        })
+    }
+
 
     const reset =()=>{
         dispatch({
@@ -33,7 +40,8 @@ export const ExpensesProvider =(props)=>{
         ...state,
         getValue,
         getDetail,
-        reset
+        reset,
+        getTotalValue
     }
 
     return(

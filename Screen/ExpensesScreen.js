@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View  } from 'react-native';
+import { View,StyleSheet  } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import Content from '../Components/organisim/expensesPage/Content';
 import Footer from '../Components/organisim/expensesPage/Footer';
@@ -31,7 +31,7 @@ const ExpensesScreen = ({navigation})=>{
       if(filterPageDay > header.TotalPages){
         filterPageDay = 1 ;
       }
-      const response = await fetch(GetExpensesEndpoint+"/"+"day?day="+day+"&PageNumber="+filterPageDay+"&Type=FILTERBYDAY&PageSize=2",{
+      const response = await fetch(GetExpensesEndpoint+"/"+"day?day="+day+"&PageNumber="+filterPageDay+"&Type=FILTERBYDAY&PageSize=10",{
         method:"GET",
         headers:{
           'Authorization': 'Bearer '+token,
@@ -54,7 +54,7 @@ const ExpensesScreen = ({navigation})=>{
       if(filterPageDate > header.TotalPages){
         filterPageDate = 1 ;
       }
-      const response =await fetch(GetExpensesEndpoint+"/"+"date?DateTime="+date+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=2",{
+      const response =await fetch(GetExpensesEndpoint+"/"+"date?DateTime="+date+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=10",{
         method:"GET",
         headers:{
           'Authorization': 'Bearer '+token,
@@ -88,7 +88,6 @@ const ExpensesScreen = ({navigation})=>{
 
 useFocusEffect(
   React.useCallback(()=>{
-    callEndpoint();
     handleConfirm();
     return () => {
       reset();
@@ -126,6 +125,7 @@ useFocusEffect(
   const handleConfirm = (date) => {
     if(dates != moment(date).format('MM/DD/YYYY')){
     reset();
+    callEndpoint();
     setDate(moment(date).format('MM/DD/YYYY'));
     filterExpensesByDate(moment(date).format('MM/DD/YYYY'));
     hideDatePicker();
@@ -162,9 +162,7 @@ useFocusEffect(
   }, [navigation]);
 
     return(
-        <View style={{  flex:1,
-          backgroundColor: "#FFF4F4",
-          paddingTop:5,}}>
+      <View style={styles.container}>
                   <Calendar
               visible={isDatePickerVisible}
               onConfrim={handleConfirm}
@@ -202,4 +200,15 @@ useFocusEffect(
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+  container: {
+      flex:1,
+      backgroundColor: "#FFF4F4",
+      paddingTop:5,
+  },
+  
+ 
+
+})
 export default ExpensesScreen;

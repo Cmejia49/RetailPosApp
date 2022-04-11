@@ -18,10 +18,10 @@ const Content = ({reach}) =>{
      <FlatList contentContainerStyle={{width:screenWidth,borderWidth:1,borderTopWidth:0}} 
            data={expenses}
            keyExtractor={(expenses,index) =>expenses.expensesId}    
-           onEndReachedThreshold={0.5}
+            onEndReachedThreshold={0.2}
            onEndReached={reach}
            ListHeaderComponent={<HeaderFlatlist value="Detail">
-               <FlalistTxt value={"Amount"}/>
+                <FlalistTxt value={"Amount"}/>
                <FlalistTxt value={"Date"}/>
            </HeaderFlatlist>}
            ListHeaderComponentStyle={{ borderColor: '#000', borderBottomWidth:1}}

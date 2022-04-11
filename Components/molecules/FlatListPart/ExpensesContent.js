@@ -8,9 +8,10 @@ import useExpenses from '../../../Service/ExpensesContext'
 
 
 const ExpensesContent = ({item}) =>{
-    const {getValue,reset} = useExpenses();
+    const {getTotalValue,reset} = useExpenses();
+    
     React.useEffect(()=>{
-        getValue(item.value);
+        getTotalValue(item.value);
         return()=>{reset()}
     },[item])
     return(
