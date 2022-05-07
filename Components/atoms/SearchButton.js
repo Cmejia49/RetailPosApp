@@ -1,29 +1,31 @@
 import * as React from 'react';
 import { AntDesign } from '@expo/vector-icons'; 
 import 'react-native-gesture-handler';
-import {GetDetail} from '../../Service/URLstring'
+import {GetProductUrl} from '../../Service/URLstring'
 import useApi from '../../Service/ApiContext';
 import { useFocusEffect } from '@react-navigation/native';
+import {fetchByName} from '../../Service/FetchService'
 const SearchButton = ({name}) =>{
     const {getProduct,error,searchValue,reset,filterPageName,header,getHeader} = useApi();
-    const search = async()=>{
-        console.debug(searchValue);
-        try {
-            const response = await fetch(GetDetail+"name?ItemName="+searchValue+"&PageNumber="+filterPageName+"&Type=FILTERBYNAME&PageSize=2");
-            const json = await response.json();
-            const head = await JSON.parse(response.headers.get("x-pagination"));
-            getHeader(head);
-            console.debug(head);
-            getProduct(json)
-         } catch (ex) {
-          error(ex)
-         } 
+
+    const searchProduct = async()=>{
+        console.debug(searchValue)
+        try{
+            await fetchByName(searchValue,filterPageName)
+            .then(res =>{
+                getHeader(res[0]);
+               getProduct(res[1]);
+             })
+        }catch(ex){
+            error(ex)
+        }
+
     }
 
     useFocusEffect(
         React.useCallback(()=>{
             if(header.Type ==="FILTERBYNAME"){
-                search();
+                searchProduct();
             }
         },[filterPageName])
         );
@@ -40,7 +42,7 @@ const SearchButton = ({name}) =>{
     }
     onPress={()=>{
         reset();
-        search();
+        searchProduct();
     }}
     />
 

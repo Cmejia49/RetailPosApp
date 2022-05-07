@@ -11,7 +11,7 @@ export const initialState ={
     isLoading:false,
     error:null,
     searchValue:'',
-    header:[],
+    header:["GETALL"],
     page:1,
     filterPageCat:1,
     filterPageName:1,
@@ -68,7 +68,6 @@ const apiReducer = (state = initialState, action)=>{
         }
 
         case ACTIONS.GET_DETAIL:{
-            console.debug("GETDETAIL",action.detail);
             return{
                 ...state,
                 isLoading:false,
@@ -77,8 +76,6 @@ const apiReducer = (state = initialState, action)=>{
         }
 
         case ACTIONS.GET_SALE:{
-            console.debug("GETSALE",action.sale);
-
             const newDict = Object.assign({}, state.dict);
 
             const prop = action.sale;

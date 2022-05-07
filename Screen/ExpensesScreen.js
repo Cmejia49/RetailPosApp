@@ -12,6 +12,7 @@ import useApi from '../Service/ApiContext';
 import {FilterOption} from '../Data/FilterOption'
 import { GetExpensesEndpoint } from '../Service/URLstring';
 import { useFocusEffect } from '@react-navigation/native';
+import { fetchExpensesByDay, fetchExpensesByDate } from "../Service/FetchService";
 
 const ExpensesScreen = ({navigation})=>{
 
@@ -31,18 +32,12 @@ const ExpensesScreen = ({navigation})=>{
       if(filterPageDay > header.TotalPages){
         filterPageDay = 1 ;
       }
-      const response = await fetch(GetExpensesEndpoint+"/"+"day?day="+day+"&PageNumber="+filterPageDay+"&Type=FILTERBYDAY&PageSize=10",{
-        method:"GET",
-        headers:{
-          'Authorization': 'Bearer '+token,
-          'Accept': '*/*',
-        }
-      })
-      const json = await response.json();
-      const head = await JSON.parse(response.headers.get("x-pagination"));
-      getHeader(head);
-      console.debug(head);
-      getExpenses(json);
+      await fetchExpensesByDay(day,filterPageDay,token).then(res =>{
+        getHeader(res[0]);
+        getExpenses(res[1]);
+     }).catch(err=>{
+       error(err)
+     })
      } catch (ex) {
       error(ex)
      } 
@@ -54,18 +49,12 @@ const ExpensesScreen = ({navigation})=>{
       if(filterPageDate > header.TotalPages){
         filterPageDate = 1 ;
       }
-      const response =await fetch(GetExpensesEndpoint+"/"+"date?DateTime="+date+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=10",{
-        method:"GET",
-        headers:{
-          'Authorization': 'Bearer '+token,
-          'Accept': '*/*',
-        }
-      })
-      const json = await response.json();
-      const head = await JSON.parse(response.headers.get("x-pagination"));
-      getHeader(head);
-      console.debug(head);
-      getExpenses(json);
+      await fetchExpensesByDate(date,filterPageDate,token).then(res =>{
+        getHeader(res[0]);
+        getExpenses(res[1]);
+     }).catch(err=>{
+       error(err)
+     })
     }catch(ex){
       error(ex)
     }
@@ -88,6 +77,7 @@ const ExpensesScreen = ({navigation})=>{
 
 useFocusEffect(
   React.useCallback(()=>{
+    callEndpoint();
     handleConfirm();
     return () => {
       reset();

@@ -12,16 +12,15 @@ import {FilterOption} from '../Data/FilterOption'
 import { GetDamageEndPoint } from '../Service/URLstring';
 import { DamageProvider } from '../Service/DamageContext';
 import useApi from '../Service/ApiContext';
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect } from '@react-navigation/native';
+import { fetchDamageByDay, fetchDamageByDate } from "../Service/FetchService";
 
 const DamageScreen = ()=>{
-
-  const isFocused = useIsFocused();
 
   const {token,getDamage,error,reset,callEndpoint,getFilterPageName,getHeader,
     filterPageName,getFilterPageCat,filterPageCat,header} = useApi();
 
-  const [value, setValue] = React.useState()
+  const [value, setValue] = React.useState('Today')
   const [text, setText] = React.useState('Today')
   const [modalVisible, setModalVisible]= React.useState(false)
   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
@@ -34,18 +33,12 @@ const filterDamageByDay = async(day)=>{
     if(filterPageDay > header.TotalPages){
       filterPageDay = 1 ;
     }
-    const response = await fetch(GetDamageEndPoint+"/"+"day?day="+day+"&PageNumber="+filterPageDay+"&Type=FILTERBYDAY&PageSize=2",{
-      method:"GET",
-      headers:{
-        'Authorization': 'Bearer '+token,
-        'Accept': '*/*',
-      }
-    })
-    const json = await response.json();
-    const head = await JSON.parse(response.headers.get("x-pagination"));
-    getHeader(head);
-    console.debug(head);
-    getDamage(json);
+    await fetchDamageByDate(day,filterPageDay,token).then(res =>{
+      getHeader(res[0]);
+      getDamage(res[1]);
+   }).catch(err=>{
+     error(err)
+   })
    } catch (ex) {
     error(ex)
    } 
@@ -57,22 +50,15 @@ const filterDamageByDate = async(date)=>{
     if(filterPageDate > header.TotalPages){
       filterPageDate = 1 ;
     }
-    const response = await fetch(GetDamageEndPoint+"/"+"date?DateTime="+date+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=2",{
-      method:"GET",
-      headers:{
-        'Authorization': 'Bearer '+token,
-        'Accept': '*/*',
-      }
-    })
-    const json = await response.json();
-    const head = await JSON.parse(response.headers.get("x-pagination"));
-    getHeader(head);
-    console.debug(head);
-    getDamage(json);
-
-   } catch (ex) {
+    await fetchDamageByDate(date,filterPageDate,token).then(res =>{
+      getHeader(res[0]);
+      getDamage(res[1]);
+   }).catch(err=>{
+     error(err)
+   })
+  }catch(ex){
     error(ex)
-   } 
+  }
 }
 const onEnd =  () => {
   if(filterPageCat <= header.TotalPages){
@@ -89,31 +75,34 @@ const onEnd =  () => {
 
 }
 
-React.useEffect(()=>{
-  if(isFocused){ 
+useFocusEffect(
+  React.useCallback( () => {
     callEndpoint();
     handleConfirm();
+    return () => {
+     reset();
+      console.debug('Screen was unfocused');
+    };
+  },[])
+);
+
+useFocusEffect(
+  React.useCallback( () => {
+    if(header.Type == "FILTERBYDAY"){
+      callEndpoint();
+      filterDamageByDay(value)
+      }
+  },[filterPageCat])
+);
+useFocusEffect(
+  React.useCallback( () => {
+    if(header.Type == "FILTERBYDATE"){
+      callEndpoint();
+      filterDamageByDate(dates);    
     }
-  
-},[isFocused])
+  },[filterPageName])
+);
 
-React.useEffect(()=>{
-  if(isFocused){ 
-  if(header.Type == "FILTERBYDAY"){
-  callEndpoint();
-  filterDamageByDay(value)
-  }
-}
-},[filterPageCat])
-
-React.useEffect(()=>{
-  if(isFocused){ 
-  if(header.Type == "FILTERBYDATE"){
-    callEndpoint();
-    filterDamageByDate(dates);    
-  }
-}
-},[filterPageName])
 
 const showDatePicker = () => {
   setDatePickerVisibility(true);

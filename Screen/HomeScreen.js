@@ -2,53 +2,56 @@ import React, { useRef } from "react";
 import { StatusBar } from 'expo-status-bar';
 import AppLoading from 'expo-app-loading';
 import {useFonts,EBGaramond_400Regular} from '@expo-google-fonts/eb-garamond';
-import { View,Animated,FlatList,ActivityIndicator, } from 'react-native';
+import { View,Animated,FlatList,ActivityIndicator,Button } from 'react-native';
 import Filter from "../Components/organisim/homePage/Filter";
 import Header from "../Components/organisim/homePage/Header";
 import { useFocusEffect } from '@react-navigation/native';
-import {GetProductUrl,GetCat} from "../Service/URLstring";
 import logo from '../assets/shoes.png'
 import ProductCard from '../Components/molecules/homePage/ProductCard'
 import containerStyle from '../styles/containerStyle';
 import 'react-native-gesture-handler';
 import useApi from "../Service/ApiContext";
-
+import { fetchProduct, fetchCategory } from "../Service/FetchService";
+import { isLoading } from "expo-font";
   
 
 const HomeScreen =({navigation}) =>{
   const {product,callEndpoint,getProduct,
     getCategories,error,getHeader,header,getPage,page,getFilterPageName,
-    getFilterPageCat,filterPageCat,filterPageName,reset} = useApi();
+    getFilterPageCat,filterPageCat,filterPageName,reset,isLoading} = useApi();
   
   const [isClicked, setisClicked] = React.useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const fetchProduct = async () => {
-    try {
-    const response = await fetch(GetProductUrl+"?PageNumber="+page+"&Type=GETALL&PageSize=2");
-    const json = await response.json();
-    const  head = await JSON.parse(response.headers.get("x-pagination"));
-    
-    getHeader(head);
-    console.debug(head);
-    getProduct(json)
-   } catch (ex) {
-     error(ex)
-   } 
+  const sige = async () => {
+    try{
+        await fetchProduct(page).then(res =>{
+                 getHeader(res[0]);
+                getProduct(res[1]);
+              }).catch(err=>{
+                error(err)
+              })
+       }catch(ex){
+              error(ex);
+       }
+   
+      
  }
 
  
- const fetchCategories = async () => {
-  try {
-  const response = await fetch(GetCat);
-  const json = await response.json();
-    getCategories(json)
- } catch (ex) {
-   error(ex)
- } 
+ const category = async () => {
+    await fetchCategory()
+    .then(res =>{
+      getCategories(res)
+   }).catch(err=>{
+     error(err)
+    })
+
+
 }
 
 const onEnd = () => {
+  console.debug(header);
   if(page < header.TotalPages){
     if(header.Type == "GETALL"){
       getPage(page+1);
@@ -68,12 +71,12 @@ const onEnd = () => {
   }
 }
 useFocusEffect(
-  React.useCallback(() => {
+  React.useCallback( () => {
     callEndpoint();
-    fetchCategories();
-    fetchProduct();
+     category();
+    sige();
     return () => {
-      reset();
+     reset();
       console.debug('Screen was unfocused');
     };
   },[])
@@ -82,8 +85,7 @@ useFocusEffect(
 useFocusEffect(
   React.useCallback(() => {
     if(header.Type == "GETALL"){
-      callEndpoint();
-      fetchProduct();
+      sige();
     }
   },[page])
 );
@@ -142,14 +144,15 @@ useFocusEffect(
         }
       ]}>
          
-          {product == null || product == undefined ? <View><ActivityIndicator size="large" color="#00ff00" /></View> : (
-        <View style={containerStyle.container}>    
+          {product == null || isLoading ? <View><ActivityIndicator size="large" color="#00ff00" /></View> : (
+        <View style={containerStyle.container}>  
+        
        <Filter/>
            <View style={containerStyle.ProductContainer}>
            <FlatList contentContainerStyle={{alignContent:'center',alignItems:'center',}} 
                 showsVerticalScrollIndicator={false}
                 data={product}
-                 keyExtractor={(item,index) => item.itemId} 
+                 keyExtractor={(item,index) => index} 
                  onEndReachedThreshold={0.3}
                  onEndReached={onEnd}
                  numColumns={2} 

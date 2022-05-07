@@ -8,15 +8,13 @@ import Filter from '../Components/organisim/salePage/Filter';
 import FilterMessage from '../Components/organisim/popUp/FilterMessage'
 import RadioButton from '../Components/organisim/popUp/RadioButton';
 import Calendar from '../Components/organisim/popUp/Calendar';
-import { GetSaleEndPoint } from '../Service/URLstring';
+import { useFocusEffect } from '@react-navigation/native';
 import useApi from '../Service/ApiContext';
 import {FilterOption} from '../Data/FilterOption'
 import { SaleProvider } from '../Service/SaleContext';
-import { useIsFocused } from "@react-navigation/native";
-
+import { fetchSaleByDay, fetchSaleByDate } from "../Service/FetchService";
 const SaleScreen = ()=>{
 
-  const isFocused = useIsFocused();
   
   const {token,getSale,error,reset,callEndpoint,getFilterPageName,getHeader,
     filterPageName,getFilterPageCat,filterPageCat,header} = useApi();
@@ -25,25 +23,19 @@ const SaleScreen = ()=>{
   const [modalVisible, setModalVisible]= React.useState(false)
   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
   const [dates,setDate] = React.useState("");
-
+  
 const filterSaleByDay = async(day)=>{
   let filterPageDay = filterPageCat;
   try {
     if(filterPageDay > header.TotalPages){
       filterPageDay = 1 ;
     }
-    const response = await fetch(GetSaleEndPoint+"/"+"day?day="+day+"&PageNumber="+filterPageDay+"&Type=FILTERBYDAY&PageSize=2",{
-      method:"GET",
-      headers:{
-        'Authorization': 'Bearer '+token,
-        'Accept': '*/*',
-      }
-    })
-    const json = await response.json();
-    const head = await JSON.parse(response.headers.get("x-pagination"));
-    getHeader(head);
-    console.debug(head);
-    getSale(json);
+    await fetchSaleByDay(day,filterPageDay,token).then(res =>{
+      getHeader(res[0]);
+      getSale(res[1]);
+   }).catch(err=>{
+     error(err)
+   })
    } catch (ex) {
     error(ex)
    } 
@@ -55,18 +47,12 @@ const filterSaleByDate = async(date)=>{
     if(filterPageDate > header.TotalPages){
       filterPageDate = 1 ;
     }
-    const response =await fetch(GetSaleEndPoint+"/"+"date?DateTime="+date+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=2",{
-      method:"GET",
-      headers:{
-        'Authorization': 'Bearer '+token,
-        'Accept': '*/*',
-      }
-    })
-    const json = await response.json();
-    const head = await JSON.parse(response.headers.get("x-pagination"));
-    getHeader(head);
-    console.debug(head);
-    getSale(json);
+    await fetchSaleByDate(date,filterPageDate,token).then(res =>{
+      getHeader(res[0]);
+      getSale(res[1]);
+   }).catch(err=>{
+     error(err)
+   })
   }catch(ex){
     error(ex)
   }
@@ -88,30 +74,35 @@ const onEnd = () => {
 
 }
 
-React.useEffect(()=>{
-  if(isFocused){ 
-  callEndpoint();
-  handleConfirm();
-  }
-},[isFocused])
-
-React.useEffect(()=>{
-  if(isFocused){ 
-  if(header.Type == "FILTERBYDAY"){
-  callEndpoint();
-  filterSaleByDay(value)
-  }
-}
-},[filterPageCat])
-
-React.useEffect(()=>{
-  if(isFocused){ 
-  if(header.Type == "FILTERBYDATE"){
+useFocusEffect(
+  React.useCallback( () => {
     callEndpoint();
-    filterSaleByDate(dates);    
-  }
-}
-},[filterPageName])
+    handleConfirm();
+    return () => {
+     reset();
+      console.debug('Screen was unfocused');
+    };
+  },[])
+);
+
+useFocusEffect(
+  React.useCallback( () => {
+    if(header.Type == "FILTERBYDAY"){
+      callEndpoint();
+      filterSaleByDay(value)
+      }
+  },[filterPageCat])
+);
+useFocusEffect(
+  React.useCallback( () => {
+    if(header.Type == "FILTERBYDATE"){
+      callEndpoint();
+      filterSaleByDate();    
+    }
+  },[filterPageName])
+);
+
+
 
 const showDatePicker = () => {
   setDatePickerVisibility(true);

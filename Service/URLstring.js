@@ -1,24 +1,24 @@
 
 
- export const ipAddress = "https://b8de-110-93-85-113.ngrok.io";
+ export const ipAddress = "https://1106-110-93-84-79.ngrok.io";
 
- const GetProductList = "/api/Items/Item";
+ const GetProductList = "/api/v1/Item/item";
 
- const GetCatList = "/api/ItemCategories";
+ const GetCatList = "/api/v1/Category";
 
- const GetDetailEndPoint = "/api/Items/"
+ const GetDetailEndPoint = "/api/v1/Items/"
 
- const login = "/api/Auth/Login"
+ const login = "/api/v1/Auth/Login"
 
- const CreateSale ="/api/SaleItem"
+ const CreateSale ="/api/v1/SaleItem"
 
- const GetSale = "/api/SaleItem"
+ const GetSale = "/api/v1/SaleItem"
 
- const CreateDamage = "/api/DamageReport"
+ const CreateDamage = "/api/v1/DamageReport"
 
- const GetDamage="/api/DamageReport"
+ const GetDamage="/api/v1/DamageReport"
 
- const GetExpenses="/api/Expenses"
+ const GetExpenses="/api/v1/Expenses"
 
 export const GetProductUrl = ipAddress + GetProductList;
 

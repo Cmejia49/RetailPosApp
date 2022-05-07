@@ -53,7 +53,6 @@ export const ACTIONS={
              }
          }
          case ACTIONS.GET_COST:{
-             console.debug("GETCOST",action.cost)
                  const s = converter(action.cost);
                   console.debug(s)
              
