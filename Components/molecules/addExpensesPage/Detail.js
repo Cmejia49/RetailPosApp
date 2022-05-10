@@ -10,11 +10,9 @@ const Detail =() =>{
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={containerStyle.middleContainer}>
-                <Text style={textStyle.detailTxt}>Enter Amount:</Text>
                 <AmountInput 
              onChangeText={x => getValue(x)}
              value={value}/>
-            <Text style={textStyle.detailTxt}>Enter Detail:</Text>
             <MultiLineInput/>
         </View>
         </TouchableWithoutFeedback>

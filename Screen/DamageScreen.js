@@ -33,7 +33,7 @@ const filterDamageByDay = async(day)=>{
     if(filterPageDay > header.TotalPages){
       filterPageDay = 1 ;
     }
-    await fetchDamageByDate(day,filterPageDay,token).then(res =>{
+    await fetchDamageByDay(day,filterPageDay,token).then(res =>{
       getHeader(res[0]);
       getDamage(res[1]);
    }).catch(err=>{

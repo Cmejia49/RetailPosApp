@@ -1,4 +1,5 @@
-import {GetProductUrl,GetCat, GetDetail,GetSaleEndPoint,GetExpensesEndpoint,GetDamageEndPoint} from "../Service/URLstring";
+import {GetProductUrl,GetCat, GetDetail,GetSaleEndPoint,
+  ExpensesEndPoint,GetDamageEndPoint} from "../Service/URLstring";
 
 
 export const fetchProduct = (page = 1)=>{
@@ -118,7 +119,7 @@ export const fetchSaleByDate=(date,filterPageDate,token)=>{
 export const fetchExpensesByDay=(day,filterPageDate,token)=>{
   return new Promise((resolve, reject)=>{
     try{
-      fetch(GetExpensesEndpoint+"?Day="+day+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=10",{
+      fetch(ExpensesEndPoint+"?Day="+day+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=10",{
         method:"GET",
         headers:{
           'Authorization': 'Bearer '+token,
@@ -140,7 +141,7 @@ export const fetchExpensesByDay=(day,filterPageDate,token)=>{
 export const fetchExpensesByDate=(date,filterPageDate,token)=>{
   return new Promise((resolve, reject)=>{
     try{
-      fetch(GetExpensesEndpoint+"?DateTime="+date+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=10",{
+      fetch(ExpensesEndPoint+"?DateTime="+date+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=10",{
         method:"GET",
         headers:{
           'Authorization': 'Bearer '+token,
@@ -158,13 +159,32 @@ export const fetchExpensesByDate=(date,filterPageDate,token)=>{
   })
 }
 
+//POST 
 
-
+export const postExpenses=(token,expenses)=>{
+  return new Promise((resolve, reject)=>{
+    try{
+      fetch(ExpensesEndPoint,{
+        method:"POST",
+        headers:{
+          'Authorization': 'Bearer '+token,
+          'Content-Type': 'application/json',
+          'Accept': '*/*',
+        },
+        body:JSON.stringify(expenses)
+      }).then(res =>{console.debug(res.status);
+         resolve(res.status)});
+    }catch(ex){
+      reject(ex)
+    }
+  })
+}
 //EXPENSES -END
 
 //DAMAGE -START
 
 export const fetchDamageByDay=(day,filterPageDay,token)=>{
+  console.debug(day);
   return new Promise((resolve, reject)=>{
     try{
       fetch(GetDamageEndPoint+"?Day="+day+"&PageNumber="+filterPageDay+"&Type=FILTERBYDAY&PageSize=2",{
@@ -207,3 +227,19 @@ export const fetchDamageByDate=(date,filterPageDate,token)=>{
 }
 
 //DAMAGE END 
+
+//DETAIL START
+
+export const fetchDetail =(key)=>{
+  return new Promise((resolve,reject)=>{
+    try{
+      fetch(GetDetail+key)
+      .then(res => {
+        console.debug(res.json()); 
+        resolve(res.json())
+        })
+    }catch(ex){
+      reject(ex);
+    }
+  })
+}

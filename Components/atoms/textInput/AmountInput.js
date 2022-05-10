@@ -5,6 +5,7 @@ import textInputStyle from '../../../styles/textInputStyle'
 const AmountInput = (props) =>{
     return(
         <TextInput 
+        placeholder='ENTER AMOUNT'
         style={textInputStyle.inputTxt}
         {...props}
         />

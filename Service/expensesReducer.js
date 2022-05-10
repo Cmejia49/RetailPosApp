@@ -16,7 +16,6 @@ const expensesReducer =(state=intialState,action)=>{
     
     switch(action.type){
         case ACTION.GET_VALUE:{
-            console.debug("GET_VALUE")
             return{
                 ...state,
                    value:action.value,
@@ -24,7 +23,6 @@ const expensesReducer =(state=intialState,action)=>{
         }
 
         case ACTION.GET_DETAIL:{
-            console.debug("GET_DETAIL")
             
             return{
                 ...state,

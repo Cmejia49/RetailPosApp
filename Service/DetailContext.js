@@ -8,6 +8,7 @@ export const DetailProvider =(props)=>{
    
    
     React.useEffect(()=>{
+        console.debug("hehe")
         updateStock();
         updateQnt();
     },[state.index1,state.index2])

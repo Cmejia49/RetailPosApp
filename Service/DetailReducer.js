@@ -84,17 +84,19 @@ const detailReducer=(state=initialState,action)=>{
 
         case ACTIONS.GET_INDEX3:{
             const variety = action.variety
-            const variation = undefined;
-            const subVariation = undefined;
+            var variation = undefined;
+            var subVariation = undefined;
             if(variety.variationList.length == 1){
-                 variation =  variety.variationList[0].variationValuesList;
+                 variation =  variety.variationList[0].variationValuesList[0];
+                 console.debug(JSON.stringify(variation)+"walang hiya")
             }else if(variety.variationList.length == 2){
-                 subVariation =  variety.variationList[0].variationValuesList[0].children;
-            }
+                 subVariation =  variety.variationList[0].variationValuesList[0].children[0];
+                 console.debug(subVariation+"walang hiya2")
+                }
 
             //if no variation
             if(variety.variationList === undefined || variety.variationList === null){
-                const index3 = srchIndex(subVariation.stockList)
+                const index3 =  srchIndex(variety.stockList,state.storeFid)
                 return{
                     ...state,
                     index3:index3
@@ -102,8 +104,8 @@ const detailReducer=(state=initialState,action)=>{
             }
             //1 variation
             if(variation !== undefined || variation !== null && subVariation === null){
- 
-                const index3 = srchIndex(subVariation.stockList)
+                console.debug("sex"+variation.stockList)
+                const index3 =  srchIndex(variation.stockList,state.storeFid)
                return{
                    ...state,
                    index3:index3
@@ -111,7 +113,7 @@ const detailReducer=(state=initialState,action)=>{
             }
             //2 variation
             if(subVariation !== undefined || subVariation !== null){
-               const index3 = srchIndex(subVariation.stockList)
+               const index3 = srchIndex(subVariation.stockList,state.storeFid)
                return{
                    ...state,
                    index3:index3
@@ -140,7 +142,7 @@ const detailReducer=(state=initialState,action)=>{
             //Validate the size of variety
             //No variety
             if(variety.variationList === undefined || variety.variationList === null){
-               total = variety.stockList[index3].quantity;
+               total = variety.stockList[state.index3].quantity;
                 return{
                     ...state,
                     stock:total,
@@ -154,7 +156,8 @@ const detailReducer=(state=initialState,action)=>{
                 const length = variety.variationList[0].variationValuesList.length;
                 for(let i = 0 ;i<length;i++){
                     const v1 = variety.variationList[0].variationValuesList[i];
-                   total += v1.stockList[index3].quantity
+                    console.debug(JSON.stringify(v1.stockList)+"asdasd"+state.index3)
+                   total += v1.stockList[state.index3].quantity
                    variation.push(v1);
                 }
                 return{
@@ -246,14 +249,17 @@ const detailReducer=(state=initialState,action)=>{
             let index1 = state.index1;
             let index2 = state.index2;
             let index3 = state.index3;
+            console.debug(index1 + "index1")
+            console.debug(state.variation.length + "  "+state.subVariation.length)
             //1 variety
-            if(state.variation !== undefined && state.subVariation === undefined){
+            if(state.variation !== 0 && state.subVariation.length == 0){
              if(index1 != undefined){
                 try{
+                    console.debug(index1 + "index123")
                     let stock = state.variation[index1].stockList[index3].quantity
                     let itemCode = state.variation[index1].stockList[index3].itemCode
                     let price = state.variation[index1].stockList[index3].price
-                    let stockFid = state.variation[index1].cstockList[index3].stockId
+                    let stockFid = state.variation[index1].stockList[index3].stockId
                     return{
                         ...state,
                         stock:stock,
@@ -317,15 +323,15 @@ const detailReducer=(state=initialState,action)=>{
 }
 
 //Search for index3
-const srchIndex=(stockList)=>{
+const srchIndex=(stockList,storeFid)=>{
     const low = 0;
     const high =  stockList.length - 1;
     while(low<=high){
        const highId =  stockList[high].storeFid;
        const lowId = stockList[low].storeFid;
-       if(state.storeFid=== highId){
+       if(storeFid=== highId){
            return high;
-       }else if (state.storeFid === lowId){
+       }else if (storeFid=== lowId){
         return low;
        }else{
            console.debug("not find");

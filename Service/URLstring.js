@@ -1,12 +1,12 @@
 
 
- export const ipAddress = "https://1106-110-93-84-79.ngrok.io";
+ export const ipAddress = "https://fd26-110-93-85-108.ngrok.io";
 
  const GetProductList = "/api/v1/Item/item";
 
  const GetCatList = "/api/v1/Category";
 
- const GetDetailEndPoint = "/api/v1/Items/"
+ const GetDetailEndPoint = "/api/v1/Item/"
 
  const login = "/api/v1/Auth/Login"
 
@@ -18,7 +18,7 @@
 
  const GetDamage="/api/v1/DamageReport"
 
- const GetExpenses="/api/v1/Expenses"
+ const Expenses="/api/v1/Expenses"
 
 export const GetProductUrl = ipAddress + GetProductList;
 
@@ -36,6 +36,4 @@ export const CreateDamageEndPoint = ipAddress+CreateDamage;
 
 export const GetDamageEndPoint = ipAddress + GetDamage;
 
-export const GetExpensesEndpoint =ipAddress + GetExpenses;
-
-export const CreateExpensesEndpoint = ipAddress + GetExpenses
+export const ExpensesEndPoint =ipAddress + Expenses;

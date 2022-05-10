@@ -8,7 +8,7 @@ import FailedMessage from "../Components/organisim/popUp/FailedMessage";
 import useTheme from "../Service/ThemeContext";
 import moment from "moment";
 import useExpenses from "../Service/ExpensesContext";
-import {CreateExpensesEndpoint} from "../Service/URLstring"
+import { postExpenses } from "../Service/FetchService";
 import useApi from "../Service/ApiContext";
  const AddExpensesScreen = ({navigation}) =>{
     const {value,detail}=useExpenses();
@@ -16,21 +16,15 @@ import useApi from "../Service/ApiContext";
     const{getDate} = useTheme();
     const [visible,setVisible] = React.useState(false);
 
-    const postExpenses= async()=>{
+    const addExpenses= async()=>{
       const expenses={
         Value:value,
         Detail:detail
       }
       try {
-        const response = await fetch(CreateExpensesEndpoint,{
-          method:"POST",
-          headers:{
-            'Authorization': 'Bearer '+token,
-            'Content-Type': 'application/json',
-            'Accept': '*/*',
-          },
-          body:JSON.stringify(expenses)
-        });
+        await postExpenses(token, expenses).then(res =>{
+          console.debug(res);
+        })
       } catch (ex) {
         error(ex);
       } 
@@ -39,7 +33,7 @@ import useApi from "../Service/ApiContext";
       getDate(moment().format('MM/DD/YYYY'))
     },[])
     const save = ()=>{
-      postExpenses();
+      addExpenses();
       setVisible(true);
     }
     const saveConfirm = ()=>{

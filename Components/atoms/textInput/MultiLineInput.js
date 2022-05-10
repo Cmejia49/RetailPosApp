@@ -7,12 +7,12 @@ const MultiLineInput = () =>{
    const {getDetail,detail} = useExpenses()
     return(
         <TextInput   
-        multiline
-  numberOfLines={4}
-  onChangeText={text => getDetail(text)}
-  value={detail}
-  maxLength={40}
-   style={textInputStyle.multiLineInput}/>
+        placeholder='ENTER DETAIL'
+        numberOfLines={4}
+        onChangeText={text => getDetail(text)}
+        value={detail}
+        maxLength={40}
+        style={textInputStyle.multiLineInput}/>
     )
 }
 

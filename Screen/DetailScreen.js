@@ -33,11 +33,12 @@ const DetailScreen =({navigation,route}) =>{
     const fetchDetail = async () => {
         try {
           callEndpoint();
-          const response = await fetch(GetDetail+route.params.paramKey);
+          const response = await fetch(GetDetail+""+route.params.paramKey);
           const json = await response.json();
           if(response.status == 200){
-           await getDetail(json)
-           await getVariety(json)
+          await  getDetail(json)
+          await  retrieveIndex3(json);
+          await  getVariety(json)
           }
        } catch (ex) {
         error(ex)
@@ -61,14 +62,15 @@ const DetailScreen =({navigation,route}) =>{
        } 
      }
 
-     const retrieveIndex3 = async()=>{
+     const retrieveIndex3 = async(json)=>{
       const result = await SecureStore.getItemAsync("index3");
     
        if(result != null){
+         console.debug("here")
         await setIndex3(~~JSON.parse(result) *1);
        }else{
-         await getIndex3(detail);
-         await SecureStore.setItemAsync("index3",JSON.stringify(index3));
+         console.debug("here1")
+         await getIndex3(json);
        }
      }
 
@@ -136,8 +138,6 @@ const DetailScreen =({navigation,route}) =>{
 
       React.useEffect(() => {
         fetchDetail();
-        retrieveIndex3();
-        return()=>{reset()}
       }, []);
 
     

@@ -28,7 +28,6 @@ var textInputStyle = StyleSheet.create({
      //default
    inputTxt: {
       margin:10,
-      height:52,
       borderWidth:1,
       fontSize: 24,
       lineHeight: 32,
@@ -42,12 +41,12 @@ var textInputStyle = StyleSheet.create({
     multiLineInput:{
             flex:1,
             borderWidth:1,
-            margin:10,
-            textAlignVertical:'top',
-            padding:5,
+            marginHorizontal:10,
+            marginVertical:10,
             fontFamily:'Roboto',
             fontWeight:'300',
             fontStyle:'normal',
+            textAlign:'center',
             fontSize:14,
             lineHeight:17,
     }
