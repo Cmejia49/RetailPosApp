@@ -15,7 +15,7 @@ React.useEffect(()=>{
     getQuantity(item.quantity)
     getTotal(item.price)
     getMargin();
-    return()=>{reset()}
+ return()=>{reset()}
 
 },[item])
 const converter =(str)=>{

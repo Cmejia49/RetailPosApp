@@ -31,8 +31,9 @@ import NetInfo from '@react-native-community/netinfo';
 import {createTable,insertItemFullVariation,insertItemSingleVariation,insertItem,
   getItem,getItemSingleVar,getItemMultiVar,selectItem,selectSale,createTableSale} from "../Service/SqliteService"
 
+  
 const LoginScreen =()=>{
-  const{getToken,error} = useApi();
+  const{getToken,error,isConnected} = useApi();
   const{getStoreFid} = useDetailOper();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -94,7 +95,7 @@ const LoginScreen =()=>{
       const unsubscribe = NetInfo.addEventListener(state => {
         console.log('Connection type', state.type);
         console.log('Is connected?', state.isConnected);
-        setConnected(state.isConnected);
+        isConnected(state.isConnected);
       });
       
       // To unsubscribe to these update, just use:

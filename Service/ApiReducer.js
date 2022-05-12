@@ -9,6 +9,7 @@ export const initialState ={
     damage:[],
     expenses:[],
     isLoading:false,
+    isConnected:false,
     error:null,
     searchValue:'',
     header:["GETALL"],
@@ -33,6 +34,7 @@ export const ACTIONS={
     GET_FILTER_PAGE_CAT:'GET_PAGE_CAT',
     GET_FILTER_PAGE_NAME:'GET_PAGE_NAME',
     GET_CAT_NAME:'GET_CAT_NAME',
+    GET_CONNECTION:'GET_CONNECTION',
     ERROR:'error',
     SEARCH:'SEARCH',
     RESET:'RESET'
@@ -97,7 +99,6 @@ const apiReducer = (state = initialState, action)=>{
         }
 
         case ACTIONS.GET_DAMAGE:{
-            console.debug("GETDAMAGE",action.damage);
             const newDict = Object.assign({}, state.dict);
 
             const prop = action.damage;
@@ -119,7 +120,6 @@ const apiReducer = (state = initialState, action)=>{
         }
 
         case ACTIONS.GET_EXPENSES:{
-            console.debug("GETEXPENSES",action.expenses);
             const newDict = Object.assign({}, state.dict);
 
             const prop = action.expenses;
@@ -176,7 +176,6 @@ const apiReducer = (state = initialState, action)=>{
         }
 
         case ACTIONS.SEARCH:{
-            console.debug("SEARCH");
             return{
                 ...state,
                 searchValue:action.searchValue
@@ -189,6 +188,14 @@ const apiReducer = (state = initialState, action)=>{
                 isLoading:false,
                 error:action.error,
             };
+        }
+
+        case ACTIONS.GET_CONNECTION:{
+            console.debug("connection",action.connection);
+            return{
+                ...state,
+                isConnected:action.connection
+            }
         }
 
         case ACTIONS.RESET:{

@@ -1,5 +1,5 @@
 import {GetProductUrl,GetCat, GetDetail,GetSaleEndPoint,
-  ExpensesEndPoint,GetDamageEndPoint} from "../Service/URLstring";
+  ExpensesEndPoint,GetDamageEndPoint,CreateSaleEndPoint,CreateDamageEndPoint} from "../Service/URLstring";
 
 
 export const fetchProduct = (page = 1)=>{
@@ -111,6 +111,26 @@ export const fetchSaleByDate=(date,filterPageDate,token)=>{
   })
 }
 
+//POST
+export const postSale=(product,token)=>{
+  return new Promise((resolve, reject)=>{
+    try{
+      fetch(CreateSaleEndPoint,{
+        method:"POST",
+        headers:{
+          'Authorization': 'Bearer '+token,
+          'Content-Type': 'application/json',
+          'Accept': '*/*',
+        },
+        body:JSON.stringify(product)
+      }).then(res =>{
+         resolve(res.status)});
+    }catch(ex){
+      reject(ex)
+    }
+  })
+}
+
 //SALE -END
 
 
@@ -172,7 +192,7 @@ export const postExpenses=(token,expenses)=>{
           'Accept': '*/*',
         },
         body:JSON.stringify(expenses)
-      }).then(res =>{console.debug(res.status);
+      }).then(res =>{
          resolve(res.status)});
     }catch(ex){
       reject(ex)
@@ -184,10 +204,9 @@ export const postExpenses=(token,expenses)=>{
 //DAMAGE -START
 
 export const fetchDamageByDay=(day,filterPageDay,token)=>{
-  console.debug(day);
   return new Promise((resolve, reject)=>{
     try{
-      fetch(GetDamageEndPoint+"?Day="+day+"&PageNumber="+filterPageDay+"&Type=FILTERBYDAY&PageSize=2",{
+      fetch(GetDamageEndPoint+"?Day="+day+"&PageNumber="+filterPageDay+"&Type=FILTERBYDAY&PageSize=10",{
         method:"GET",
         headers:{
           'Authorization': 'Bearer '+token,
@@ -208,7 +227,7 @@ export const fetchDamageByDay=(day,filterPageDay,token)=>{
 export const fetchDamageByDate=(date,filterPageDate,token)=>{
   return new Promise((resolve, reject)=>{
     try{
-      fetch(GetDamageEndPoint+"?DateTime="+date+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=2",{
+      fetch(GetDamageEndPoint+"?DateTime="+date+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=10",{
         method:"GET",
         headers:{
           'Authorization': 'Bearer '+token,
@@ -226,6 +245,24 @@ export const fetchDamageByDate=(date,filterPageDate,token)=>{
   })
 }
 
+export const postDamage = (damage,token)=>{
+  return new Promise((resolve, reject)=>{
+    try{
+      fetch(CreateDamageEndPoint,{
+        method:"POST",
+        headers:{
+          'Authorization': 'Bearer '+token,
+          'Content-Type': 'application/json',
+          'Accept': '*/*',
+        },
+        body:JSON.stringify(damage)
+      }).then(res =>{;
+         resolve(res.status)});
+    }catch(ex){
+      reject(ex)
+    }
+  })
+}
 //DAMAGE END 
 
 //DETAIL START
@@ -233,11 +270,12 @@ export const fetchDamageByDate=(date,filterPageDate,token)=>{
 export const fetchDetail =(key)=>{
   return new Promise((resolve,reject)=>{
     try{
-      fetch(GetDetail+key)
-      .then(res => {
-        console.debug(res.json()); 
-        resolve(res.json())
-        })
+      fetch(GetDetail+""+key)
+      .then(res => res.json().then(json => ({
+        json
+      }))).then(({json}) =>{
+          resolve(json);
+      });
     }catch(ex){
       reject(ex);
     }

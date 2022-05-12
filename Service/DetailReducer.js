@@ -95,7 +95,9 @@ const detailReducer=(state=initialState,action)=>{
                 }
 
             //if no variation
-            if(variety.variationList === undefined || variety.variationList === null){
+            if(variety.variationList.length === 0){
+                console.debug(variety.stockList)
+               console.debug("walanghiya ka 2.1");
                 const index3 =  srchIndex(variety.stockList,state.storeFid)
                 return{
                     ...state,
@@ -112,7 +114,8 @@ const detailReducer=(state=initialState,action)=>{
                }
             }
             //2 variation
-            if(subVariation !== undefined || subVariation !== null){
+            if(variation !== undefined || subVariation !== null){
+                console.debug("hahahaha")
                const index3 = srchIndex(subVariation.stockList,state.storeFid)
                return{
                    ...state,
@@ -141,8 +144,9 @@ const detailReducer=(state=initialState,action)=>{
             let total=0
             //Validate the size of variety
             //No variety
-            if(variety.variationList === undefined || variety.variationList === null){
+            if(variety.variationList.length == 0){
                total = variety.stockList[state.index3].quantity;
+               console.debug(total)
                 return{
                     ...state,
                     stock:total,
@@ -310,6 +314,8 @@ const detailReducer=(state=initialState,action)=>{
                 stock:0,
                 variationValue:'',
                 subVariationValue:'',
+                variationName:'',
+                subVariationName:'',
                 inputPrice:'',
                 index1:undefined,
                 index2:undefined

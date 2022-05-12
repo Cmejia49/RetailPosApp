@@ -75,10 +75,11 @@ const onEnd =  () => {
 
 }
 
+
 useFocusEffect(
   React.useCallback( () => {
     callEndpoint();
-    handleConfirm();
+    filterDamageByDay(value)
     return () => {
      reset();
       console.debug('Screen was unfocused');

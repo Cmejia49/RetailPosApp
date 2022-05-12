@@ -11,7 +11,7 @@ import useDetailOper from "../Service/DetailContext";
 import {ipAddress, GetDetail,CreateDamageEndPoint} from "../Service/URLstring";
 import * as SecureStore from 'expo-secure-store';
 import useTheme from '../Service/ThemeContext';
-
+import { fetchDetail,postDamage } from '../Service/FetchService';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 
@@ -30,32 +30,26 @@ const DetailScreen =({navigation,route}) =>{
     const [failed, setFailed] = React.useState(false)
 
 
-    const fetchDetail = async () => {
+    const retrieveDetail = async () => {
         try {
-          callEndpoint();
-          const response = await fetch(GetDetail+""+route.params.paramKey);
-          const json = await response.json();
-          if(response.status == 200){
-          await  getDetail(json)
-          await  retrieveIndex3(json);
-          await  getVariety(json)
-          }
+          await fetchDetail(route.params.paramKey).then(res=>{
+              getDetail(res)
+              retrieveIndex3(res);
+              getVariety(res)
+            });
+
        } catch (ex) {
         error(ex)
        } 
      }
 
-     const postDamage=async(damage)=>{
+     const insertDamage=async(damage)=>{
       try {
-        const response =  await fetch(CreateDamageEndPoint,{
-          method:"POST",
-          headers:{
-            'Authorization': 'Bearer '+token,
-            'Content-Type': 'application/json',
-            'Accept': '*/*',
-          },
-          body:JSON.stringify(damage)
-        });
+        await postDamage(damage,token).then(res=>{
+          if(res === 200 || res === 201){
+            console.debug("success")
+          }
+        })
 
        } catch (ex) {
         console.debug(ex);
@@ -81,7 +75,7 @@ const DetailScreen =({navigation,route}) =>{
         Quantity:quantity,
         StockFid:stockFid,
       }
-        postDamage(damage)
+        insertDamage(damage)
         setDamageMessage(true);
     }
     const addToDamageConfirm = ()=>{
@@ -137,7 +131,9 @@ const DetailScreen =({navigation,route}) =>{
       }
 
       React.useEffect(() => {
-        fetchDetail();
+        callEndpoint();
+        retrieveDetail();
+        return()=>{reset()}
       }, []);
 
     

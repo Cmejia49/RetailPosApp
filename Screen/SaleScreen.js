@@ -77,7 +77,7 @@ const onEnd = () => {
 useFocusEffect(
   React.useCallback( () => {
     callEndpoint();
-    handleConfirm();
+    filterSaleByDay(value)
     return () => {
      reset();
       console.debug('Screen was unfocused');
@@ -119,8 +119,6 @@ const handleConfirm = (date) => {
   filterSaleByDate(moment(date).format('MM/DD/YYYY') );
   hideDatePicker();
 }
-setValue("Today")
-setText("Today")
 hideDatePicker();
 };
     return(

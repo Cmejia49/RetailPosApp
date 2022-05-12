@@ -100,6 +100,13 @@ export const ApiProvider = (props) =>{
         })
     }
 
+    const isConnected=(connection)=>{
+        dispatch({
+            type:ACTIONS.GET_CONNECTION,
+            connection:connection
+        })
+    }
+
 
     const error = (ex)=>{
         dispatch({type:ACTIONS.ERROR,error:ex})
@@ -126,6 +133,7 @@ export const ApiProvider = (props) =>{
         getFilterPageName,
         getFilterPageCat,
         getCatName,
+        isConnected,
         search,
         reset
     }

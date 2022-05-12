@@ -7,28 +7,21 @@ import useTheme from "../Service/ThemeContext";
 import SuccessMessage from '../Components/organisim/popUp/SuccessMessage';
 import useApi from "../Service/ApiContext";
 import {CreateSaleEndPoint} from"../Service/URLstring"
-
+import { postSale } from "../Service/FetchService";
 const CheckoutScreen = ({navigation}) =>{
   const{change,getChange,getTotalItem,getDate,product,successReset} = useTheme();
-   const{error,token} = useApi(); 
+   const{error,token,calledEndPoint} = useApi(); 
   const [modalVisible, setModalVisible] = React.useState(false);
 
 
   const checkOut = async () =>{
     try {
-      const response =  await fetch(CreateSaleEndPoint,{
-        method:"POST",
-        headers:{
-          'Authorization': 'Bearer '+token,
-          'Content-Type': 'application/json',
-          'Accept': '*/*',
-        },
-        body:JSON.stringify(product)
-      });
-      if(response.status === 200 || response.status === 201){
-        successReset()
-      
-      }
+      await postSale(product,token).then(res=>{
+        console.debug(res)
+        if(res === 200 || res === 201){
+          successReset();
+        }
+      })
      } catch (ex) {
        error(ex)
      } 
