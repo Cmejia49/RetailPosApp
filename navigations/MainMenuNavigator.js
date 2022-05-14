@@ -32,7 +32,7 @@ const MainMenuNavigator = () =>{
         <stack.Navigator>
           {token == null ?(
               <stack.Screen
-            name=" "
+            name="login"
             component={LoginScreen}
           />
           ):(

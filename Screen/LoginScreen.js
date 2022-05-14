@@ -31,35 +31,43 @@ import NetInfo from '@react-native-community/netinfo';
 import {createTable,insertItemFullVariation,insertItemSingleVariation,insertItem,
   getItem,getItemSingleVar,getItemMultiVar,selectItem,selectSale,createTableSale} from "../Service/SqliteService"
 
-  
+import {fetchDetail} from '../Service/FetchService'  
 const LoginScreen =()=>{
-  const{getToken,error,isConnected} = useApi();
+  const{getToken,error,isConnected,detail,getDetail} = useApi();
+  const {getVariety,setIndex3,reset,cartId,itemCode,variation,subVariation,
+    getIndex3,index3,name,quantity,stock,stockFid
+   ,variationValue,subVariationValue,subTotal,inputPrice} = useDetailOper();
   const{getStoreFid} = useDetailOper();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [connected, setConnected] = useState(false);
 
     
-    const printTable = ()=>{
-      selectItem(0);
+    const printTable = async()=>{
+      try {
+        await fetchDetail(2).then(res=>{
+            getDetail(res)
+            console.debug(JSON.stringify(res));
+            getVariety(res)
+         //   insertItemFullVariation(res);
+          });
+
+     } catch (ex) {
+      error(ex)
+     } 
     }
 
     const insert = () =>{
-      insertItemFullVariation();
-      insertItemSingleVariation();
-      insertItem();
+     selectItem(0);
+     // insertItemSingleVariation();
+     // insertItem();
     }
 
     const printSale = async() =>{
-      await getItem(3).then((value) =>{
-        console.debug(JSON.stringify(value));
-      })
-      await getItemSingleVar(2).then((value) =>{
-        console.debug(JSON.stringify(value));
-      })
-      await getItemMultiVar(1).then((value) =>{
-        console.debug(JSON.stringify(value));
-      })
+ /*.then((value) =>{
+  console.debug(JSON.stringify(value));
+})*/
+      await getItemMultiVar(2)
     }
     const userLogin = async () =>{
       try {

@@ -6,7 +6,7 @@ export const fetchProduct = (page = 1)=>{
     return new Promise((resolve, reject)=>{
         try {
             
-             fetch(GetProductUrl+"?PageNumber="+page+"&Type=GETALL&PageSize=4")
+             fetch(GetProductUrl+"?PageNumber="+page+"&Type=GETALL&PageSize=10")
             .then(res => res.json().then(json => ({
               header:JSON.parse(res.headers.get("x-pagination")),
               json
@@ -22,7 +22,7 @@ export const fetchProduct = (page = 1)=>{
 export const fetchByName = (searchValue,filterPageName)=>{
   return new Promise((resolve, reject)=>{
     try{
-      fetch(GetProductUrl+"?ItemName="+searchValue+"&PageNumber="+filterPageName+"&Type=FILTERBYNAME&PageSize=4")
+      fetch(GetProductUrl+"?ItemName="+searchValue+"&PageNumber="+filterPageName+"&Type=FILTERBYNAME&PageSize=10")
       .then(res => res.json().then(json => ({
         header:JSON.parse(res.headers.get("x-pagination")),
         json
@@ -38,7 +38,7 @@ export const fetchByName = (searchValue,filterPageName)=>{
 export const fetchByCat = (catName,filterPageCat)=>{
   return new Promise((resolve,reject)=>{
     try{
-      fetch(GetProductUrl+"?CatName="+catName+"&PageNumber="+filterPageCat+"&Type=FILTERBYCAT&PageSize=4")
+      fetch(GetProductUrl+"?CatName="+catName+"&PageNumber="+filterPageCat+"&Type=FILTERBYCAT&PageSize=10")
       .then(res => res.json().then(json => ({
         header:JSON.parse(res.headers.get("x-pagination")),
         json
