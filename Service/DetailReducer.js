@@ -1,8 +1,5 @@
 
 
-import React,{useReducer, useState} from 'react'
-import { interpolate } from 'react-native-reanimated';
-
 export const initialState={
     itemId:undefined,
     cartId:undefined,
@@ -88,16 +85,13 @@ const detailReducer=(state=initialState,action)=>{
             var subVariation = undefined;
             if(variety.variationList.length == 1){
                  variation =  variety.variationList[0].variationValuesList[0];
-                 console.debug(JSON.stringify(variation)+"walang hiya")
             }else if(variety.variationList.length == 2){
                  subVariation =  variety.variationList[0].variationValuesList[0].children[0];
-                 console.debug(subVariation+"walang hiya2")
                 }
 
             //if no variation
             if(variety.variationList.length === 0){
                 console.debug(variety.stockList)
-               console.debug("walanghiya ka 2.1");
                 const index3 =  srchIndex(variety.stockList,state.storeFid)
                 return{
                     ...state,

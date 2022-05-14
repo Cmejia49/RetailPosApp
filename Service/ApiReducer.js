@@ -1,6 +1,4 @@
 
-import React,{useReducer, useState} from 'react'
-
 export const initialState ={
     product:[],
     categories:[],
@@ -9,7 +7,6 @@ export const initialState ={
     damage:[],
     expenses:[],
     isLoading:false,
-    isConnected:false,
     error:null,
     searchValue:'',
     header:["GETALL"],
@@ -34,7 +31,6 @@ export const ACTIONS={
     GET_FILTER_PAGE_CAT:'GET_PAGE_CAT',
     GET_FILTER_PAGE_NAME:'GET_PAGE_NAME',
     GET_CAT_NAME:'GET_CAT_NAME',
-    GET_CONNECTION:'GET_CONNECTION',
     ERROR:'error',
     SEARCH:'SEARCH',
     RESET:'RESET'
@@ -188,14 +184,6 @@ const apiReducer = (state = initialState, action)=>{
                 isLoading:false,
                 error:action.error,
             };
-        }
-
-        case ACTIONS.GET_CONNECTION:{
-            console.debug("connection",action.connection);
-            return{
-                ...state,
-                isConnected:action.connection
-            }
         }
 
         case ACTIONS.RESET:{

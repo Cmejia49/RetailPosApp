@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MaterialIcons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
 import 'react-native-gesture-handler';
 //Import Screen
 import DamageScreen from '../Screen/DamageScreen.js'
-import ExpensesScreen from "../Screen/ExpensesScreen";
 import AddExpensesScreen from "../Screen/AddExpensesScreen";
 const stack = createStackNavigator();
 const DamageNavigator = () =>{

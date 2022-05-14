@@ -8,7 +8,7 @@ import InputMessage from '../Components/organisim/popUp/InputMessage';
 import FailedMessage from '../Components/organisim/popUp/FailedMessage';
 import useApi from "../Service/ApiContext";
 import useDetailOper from "../Service/DetailContext";
-import {ipAddress, GetDetail,CreateDamageEndPoint} from "../Service/URLstring";
+import {ipAddress} from "../Service/URLstring";
 import * as SecureStore from 'expo-secure-store';
 import useTheme from '../Service/ThemeContext';
 import { fetchDetail,postDamage } from '../Service/FetchService';
@@ -65,6 +65,7 @@ const DetailScreen =({navigation,route}) =>{
        }else{
          console.debug("here1")
          await getIndex3(json);
+         await SecureStore.setItemAsync("index3",index3);
        }
      }
 

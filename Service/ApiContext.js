@@ -100,21 +100,15 @@ export const ApiProvider = (props) =>{
         })
     }
 
-    const isConnected=(connection)=>{
-        dispatch({
-            type:ACTIONS.GET_CONNECTION,
-            connection:connection
-        })
-    }
-
 
     const error = (ex)=>{
         dispatch({type:ACTIONS.ERROR,error:ex})
     }
 
-    const reset=useCallback(()=>
-        dispatch({type:ACTIONS.RESET}),[]
-    )
+    const reset=()=>{
+        dispatch({type:ACTIONS.RESET})
+    }
+    
 
     const value={
         ...state,
@@ -133,7 +127,6 @@ export const ApiProvider = (props) =>{
         getFilterPageName,
         getFilterPageCat,
         getCatName,
-        isConnected,
         search,
         reset
     }

@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import { StatusBar } from 'expo-status-bar';
 import AppLoading from 'expo-app-loading';
 import {useFonts,EBGaramond_400Regular} from '@expo-google-fonts/eb-garamond';
 import { View,Animated,FlatList,ActivityIndicator,Button } from 'react-native';
@@ -12,7 +11,6 @@ import containerStyle from '../styles/containerStyle';
 import 'react-native-gesture-handler';
 import useApi from "../Service/ApiContext";
 import { fetchProduct, fetchCategory } from "../Service/FetchService";
-import { isLoading } from "expo-font";
   
 
 const HomeScreen =({navigation}) =>{

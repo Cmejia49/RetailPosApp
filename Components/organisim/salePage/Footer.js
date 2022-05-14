@@ -1,6 +1,5 @@
 import React from 'react'
 import {View,Text} from 'react-native'
-import useApi from '../../../Service/ApiContext'
 import useSale from '../../../Service/SaleContext'
 import containerStyle from '../../../styles/containerStyle'
 import textStyle from '../../../styles/textStyle'

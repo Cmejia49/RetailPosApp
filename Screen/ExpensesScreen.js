@@ -10,7 +10,6 @@ import Calendar from '../Components/organisim/popUp/Calendar';
 import moment from 'moment';
 import useApi from '../Service/ApiContext';
 import {FilterOption} from '../Data/FilterOption'
-import { GetExpensesEndpoint } from '../Service/URLstring';
 import { useFocusEffect } from '@react-navigation/native';
 import { fetchExpensesByDay, fetchExpensesByDate } from "../Service/FetchService";
 

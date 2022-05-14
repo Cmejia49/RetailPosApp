@@ -6,7 +6,6 @@ import moment from 'moment';
 import useTheme from "../Service/ThemeContext";
 import SuccessMessage from '../Components/organisim/popUp/SuccessMessage';
 import useApi from "../Service/ApiContext";
-import {CreateSaleEndPoint} from"../Service/URLstring"
 import { postSale } from "../Service/FetchService";
 const CheckoutScreen = ({navigation}) =>{
   const{change,getChange,getTotalItem,getDate,product,successReset} = useTheme();

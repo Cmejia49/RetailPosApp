@@ -1,5 +1,3 @@
-import React,{useReducer, useState} from 'react'
-import {DATA} from '../DATA'
 
 export const initialState = {
     product:[],

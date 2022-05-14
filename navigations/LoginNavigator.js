@@ -2,15 +2,11 @@ import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialIcons } from '@expo/vector-icons'; 
-import { AntDesign } from '@expo/vector-icons'; 
 import 'react-native-gesture-handler';
 //Import Screen
 import HeaderCartGrp from "../Components/molecules/HeaderCartGrp"
 import HomeScreen from "../Screen/HomeScreen";
 import LoginScreen from "../Screen/LoginScreen"
-import CartNavigator from './CartNavigator';
-import DetailScreen from '../Screen/DetailScreen';
-import { StackRouter } from 'react-navigation';
 const stack = createStackNavigator();
 
 const LoginNavigator = () =>{
