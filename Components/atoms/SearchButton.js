@@ -5,16 +5,22 @@ import {GetProductUrl} from '../../Service/URLstring'
 import useApi from '../../Service/ApiContext';
 import { useFocusEffect } from '@react-navigation/native';
 import {fetchByName} from '../../Service/FetchService'
+import debounce from 'lodash.debounce';
 const SearchButton = ({name}) =>{
-    const {getProduct,error,searchValue,reset,filterPageName,header,getHeader} = useApi();
+    const {getProduct,error,searchValue,reset,filterPageName,header,getHeader,token,callEndpoint} = useApi();
 
+    	// highlight-starts
+	const debouncedSave = React.useCallback(
+		debounce(nextValue => getProduct(nextValue), 1000),
+		[], // will be created only once initially
+	);
+	// highlight-ends
     const searchProduct = async()=>{
-        console.debug(searchValue)
         try{
-            await fetchByName(searchValue,filterPageName)
+            await fetchByName(searchValue,filterPageName,token)
             .then(res =>{
                 getHeader(res[0]);
-               getProduct(res[1]);
+                debouncedSave(res[1]);
              })
         }catch(ex){
             error(ex)
@@ -24,9 +30,16 @@ const SearchButton = ({name}) =>{
 
     useFocusEffect(
         React.useCallback(()=>{
+            let isSubscribe = true;
+            if(isSubscribe){
             if(header.Type ==="FILTERBYNAME"){
                 searchProduct();
             }
+        }
+        return () => {
+            isSubscribe = false;
+            reset();
+          };
         },[filterPageName])
         );
     return(
@@ -40,9 +53,10 @@ const SearchButton = ({name}) =>{
       fontWeight:'bold',
      }
     }
-    onPress={()=>{
-        reset();
-        searchProduct();
+    onPress={async()=>{
+        callEndpoint();
+       await reset();
+       await searchProduct();
     }}
     />
 

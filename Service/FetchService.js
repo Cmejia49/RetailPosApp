@@ -2,11 +2,17 @@ import {GetProductUrl,GetCat, GetDetail,GetSaleEndPoint,
   ExpensesEndPoint,GetDamageEndPoint,CreateSaleEndPoint,CreateDamageEndPoint} from "../Service/URLstring";
 
 
-export const fetchProduct = (page = 1)=>{
+export const fetchProduct = (page = 1,token)=>{
     return new Promise((resolve, reject)=>{
         try {
             
-             fetch(GetProductUrl+"?PageNumber="+page+"&Type=GETALL&PageSize=4")
+             fetch(GetProductUrl+"?PageNumber="+page+"&Type=GETALL&PageSize=10",{
+              method:"GET",
+              headers:{
+                'Authorization': 'Bearer '+token,
+                'Accept': '*/*',
+              }
+            })
             .then(res => res.json().then(json => ({
               header:JSON.parse(res.headers.get("x-pagination")),
               json
@@ -19,10 +25,16 @@ export const fetchProduct = (page = 1)=>{
     })
 }
 
-export const fetchByName = (searchValue,filterPageName)=>{
+export const fetchByName = (searchValue,filterPageName, token)=>{
   return new Promise((resolve, reject)=>{
     try{
-      fetch(GetProductUrl+"?ItemName="+searchValue+"&PageNumber="+filterPageName+"&Type=FILTERBYNAME&PageSize=4")
+      fetch(GetProductUrl+"?ItemName="+searchValue+"&PageNumber="+filterPageName+"&Type=FILTERBYNAME&PageSize=10",{
+        method:"GET",
+        headers:{
+          'Authorization': 'Bearer '+token,
+          'Accept': '*/*',
+        }
+      })
       .then(res => res.json().then(json => ({
         header:JSON.parse(res.headers.get("x-pagination")),
         json
@@ -35,10 +47,16 @@ export const fetchByName = (searchValue,filterPageName)=>{
   })
 }
 
-export const fetchByCat = (catName,filterPageCat)=>{
+export const fetchByCat = (catName,filterPageCat,token)=>{
   return new Promise((resolve,reject)=>{
     try{
-      fetch(GetProductUrl+"?CatName="+catName+"&PageNumber="+filterPageCat+"&Type=FILTERBYCAT&PageSize=4")
+      fetch(GetProductUrl+"?CatName="+catName+"&PageNumber="+filterPageCat+"&Type=FILTERBYCAT&PageSize=10",{
+        method:"GET",
+        headers:{
+          'Authorization': 'Bearer '+token,
+          'Accept': '*/*',
+        }
+      })
       .then(res => res.json().then(json => ({
         header:JSON.parse(res.headers.get("x-pagination")),
         json
@@ -136,10 +154,10 @@ export const postSale=(product,token)=>{
 
 //EXPENSES START
 
-export const fetchExpensesByDay=(day,filterPageDate,token)=>{
+export const fetchExpensesByDay=(day,filterPageDay,token)=>{
   return new Promise((resolve, reject)=>{
     try{
-      fetch(ExpensesEndPoint+"?Day="+day+"&PageNumber="+filterPageDate+"&Type=FILTERBYDATE&PageSize=10",{
+      fetch(ExpensesEndPoint+"?Day="+day+"&PageNumber="+filterPageDay+"&Type=FILTERBYDAY&PageSize=10",{
         method:"GET",
         headers:{
           'Authorization': 'Bearer '+token,
@@ -267,10 +285,16 @@ export const postDamage = (damage,token)=>{
 
 //DETAIL START
 
-export const fetchDetail =(key)=>{
+export const fetchDetail =(key,token)=>{
   return new Promise((resolve,reject)=>{
     try{
-      fetch(GetDetail+""+key)
+      fetch(GetDetail+""+key,{
+        method:"GET",
+        headers:{
+          'Authorization': 'Bearer '+token,
+          'Accept': '*/*',
+        }
+      })
       .then(res => res.json().then(json => ({
         json
       }))).then(({json}) =>{

@@ -1,22 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { StyleSheet, Text, View,TouchableWithoutFeedback,Animated } from 'react-native';
-import { NavigationContainer,useNavigation } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createStackNavigator } from '@react-navigation/stack';
-import { AntDesign } from '@expo/vector-icons'; 
+import { View,TouchableWithoutFeedback,Text,Image } from 'react-native';
 import 'react-native-gesture-handler';
-
+import useApi from "../../../Service/ApiContext";
 import ItemImage from '../../atoms/homePage/ItemImage';
 import ItemNameTxt from'../../atoms/homePage/ItemNameTxt';
 import ItemPriceTxt from '../../atoms/homePage/ItemPriceTxt';
 import containerStyle from '../../../styles/containerStyle';
-const ProductCard = ({item,imgSrc,onPress}) =>{
+import {ipAddress} from '../../../Service/URLstring';
+import imageStyle from '../../../styles/imageStyle';
+import ExpoFastImage from 'expo-fast-image'
+
+const ProductCard = ({item,onPress}) =>{
     return(
         <TouchableWithoutFeedback onPress={onPress}>
         <View style={containerStyle.cardContainer}>
             <View  style={containerStyle.cardImgContainer}>
-             <ItemImage source={imgSrc}/> 
+            <ExpoFastImage
+                uri={ipAddress+"/wwwroot/uploads/"+item.imageName}
+                cacheKey={item.itemId}
+                style={imageStyle.cardImg}
+            />
             </View>
             <View  style={containerStyle.cardInfoContainer}>
                 <ItemNameTxt  name={item.itemName}/>

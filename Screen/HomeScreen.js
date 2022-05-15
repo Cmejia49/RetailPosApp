@@ -14,16 +14,16 @@ import { fetchProduct, fetchCategory } from "../Service/FetchService";
   
 
 const HomeScreen =({navigation}) =>{
-  const {product,callEndpoint,getProduct,
+  const {product,callEndpoint,getProduct,token,
     getCategories,error,getHeader,header,getPage,page,getFilterPageName,
     getFilterPageCat,filterPageCat,filterPageName,reset,isLoading} = useApi();
   
-  const [isClicked, setisClicked] = React.useState(true);
+  const [isClicked, setisClicked] = React.useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const sige = async () => {
     try{
-        await fetchProduct(page).then(res =>{
+        await fetchProduct(page,token).then(res =>{
                  getHeader(res[0]);
                 getProduct(res[1]);
               }).catch(err=>{
@@ -50,8 +50,9 @@ const HomeScreen =({navigation}) =>{
 
 const onEnd = () => {
   console.debug(header);
-  if(page < header.TotalPages){
+  if(page < header.TotalPages && header.HasNext == true){
     if(header.Type == "GETALL"){
+      console.debug("call")
       getPage(page+1);
     }
   }
@@ -69,11 +70,15 @@ const onEnd = () => {
   }
 }
 useFocusEffect(
-  React.useCallback( () => {
-    callEndpoint();
-     category();
-    sige();
+  React.useCallback(() => {
+    let isSubscribe = true;
+    if(isSubscribe){
+      callEndpoint();
+      category();
+      sige();
+    }
     return () => {
+      isSubscribe = false;
      reset();
       console.debug('Screen was unfocused');
     };
@@ -82,9 +87,16 @@ useFocusEffect(
 
 useFocusEffect(
   React.useCallback(() => {
-    if(header.Type == "GETALL"){
+    let isSubscribe = true;
+    if(isSubscribe){
+    if(header.Type == "GETALL" && header.HasNext == true){
+      console.debug("tangina")
       sige();
     }
+    }
+    return () => {
+      isSubscribe = false;
+    };
   },[page])
 );
 
@@ -142,28 +154,28 @@ useFocusEffect(
         }
       ]}>
          
-          {product == null || isLoading ? <View><ActivityIndicator size="large" color="#00ff00" /></View> : (
         <View style={containerStyle.container}>  
         
        <Filter/>
+       {product == null || isLoading ? <View><ActivityIndicator size="large" color="#00ff00" /></View> : (
            <View style={containerStyle.ProductContainer}>
            <FlatList contentContainerStyle={{alignContent:'center',alignItems:'center',}} 
                 showsVerticalScrollIndicator={false}
                 data={product}
-                 keyExtractor={(item,index) => index} 
+                 keyExtractor={(item,index) => item.itemId} 
+                 initialNumToRender={10}
                  onEndReachedThreshold={0.3}
                  onEndReached={onEnd}
                  numColumns={2} 
                  renderItem={({item, index}) =>                        
                  <ProductCard 
                  item={item}
-                 onPress={()=>{ navigation.navigate("Detail",{paramKey:item.itemId})}}
-                 imgSrc={logo}/>
+                 onPress={()=>{ navigation.navigate("Detail",{paramKey:item.itemId})}}/>
              }
                />
            </View>
+       )}
         </View>
-          )}
         </Animated.View>
 
     )

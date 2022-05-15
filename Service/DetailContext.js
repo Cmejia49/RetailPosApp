@@ -28,19 +28,19 @@ export const DetailProvider =(props)=>{
         })
     }
 
-    const variationClick=(index,value)=>{
+    const variationClick=(index,name)=>{
         dispatch({
             type:ACTIONS.VARIATION_CLICK,
             index:index,
-            value:value,
+            name:name,
         })
     }
 
-    const subVariationClick=(index,value)=>{
+    const subVariationClick=(index,name)=>{
         dispatch({
             type:ACTIONS.SUBVARIATION_CLICK,
             index:index,
-            value:value,
+            name:name,
         })
     }
     const getStoreFid = (storeFid)=>{
@@ -49,18 +49,7 @@ export const DetailProvider =(props)=>{
             storeFid:storeFid
         })
     }
-    const getIndex3 = (variety)=>{
-        dispatch({
-            type:ACTIONS.GET_INDEX3,
-            variety:variety
-        })
-    }
-    const setIndex3 = (index3) =>{
-        dispatch({
-            type:ACTIONS.SET_INDEX3,
-            index3:index3
-        })
-    }
+
 
     const getInputPrice = (inputPrice) =>{
         dispatch({
@@ -96,9 +85,7 @@ export const DetailProvider =(props)=>{
         subVariationClick,
         updateStock,
         getStoreFid,
-        getIndex3,
         getInputPrice,
-        setIndex3,
     }
     return(
         <DetailContext.Provider value={values}>{props.children}</DetailContext.Provider>

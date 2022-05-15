@@ -77,10 +77,11 @@ const ExpensesScreen = ({navigation})=>{
 useFocusEffect(
   React.useCallback(()=>{
     callEndpoint();
-    handleConfirm();
+    filterExpensesByDay(value)
     return () => {
       reset();
-    };
+       console.debug('Screen was unfocused');
+     };
 
 },[])
 );
@@ -111,16 +112,13 @@ useFocusEffect(
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = (date) => {
+  const handleConfirm = async(date) => {
     if(dates != moment(date).format('MM/DD/YYYY')){
-    reset();
-    callEndpoint();
     setDate(moment(date).format('MM/DD/YYYY'));
-    filterExpensesByDate(moment(date).format('MM/DD/YYYY'));
+    await reset();
+    await filterExpensesByDate(moment(date).format('MM/DD/YYYY'));
     hideDatePicker();
     }
-    setValue("Today")
-    setText("Today")
     hideDatePicker();
   };
 
@@ -165,14 +163,14 @@ useFocusEffect(
               id={res.key}
               text={res.text}
               value={value}
-             onPress={()=>{
+             onPress={async()=>{
               if(value != res.key){
                 getFilterPageCat(1)
-               reset();
-              filterExpensesByDay(res.key);
                setValue(res.key);
                setModalVisible(!modalVisible);
                setText(res.text);
+               await reset();
+               await filterExpensesByDay(res.key);
               }
               setModalVisible(!modalVisible);
               }}/>

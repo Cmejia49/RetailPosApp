@@ -19,7 +19,6 @@ export const initialState={
     storeFid:undefined,
     index1:undefined,
     index2:undefined,
-    index3:undefined,
     stockFid:undefined
 }
 
@@ -28,8 +27,6 @@ export const ACTIONS={
     DECREMENT:'DECREMENT',
     GET_VARIETY:'GETVARIETY',
     GET_STOREFID:'GETSTOREFID',
-    GET_INDEX3:'GETINDEX3',
-    SET_INDEX3:'SETINDEX3',
     VARIATION_CLICK:'VARIATIONCLICK',
     SUBVARIATION_CLICK:'SUBVARIATIONCLICK',
     UPDATE_STOCK:'UPDATESTOCK',
@@ -79,52 +76,8 @@ const detailReducer=(state=initialState,action)=>{
             }
         }
 
-        case ACTIONS.GET_INDEX3:{
-            const variety = action.variety
-            var variation = undefined;
-            var subVariation = undefined;
-            if(variety.variationList.length == 1){
-                 variation =  variety.variationList[0].variationValuesList[0];
-            }else if(variety.variationList.length == 2){
-                 subVariation =  variety.variationList[0].variationValuesList[0].children[0];
-                }
 
-            //if no variation
-            if(variety.variationList.length === 0){
-                console.debug(variety.stockList)
-                const index3 =  srchIndex(variety.stockList,state.storeFid)
-                return{
-                    ...state,
-                    index3:index3
-                }
-            }
-            //1 variation
-            if(variation !== undefined || variation !== null && subVariation === null){
-                console.debug("sex"+variation.stockList)
-                const index3 =  srchIndex(variation.stockList,state.storeFid)
-               return{
-                   ...state,
-                   index3:index3
-               }
-            }
-            //2 variation
-            if(variation !== undefined || subVariation !== null){
-                console.debug("hahahaha")
-               const index3 = srchIndex(subVariation.stockList,state.storeFid)
-               return{
-                   ...state,
-                   index3:index3
-               }
-            }
-            
-        }
-        case ACTIONS.SET_INDEX3:{
-            console.debug("SETINDEX3");
-            return{
-                ...state,
-                index3:action.index3
-            }
-        }
+ 
         case ACTIONS.GET_VARIETY:{
             console.debug("GETVARIETY");
             const variety = action.variety
@@ -139,7 +92,7 @@ const detailReducer=(state=initialState,action)=>{
             //Validate the size of variety
             //No variety
             if(variety.variationList.length == 0){
-               total = variety.stockList[state.index3].quantity;
+               total = variety.stockList[0].quantity;
                console.debug(total)
                 return{
                     ...state,
@@ -154,8 +107,7 @@ const detailReducer=(state=initialState,action)=>{
                 const length = variety.variationList[0].variationValuesList.length;
                 for(let i = 0 ;i<length;i++){
                     const v1 = variety.variationList[0].variationValuesList[i];
-                    console.debug(JSON.stringify(v1.stockList)+"asdasd"+state.index3)
-                   total += v1.stockList[state.index3].quantity
+                   total += v1.stockList[0].quantity
                    variation.push(v1);
                 }
                 return{
@@ -177,8 +129,7 @@ const detailReducer=(state=initialState,action)=>{
                  const subLength =  variety.variationList[0].variationValuesList[i].children.length;
                  for(let j = 0;j<subLength;j++){
                     const v2 = variety.variationList[0].variationValuesList[i].children[j];
-                           const index3 = ~~state.index3*1
-                           total = total + v2.stockList[index3].quantity;
+                           total = total + v2.stockList[0].quantity;
                        
                     subvariation.push(v2);
                   } 
@@ -219,16 +170,25 @@ const detailReducer=(state=initialState,action)=>{
             }
         }
         case ACTIONS.VARIATION_CLICK:{
-            console.debug("VARIATIONCLICK");
-            const index = action.index
-            const subvariation = []
-            state.variation[index].children.map(i=>subvariation.push(i))
-            console.debug(index)
-            return{
-                ...state,
-                index1:action.index,
-                subVariation:subvariation,
-                variationValue:action.value
+            console.debug("VARIATIONCLICK",action.name);
+            
+            const index = action.index;
+            if(action.index >= 0){  
+                const subvariation = []
+                state.variation[action.index].children.map(i=>subvariation.push(i))
+                console.debug(index)
+                
+                return{
+                    ...state,
+                    index1:action.index,
+                    subVariation:subvariation,
+                    variationValue:action.name
+                }
+            }else{
+                return{
+                    ...state,
+                    variationValue:action.name
+                }
             }
         }
 
@@ -236,28 +196,33 @@ const detailReducer=(state=initialState,action)=>{
         case ACTIONS.SUBVARIATION_CLICK:{
             console.debug("SUBVARIATIONCLICK");
             console.debug(action.index);
-            return{
-                ...state,
-                index2:action.index,
-                subVariationValue:action.value
+            if(action.index >= 0){ 
+                return{
+                    ...state,
+                    index2:action.index,
+                    subVariationValue:action.value
+            }
+            }else{
+                return{
+                    ...state,
+                    variationValue:action.name
+                }
             }
         }
         //This code not execute when item don't have veriety
         case ACTIONS.UPDATE_STOCK:{
             let index1 = state.index1;
             let index2 = state.index2;
-            let index3 = state.index3;
             console.debug(index1 + "index1")
             console.debug(state.variation.length + "  "+state.subVariation.length)
             //1 variety
             if(state.variation !== 0 && state.subVariation.length == 0){
              if(index1 != undefined){
                 try{
-                    console.debug(index1 + "index123")
-                    let stock = state.variation[index1].stockList[index3].quantity
-                    let itemCode = state.variation[index1].stockList[index3].itemCode
-                    let price = state.variation[index1].stockList[index3].price
-                    let stockFid = state.variation[index1].stockList[index3].stockId
+                    let stock = state.variation[index1].stockList[0].quantity
+                    let itemCode = state.variation[index1].stockList[0].itemCode
+                    let price = state.variation[index1].stockList[0].price
+                    let stockFid = state.variation[index1].stockList[0].stockId
                     return{
                         ...state,
                         stock:stock,
@@ -275,10 +240,10 @@ const detailReducer=(state=initialState,action)=>{
             if(state.variation !== undefined && state.subVariation !== undefined ){
                 if(index1 != undefined && index2 != undefined){
                     try{
-                        let stock = state.variation[index1].children[index2].stockList[index3].quantity
-                        let itemCode = state.variation[index1].children[index2].stockList[index3].itemCode
-                        let price = state.variation[index1].children[index2].stockList[index3].price
-                        let stockFid = state.variation[index1].children[index2].stockList[index3].stockId
+                        let stock = state.variation[index1].children[index2].stockList[0].quantity
+                        let itemCode = state.variation[index1].children[index2].stockList[0].itemCode
+                        let price = state.variation[index1].children[index2].stockList[0].price
+                        let stockFid = state.variation[index1].children[index2].stockList[0].stockId
                         return{
                             ...state,
                             stock:stock,
@@ -322,24 +287,7 @@ const detailReducer=(state=initialState,action)=>{
 
 }
 
-//Search for index3
-const srchIndex=(stockList,storeFid)=>{
-    const low = 0;
-    const high =  stockList.length - 1;
-    while(low<=high){
-       const highId =  stockList[high].storeFid;
-       const lowId = stockList[low].storeFid;
-       if(storeFid=== highId){
-           return high;
-       }else if (storeFid=== lowId){
-        return low;
-       }else{
-           console.debug("not find");
-       }
-       low+1;
-       high-1
-    }
-}
+
 
 
 export default detailReducer;

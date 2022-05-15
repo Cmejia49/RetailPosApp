@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View,Image,Dimensions,Button  } from 'react-native';
+import { StyleSheet, View,Image,Dimensions,Button,ScrollView  } from 'react-native';
 
 import Content from '../Components/organisim/detailPage/Content';
 import Footer from '../Components/organisim/detailPage/Footer';
@@ -21,7 +21,7 @@ const DetailScreen =({navigation,route}) =>{
 
   const {getVariety,setIndex3,reset,cartId,itemCode,variation,subVariation,
           getIndex3,index3,name,quantity,stock,stockFid
-         ,variationValue,subVariationValue,subTotal,inputPrice} = useDetailOper();
+         ,variationValue,subVariationValue,subTotal,inputPrice,price} = useDetailOper();
 
     const {addCart} = useTheme();
 
@@ -32,11 +32,10 @@ const DetailScreen =({navigation,route}) =>{
 
     const retrieveDetail = async () => {
         try {
-          await fetchDetail(route.params.paramKey).then(res=>{
+          await fetchDetail(route.params.paramKey,token).then(res=>{
               getDetail(res)
-              retrieveIndex3(res);
               getVariety(res)
-            });
+            })
 
        } catch (ex) {
         error(ex)
@@ -56,28 +55,43 @@ const DetailScreen =({navigation,route}) =>{
        } 
      }
 
-     const retrieveIndex3 = async(json)=>{
-      const result = await SecureStore.getItemAsync("index3");
-    
-       if(result != null){
-         console.debug("here")
-        await setIndex3(~~JSON.parse(result) *1);
-       }else{
-         console.debug("here1")
-         await getIndex3(json);
-         await SecureStore.setItemAsync("index3",index3);
-       }
-     }
 
     const addToDamage = ()=>{
       const damage={
         ProductName:name+","+variationValue+","+subVariationValue,
         ItemCode:itemCode,
+        Price:price,
         Quantity:quantity,
         StockFid:stockFid,
       }
-        insertDamage(damage)
-        setDamageMessage(true);
+      if(quantity != 0){
+        if(variation.length > 0 && subVariation.length<=0){
+          if (variationValue !== ""){
+            console.debug('ger1e')
+            insertDamage(damage)
+            setDamageMessage(true);
+          }else{
+            setFailed(true)
+           }
+        }else if(subVariation.length > 0){
+          if (variationValue !=="" && subVariation !==""){
+            insertDamage(damage)
+               console.debug('gere'+variationValue+""+subVariationValue)
+               setDamageMessage(true);
+             }else{
+              setFailed(true)
+             }
+        }else if(variation.length<=0){
+          console.debug('dgere')
+          insertDamage(damage)
+          setDamageMessage(true);
+          }else{
+            setFailed(true)
+          }
+      }else{
+        setFailed(true)
+      }
+
     }
     const addToDamageConfirm = ()=>{
         setDamageMessage(!damageMessage);
@@ -152,11 +166,12 @@ const DetailScreen =({navigation,route}) =>{
                 visible={damageMessage} 
                 onPress={addToDamageConfirm}
               />
-              
+          <ScrollView>
             <View>
             <Image source={{uri:ipAddress+"/wwwroot/uploads/"+detail.imageName}} style={styles.image}/> 
             </View>
             <Content/>
+            </ScrollView>
             <Footer
               addDamage={addToDamage}
               addCart={addToCart}

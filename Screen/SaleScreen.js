@@ -112,11 +112,11 @@ const hideDatePicker = () => {
   setDatePickerVisibility(false);
 };
 
-const handleConfirm = (date) => {
+const handleConfirm = async(date) => {
   if(dates != moment(date).format('MM/DD/YYYY')){
-  reset();
   setDate(moment(date).format('MM/DD/YYYY') );
-  filterSaleByDate(moment(date).format('MM/DD/YYYY') );
+  await reset();
+  await filterSaleByDate(moment(date).format('MM/DD/YYYY') );
   hideDatePicker();
 }
 hideDatePicker();
@@ -137,14 +137,14 @@ hideDatePicker();
               key={res.key}
               text={res.text}
               value={value}
-             onPress={()=>{
+             onPress={async()=>{
                if(value != res.key){
                  getFilterPageCat(1)
-                reset();
-                filterSaleByDay(res.key)
                 setValue(res.key)
                 setModalVisible(!modalVisible);
                 setText(res.text)
+                await reset();
+                await filterSaleByDay(res.key)
                }
                setModalVisible(!modalVisible);
               }}/>

@@ -10,18 +10,22 @@ const SubVariationBtnGrp = () =>{
   const {subVariation,subVariationClick} = useDetailOper();
     const [clickedId, setClickedId] =  React.useState(-1);
     const [activeId, setActiveId] =  React.useState(0);
-    const handleClick = (event, id) => {
-        setClickedId(id);
-        if(clickedId === id){
-        if(activeId == 0){
-          setActiveId(1)
-        }else{
-          setActiveId(0)
-        }
+    const handleClick = (name, id) => {
+      setClickedId(id);
+      if(clickedId != id){
+
+        setActiveId(1)
+        subVariationClick(id,name)
+
+      
       }else{
-          setActiveId(1)
+
+        setActiveId(0)
+        setClickedId(-1)
+        subVariationClick(-1,'')
       }
-      };
+
+    };
     return (
       <>
       {subVariation != undefined ?(
@@ -30,8 +34,7 @@ const SubVariationBtnGrp = () =>{
           <VariationBtn
             key={sub.variationValueId}
             onPress={(event) => {
-              handleClick(event, i)
-              subVariationClick(i,sub.variationValueName)
+              handleClick(sub.variationValueName, i)
             }}
             style={(i == clickedId && activeId == 1 )? buttonStyle.buttonActive : buttonStyle.variationBtn}
           >

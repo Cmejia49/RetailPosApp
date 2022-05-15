@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View,ScrollView } from 'react-native'
 //component
 import QuantityGrp from '../../molecules/detailPage/QuantityGrp'
 import ItemInfoGrp from '../../molecules/detailPage/ItemInfoGrp'
@@ -20,7 +20,7 @@ const Content = (props) =>{
         variationName,itemCode,price} = useDetailOper();
     
     return(
-        <View style={containerStyle.detailContainer}>
+       <View style={containerStyle.detailContainer}>
               <ItemInfoGrp itemName={detail.itemName} itemPrice={price} itemCost={itemCode}/>
             <View style={{marginHorizontal:7}}>
                 <DetailTxt value={variationName}/>
@@ -42,6 +42,7 @@ const Content = (props) =>{
              style={{width:20}} />
             </View>
         </View>
+ 
     )
 }
 export default Content;

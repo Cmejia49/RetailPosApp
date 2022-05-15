@@ -112,15 +112,13 @@ const hideDatePicker = () => {
   setDatePickerVisibility(false);
 };
 
-const handleConfirm = (date) => {
+const handleConfirm = async(date) => {
   if(dates != moment(date).format('MM/DD/YYYY')){
-  reset();
   setDate(moment(date).format('MM/DD/YYYY') );
-  filterDamageByDate(moment(date).format('MM/DD/YYYY') )
+  await reset();
+  await filterDamageByDate(moment(date).format('MM/DD/YYYY') )
   hideDatePicker();
   }
-  setValue("Today")
-  setText("Today")
   hideDatePicker();
 };
     return(
@@ -140,13 +138,13 @@ const handleConfirm = (date) => {
               id={res.key}
               text={res.text}
               value={value}
-             onPress={()=>{
+             onPress={async()=>{
               if(value != res.key){
-               reset()
-               filterDamageByDay(res.key)
-               setValue(res.key)
+               setValue(res.key);
                setModalVisible(!modalVisible);
-               setText(res.text)
+               setText(res.text);
+               await reset();
+               await filterDamageByDay(res.key);
               }
               setModalVisible(!modalVisible);
               }}/>
